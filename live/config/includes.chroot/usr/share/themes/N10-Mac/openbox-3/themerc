@@ -75,3 +75,8 @@ osd.hilight.bg: flat solid
 osd.hilight.bg.color: #0a84ff
 osd.unhilight.bg: flat solid
 osd.unhilight.bg.color: #d1d1d6
+
+# Roomier, rounded-feeling menu items
+menu.items.padding.width: 10
+menu.items.padding.height: 5
+menu.title.text.justify: left

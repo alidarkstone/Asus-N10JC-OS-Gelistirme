@@ -35,10 +35,8 @@ font_shadow = 0
 mouse_effects = 1
 
 button = new
-button_text = ● N10
-button_font = Inter Bold 10
-button_font_color = #1d1d1f 100
-button_padding = 8 2
+button_icon = /usr/share/n10os/rog-eye.png
+button_padding = 8 3
 button_background_id = 2
 button_centered = 1
 button_lclick_command = rofi -show drun

@@ -6,5 +6,6 @@ nm-applet &
 volumeicon &
 xfce4-power-manager &
 dunst &
-# Light compositor: shadows only, xrender backend (GMA 950 friendly)
-picom --backend xrender --vsync --no-fading-openclose --shadow --shadow-radius 14 --shadow-opacity 0.25 --corner-radius 8 --shadow-exclude "class_g = 'Plank'" --shadow-exclude "class_g = 'Tint2'" -b &
+# Light compositor (xrender, GMA 950 friendly): soft shadows, rounded corners and
+# short fades so menus and windows open smoothly without costing much CPU
+picom --backend xrender --vsync --fading --fade-in-step 0.14 --fade-out-step 0.18 --fade-delta 8 --shadow --shadow-radius 14 --shadow-opacity 0.25 --corner-radius 8 --shadow-exclude "class_g = 'Plank'" --shadow-exclude "class_g = 'Tint2'" -b &
