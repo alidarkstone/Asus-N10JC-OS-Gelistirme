@@ -151,6 +151,7 @@ $sira | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $guncel 'sira.jso
 if ($TurkceDilPaketi) {
     # Türkçe arayüz dil paketi (KB2483139, SP1 için). Microsoft yalnızca Ultimate/Enterprise'ta dil paketine izin verir.
     $lpCab = Join-Path $guncel 'dil-tr\lp.cab'
+    if ((Test-Path $lpCab) -and (Get-Item $lpCab).Length -lt 20MB) { Remove-Item -Force $lpCab }
     if (-not (Test-Path $lpCab)) {
         try {
             # Dil paketleri katalogda yok; Microsoft'un Windows Update sunucusundaki asıl dosya kullanılır.
@@ -169,7 +170,9 @@ if ($TurkceDilPaketi) {
                 $acik = Join-Path $ham 'dil-tr-acik'
                 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik
                 & (Get-N10SevenZip $arac) x -y "-o$acik" $dosya | Out-Null
-                $c = Get-ChildItem $acik -Recurse -Filter *.cab | Sort-Object Length -Descending | Select-Object -First 1
+                # Windows Update dil paketinin asıl içeriği lp.mlc'dir (adı değişik bir .cab); DISM onu lp.cab olarak alır.
+                $c = Get-ChildItem $acik -Recurse -Include *.mlc, *.cab | Sort-Object Length -Descending | Select-Object -First 1
+                if ($c -and $c.Length -lt 20MB) { throw "dil paketi içeriği beklenenden küçük ($($c.Name), $($c.Length) bayt)" }
                 if ($c) { Copy-Item -Force $c.FullName $lpCab; Write-N10Log "Türkçe dil paketi hazır ($($c.Name), SHA-1 ve Microsoft imzası doğrulandı)." 'TAMAM' }
                 else { throw 'paketten lp.cab çıkmadı' }
             }
