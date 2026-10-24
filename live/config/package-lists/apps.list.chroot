@@ -10,4 +10,5 @@ p7zip-full
 htop
 hdparm
 curl
+ca-certificates
 python3
