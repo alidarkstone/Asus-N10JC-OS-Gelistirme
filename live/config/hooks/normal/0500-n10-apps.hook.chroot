@@ -7,7 +7,7 @@ set -e
 mkdir -p /usr/local/share/applications
 for f in rofi rofi-theme-selector tint2 tint2conf plank debian-uxterm debian-xterm \
          vim obconf display-im6.q16 install-debian calamares blueman-adapters \
-         lstopo yad-icon-browser xfce4-power-manager-settings htop; do
+         lstopo yad-icon-browser xfce4-power-manager-settings htop picom org.xfce.mousepad-settings; do
   src=/usr/share/applications/$f.desktop
   [ -f "$src" ] || continue
   sed '/^NoDisplay=/d' "$src" > /usr/local/share/applications/$f.desktop
