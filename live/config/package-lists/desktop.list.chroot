@@ -3,6 +3,8 @@ xserver-xorg-input-libinput
 xinit
 x11-xserver-utils
 xdotool
+x11-utils
+x11-xkb-utils
 mesa-utils
 libgl1-mesa-dri
 mesa-vdpau-drivers

@@ -1,0 +1,27 @@
+#!/bin/sh
+# N10 OS desktop session. startx runs this directly (see /etc/profile.d/n10jc.sh),
+# so the desktop no longer depends on Xsession, x-session-manager alternatives or
+# openbox-autostart. Everything it does is logged to ~/.cache/n10-session.log.
+mkdir -p "$HOME/.cache"
+exec >"$HOME/.cache/n10-session.log" 2>&1
+set -x
+date
+
+# Let D-Bus/systemd user services (nm-applet, blueman, notifications) see the display
+dbus-update-activation-environment --systemd DISPLAY XAUTHORITY 2>/dev/null || true
+xrdb -merge /etc/X11/Xresources/* 2>/dev/null || true
+setxkbmap tr 2>/dev/null || true
+xsetroot -cursor_name left_ptr 2>/dev/null || true
+
+# Window manager first, so the panel and dock get managed and placed correctly
+openbox &
+wm=$!
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null | grep -q window && break
+  sleep 0.3
+done
+
+sh /etc/xdg/openbox/n10-autostart
+
+# The session lives as long as openbox (Log out in the menu ends it)
+wait $wm

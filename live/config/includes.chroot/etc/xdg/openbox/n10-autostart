@@ -1,4 +1,4 @@
-# N10 OS session (system-wide; appended to /etc/xdg/openbox/autostart by hook 0300)
+# N10 OS session programs, started by /usr/local/bin/n10-session after openbox is up.
 feh --no-fehbg --bg-fill /usr/share/backgrounds/n10os/default.jpg &
 tint2 &
 (sleep 2; plank) &

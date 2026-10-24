@@ -23,12 +23,11 @@ grep -n "N10-Mac\|CIML\|A-space" "$rc"
 mkdir -p /etc/skel/.config/openbox
 cp "$rc" /etc/skel/.config/openbox/rc.xml
 
-# Session start must not depend on files in the user's home: startx without
-# ~/.xinitrc runs Xsession -> x-session-manager, so point that at openbox-session
-# and put our autostart in the system-wide openbox autostart.
+# The desktop itself is started by /usr/local/bin/n10-session (startx client, see
+# profile.d/n10jc.sh). Keep openbox-session as the generic session manager too.
 update-alternatives --set x-session-manager /usr/bin/openbox-session \
   || update-alternatives --install /usr/bin/x-session-manager x-session-manager /usr/bin/openbox-session 90
-cat /etc/xdg/openbox/n10-autostart >> /etc/xdg/openbox/autostart
+test -x /usr/local/bin/n10-session && test -f /etc/xdg/openbox/n10-autostart
 
 # Snappier menus: submenus open instantly, menus close quickly
 for f in /etc/xdg/openbox/rc.xml /etc/skel/.config/openbox/rc.xml; do
