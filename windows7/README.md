@@ -15,6 +15,12 @@ Kendi orijinal Windows 7 ISO'nuzdan, Asus N10JC için hazırlanmış bir kurulum
 - **Uygulamalar:** Supermium (Windows 7'de çalışan güncel Chromium tarayıcı), 7-Zip ve MPC-HC (9300M ile donanım hızlandırmalı video).
 - **Otomatik rapor:** Her açılıştan 2 dakika sonra donanım, sürücü ve etkinleştirme raporu `C:\N10\Output` klasörüne ve takılı USB belleğin **Output** klasörüne yazılır.
 
+## Kaynak doğrulama
+HAZIRLA, işe başlamadan önce kaynağı denetler ve şüpheli bir kopyada durur:
+- ISO'nun SHA-1 özetini hesaplar ve `bilinen-iso-ozetleri.txt` listesiyle karşılaştırır. Listeye yalnızca doğrulanmış resmi değerler eklenir.
+- Kurulum dosyalarının (setup, bootsect) Microsoft imzalı olup olmadığına bakar. Medyada önceden eklenmiş `$OEM$` klasörü veya hazır yanıt dosyası olup olmadığını da kontrol eder. Bunlar "hazır etkinleştirilmiş" kopyaların izleridir.
+- Windows imajının içinde önyükleme ve lisans dosyalarının (winload, ntoskrnl, ci, hal, sppsvc) değiştirilmemiş Microsoft imzalı dosyalar olduğunu doğrular.
+
 ## Etkinleştirme
 Windows yalnızca **sizin kendi orijinal ürün anahtarınızla** etkinleştirilir (örneğin bir bilgisayarın altındaki COA etiketi veya satın aldığınız lisans). Kit anahtarınızı otomatik kurulum dosyasına yazar. İnternete bağlanınca etkinleştirmeyi de kendisi dener ve sonucu rapora yazar. Çevrimiçi etkinleştirme olmazsa `slui 4` ile telefonla etkinleştirme yapılabilir. Kırma araçları, KMS taklitçileri veya "loader"lar kullanılmaz.
 
