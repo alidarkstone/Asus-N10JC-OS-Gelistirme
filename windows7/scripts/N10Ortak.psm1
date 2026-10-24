@@ -161,7 +161,9 @@ function Get-N10KatalogSurucu {
     param([string]$Ad, [string[]]$Sorgular, [string]$HwId, [string]$Hedef, [string]$Onbellek)
     if (Test-N10Inf $Hedef $HwId) { Write-N10Log "$Ad hazır (önbellekte)." 'TAMAM'; return $true }
     $denenen = @{}
-    foreach ($q in $Sorgular) {
+    # Katalog yalnızca en yeni 25 sonucu gösterir (çoğu Windows 10 sürücüsü); bu yüzden önce "Windows 7" ile daraltılır.
+    $tumSorgular = @(foreach ($ek in ' Windows 7', ' Vista', '') { foreach ($q in $Sorgular) { "$q$ek" } })
+    foreach ($q in $tumSorgular) {
         $liste = @()
         try { $liste = @(Find-N10Katalog $q) } catch { Write-N10Log "Katalog araması olmadı ($q): $($_.Exception.Message)" 'UYARI'; continue }
         $sirali = @($liste | Where-Object { $_.Urunler -match 'Windows 7' } | Where-Object { $_.Baslik -notmatch 'x64|amd64|64-bit' }) +

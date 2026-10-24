@@ -29,11 +29,11 @@ if ($env:N10_KATALOG_DOKUM -and (Test-Path $env:N10_KATALOG_DOKUM)) {
         $sonucYok = $t -match 'noResult'
         $i = $t.IndexOf('goToDetails(', $t.IndexOf('goToDetails') + 20)
         Write-Host ("{0}: {1} bayt, goToDetails={2}, sonuç yok işareti={3}" -f $h.Name, $t.Length, ([regex]::Matches($t, 'goToDetails')).Count, $sonucYok)
-        if ($i -gt 0 -and $h.Name -like 'PCI_VEN_168C*') { Write-Host ($t.Substring([Math]::Max(0, $i - 900), [Math]::Min(2600, $t.Length - $i + 900)) -replace '\s+', ' ') }
+        if ($i -gt 0 -and $false) { Write-Host ($t.Substring([Math]::Max(0, $i - 900), [Math]::Min(2600, $t.Length - $i + 900)) -replace '\s+', ' ') }
     }
 }
 Import-Module (Join-Path $kit 'scripts\N10Ortak.psm1') -Force
-Find-N10Katalog 'PCI\VEN_168C&DEV_002A' | Select-Object -First 8 | Format-Table Baslik, Urunler, Sinif, Tarih -AutoSize | Out-String -Width 250 | Write-Host
+Find-N10Katalog 'PCI\VEN_168C&DEV_002A Windows 7' | Select-Object -First 8 | Format-Table Baslik, Urunler, Sinif, Tarih -AutoSize | Out-String -Width 250 | Write-Host
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
     $inf = Get-ChildItem $_.FullName -Recurse -Filter *.inf
