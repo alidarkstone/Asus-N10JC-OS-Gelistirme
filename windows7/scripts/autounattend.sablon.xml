@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- N10JC Windows 7 32-bit otomatik kurulum. HAZIRLA.cmd {{...}} alanlarını doldurur.
+     Disk seçimi bilerek otomatik DEĞİL: kurulum hangi bölüme yazılacağını size sorar. -->
+<unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+  <settings pass="windowsPE">
+    <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <SetupUILanguage>
+        <UILanguage>{{UILANG}}</UILanguage>
+      </SetupUILanguage>
+      <InputLocale>041f:0000041f</InputLocale>
+      <SystemLocale>tr-TR</SystemLocale>
+      <UILanguage>{{UILANG}}</UILanguage>
+      <UserLocale>tr-TR</UserLocale>
+    </component>
+    <component name="Microsoft-Windows-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <UserData>
+        <AcceptEula>true</AcceptEula>
+        <FullName>{{USER}}</FullName>
+        <Organization></Organization>
+{{KEY_BLOCK}}
+      </UserData>
+    </component>
+  </settings>
+  <settings pass="specialize">
+    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <ComputerName>{{COMPUTER}}</ComputerName>
+      <RegisteredOwner>{{USER}}</RegisteredOwner>
+      <TimeZone>Turkey Standard Time</TimeZone>
+    </component>
+    <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <SkipAutoActivation>false</SkipAutoActivation>
+    </component>
+  </settings>
+  <settings pass="oobeSystem">
+    <component name="Microsoft-Windows-International-Core" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <InputLocale>041f:0000041f</InputLocale>
+      <SystemLocale>tr-TR</SystemLocale>
+      <UILanguage>{{UILANG}}</UILanguage>
+      <UserLocale>tr-TR</UserLocale>
+    </component>
+    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <OOBE>
+        <HideEULAPage>true</HideEULAPage>
+        <HideWirelessSetupInOOBE>false</HideWirelessSetupInOOBE>
+        <NetworkLocation>Home</NetworkLocation>
+        <ProtectYourPC>3</ProtectYourPC>
+      </OOBE>
+      <UserAccounts>
+        <LocalAccounts>
+          <LocalAccount wcm:action="add">
+            <Name>{{USER}}</Name>
+            <DisplayName>{{USER}}</DisplayName>
+            <Group>Administrators</Group>
+            <Password>
+              <Value>{{PASSWORD}}</Value>
+              <PlainText>true</PlainText>
+            </Password>
+          </LocalAccount>
+        </LocalAccounts>
+      </UserAccounts>
+      <TimeZone>Turkey Standard Time</TimeZone>
+      <FirstLogonCommands>
+        <SynchronousCommand wcm:action="add">
+          <Order>1</Order>
+          <CommandLine>cmd /c C:\N10\ilk-giris.cmd</CommandLine>
+          <Description>N10 ilk giris</Description>
+        </SynchronousCommand>
+      </FirstLogonCommands>
+    </component>
+  </settings>
+</unattend>

@@ -1,0 +1,31 @@
+name: Windows 7 kiti testi
+on:
+  workflow_dispatch:
+  push:
+    paths: ["windows7/**", ".github/workflows/windows7-kit.yml"]
+
+jobs:
+  test:
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/n10w7/onbellek
+          key: w7-onbellek-v2-${{ hashFiles('windows7/scripts/indir.ps1') }}
+          restore-keys: w7-onbellek-v2-
+      - name: Kit testi
+        shell: powershell
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          N10_KATALOG_DOKUM: ${{ runner.temp }}/n10w7/katalog
+        run: windows7\tests\kit-testi.ps1 -Is "$env:RUNNER_TEMP\n10w7"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows7-kit-raporu
+          path: |
+            ${{ runner.temp }}/n10w7/*.log
+            ${{ runner.temp }}/n10w7/*.json
+            ${{ runner.temp }}/n10w7/katalog/
