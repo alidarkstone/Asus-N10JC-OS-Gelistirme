@@ -1,0 +1,12 @@
+#!/bin/sh
+# One-shot hardware report for the N10JC: run `n10-hwcheck` and share the output.
+echo "== N10 OS $(uname -r) =="
+echo "== PCI ==";  lspci -nnk | grep -A3 -E "VGA|3D|Network|Ethernet|Audio"
+echo "== USB ==";  lsusb
+echo "== Radios =="; rfkill list 2>/dev/null
+echo "== Network =="; nmcli -f DEVICE,TYPE,STATE dev 2>/dev/null
+echo "== Audio =="; aplay -l 2>/dev/null; cat /proc/asound/card*/codec#0 2>/dev/null | head -3
+echo "== GPU mode: $(cat /run/n10-gpu-mode 2>/dev/null) =="
+echo "== Backlight =="; ls /sys/class/backlight
+echo "== Memory =="; free -h; swapon --show
+echo "== Firmware / errors =="; sudo dmesg 2>/dev/null | grep -iE "firmware|error|fail" | tail -15

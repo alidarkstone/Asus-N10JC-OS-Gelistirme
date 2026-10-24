@@ -3,6 +3,7 @@ feh --no-fehbg --bg-fill /usr/share/backgrounds/n10os/default.jpg &
 tint2 &
 (sleep 2; plank) &
 nm-applet &
+blueman-applet &
 volumeicon &
 xfce4-power-manager &
 dunst &

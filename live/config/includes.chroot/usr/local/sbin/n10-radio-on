@@ -1,0 +1,8 @@
+#!/bin/sh
+# N10JC boots with Wi-Fi/Bluetooth radios off when the BIOS/asus-laptop state says so.
+# Turn them on at boot so Wi-Fi is "available" without pressing Fn+F2.
+for f in /sys/devices/platform/asus_laptop/wlan /sys/devices/platform/asus_laptop/bluetooth; do
+  [ -w "$f" ] && echo 1 > "$f"
+done
+command -v rfkill >/dev/null && rfkill unblock all
+exit 0

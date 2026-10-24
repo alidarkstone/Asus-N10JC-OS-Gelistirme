@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-for u in n10-gpu-profile.service zramswap.service earlyoom.service fstrim.timer; do
+for u in n10-gpu-profile.service n10-radio-on.service zramswap.service earlyoom.service fstrim.timer; do
   systemctl enable "$u" || echo "WARN: could not enable $u"
 done
 # Logs: volatile journal (journald.conf.d); keep rotated text logs compressed

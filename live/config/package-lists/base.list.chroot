@@ -21,6 +21,17 @@ firmware-linux-free
 firmware-realtek
 firmware-atheros
 firmware-misc-nonfree
+firmware-iwlwifi
+firmware-brcm80211
+firmware-libertas
+firmware-zd1211
+firmware-ath9k-htc
+bluez-firmware
+blueman
+alsa-ucm-conf
+pipewire-alsa
+brightnessctl
+guvcview
 alsa-utils
 pipewire
 pipewire-pulse

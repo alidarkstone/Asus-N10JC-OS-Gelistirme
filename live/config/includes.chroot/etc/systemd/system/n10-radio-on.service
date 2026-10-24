@@ -1,0 +1,12 @@
+[Unit]
+Description=Turn on N10JC Wi-Fi/Bluetooth radios
+After=systemd-modules-load.service
+Before=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/n10-radio-on
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -9,7 +9,13 @@ sed -i 's#<keyboard>#<keyboard>\
     <keybind key="W-Return"><action name="Execute"><command>lxterminal</command></action></keybind>\
     <keybind key="W-b"><action name="Execute"><command>chromium</command></action></keybind>\
     <keybind key="W-e"><action name="Execute"><command>pcmanfm</command></action></keybind>\
-    <keybind key="W-q"><action name="Close"/></keybind>#' "$rc"
+    <keybind key="W-q"><action name="Close"/></keybind>\
+    <keybind key="XF86AudioRaiseVolume"><action name="Execute"><command>amixer -q set Master 5%+ unmute</command></action></keybind>\
+    <keybind key="XF86AudioLowerVolume"><action name="Execute"><command>amixer -q set Master 5%-</command></action></keybind>\
+    <keybind key="XF86AudioMute"><action name="Execute"><command>amixer -q set Master toggle</command></action></keybind>\
+    <keybind key="XF86MonBrightnessUp"><action name="Execute"><command>brightnessctl set +10%</command></action></keybind>\
+    <keybind key="XF86MonBrightnessDown"><action name="Execute"><command>brightnessctl set 10%-</command></action></keybind>\
+    <keybind key="XF86WLAN"><action name="Execute"><command>rfkill toggle wlan</command></action></keybind>#' "$rc"
 sed -i '/<theme>/,/<\/theme>/ s#<name>[^<]*</name>#<name>N10-Mac</name>#' "$rc"
 sed -i 's#<titleLayout>[^<]*</titleLayout>#<titleLayout>CIML</titleLayout>#' "$rc"
 sed -i '/<font place=/,/<\/font>/ s#<name>[^<]*</name>#<name>Inter</name>#' "$rc"
