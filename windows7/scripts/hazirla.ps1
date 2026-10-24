@@ -19,6 +19,11 @@ function Dur([string]$Mesaj) {
     [void][Windows.Forms.MessageBox]::Show("$Mesaj`n`nAyrıntılar: $gunluk", 'N10JC Windows 7', 'OK', 'Error')
     exit 1
 }
+# Kit dosyaları eksik ya da eski kalmışsa (ör. yarım kopyalanmış klasör) hiçbir denetim atlanmadan baştan durulur.
+$gerekli = 'Write-N10Log', 'Add-N10Ozet', 'Test-N10MsImza', 'Test-N10Medya', 'Test-N10Imaj', 'New-N10Iso', 'Get-N10SevenZip'
+$eksik = @($gerekli | Where-Object { -not (Get-Command $_ -ErrorAction SilentlyContinue) })
+if ($eksik) { Dur ("Kit dosyaları eksik veya eski (bulunamayan: $($eksik -join ', ')).`n`nKit klasörünü güncel hâliyle yeniden kopyalayıp tekrar deneyin.") }
+
 function DismCalistir([string[]]$Arg, [int[]]$Kabul = @(0)) {
     $out = & dism.exe /English @Arg 2>&1
     $kod = $LASTEXITCODE
@@ -99,7 +104,8 @@ if ($iso) {
     if ($eslesen) { $dogrulama += "SHA-1 resmi listedeki kayıtla eşleşti: $eslesen" }
     else { $dogrulama += 'SHA-1 kitin listesinde yok; Microsoft imza denetimine göre karar verildi.' }
 }
-$medyaSorun = Test-N10Medya $isoKlasor
+# Denetim hiç çalışamazsa geçmiş sayılmaz: hata da "orijinal değil" gibi durdurur.
+try { $medyaSorun = @(Test-N10Medya $isoKlasor) } catch { $medyaSorun = @("Medya denetimi çalıştırılamadı: $($_.Exception.Message)") }
 if ($medyaSorun) {
     Dur ("BU KAYNAK ORİJİNAL GÖRÜNMÜYOR, hazırlık durduruldu:`n`n- " + ($medyaSorun -join "`n- ") +
         "`n`nLütfen kendi orijinal Windows 7 diskinizi veya Microsoft'tan aldığınız ISO'yu kullanın.")
@@ -153,7 +159,7 @@ Write-N10Log 'Seçilen sürüm ayrı bir imaja aktarılıyor...'
 DismCalistir @('/Export-Image', "/SourceImageFile:$wim", "/SourceIndex:$($secim.ImageIndex)", "/DestinationImageFile:$tekWim", '/Compress:max') | Out-Null
 Write-N10Log 'İmaj bağlanıyor...'
 DismCalistir @('/Mount-Wim', "/WimFile:$tekWim", '/Index:1', "/MountDir:$mount") | Out-Null
-$imajSorun = Test-N10Imaj $mount
+try { $imajSorun = @(Test-N10Imaj $mount) } catch { $imajSorun = @("İmaj denetimi çalıştırılamadı: $($_.Exception.Message)") }
 if ($imajSorun) {
     & dism.exe /English /Unmount-Wim "/MountDir:$mount" /Discard | Out-Null
     Dur ("WINDOWS İMAJI DEĞİŞTİRİLMİŞ, hazırlık durduruldu:`n`n- " + ($imajSorun -join "`n- ") +
