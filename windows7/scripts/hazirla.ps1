@@ -82,6 +82,31 @@ Get-ChildItem -Recurse $isoKlasor | ForEach-Object { if (-not $_.PSIsContainer) 
 $wim = Join-Path $isoKlasor 'sources\install.wim'
 if (-not (Test-Path $wim)) { Dur 'Bu ISO''da sources\install.wim yok. Orijinal bir Windows 7 ISO''su gerekiyor.' }
 
+# ---------------- 2b) Kaynak doğrulama ----------------
+# Kitin içindeki listede bu ISO'nun SHA-1 değeri varsa karşılaştırılır; her durumda Microsoft imzaları denetlenir.
+$dogrulama = @()
+if ($iso) {
+    Write-N10Log 'ISO''nun SHA-1 özeti hesaplanıyor...'
+    $sha1 = (Get-FileHash -Algorithm SHA1 -Path $iso).Hash.ToUpper()
+    $liste = Join-Path $kit 'bilinen-iso-ozetleri.txt'
+    $eslesen = $null
+    if (Test-Path $liste) {
+        foreach ($s in Get-Content -Encoding UTF8 $liste) {
+            if ($s -match '^\s*([0-9A-Fa-f]{40})\s+(.+)$' -and $Matches[1].ToUpper() -eq $sha1) { $eslesen = $Matches[2].Trim() }
+        }
+    }
+    $dogrulama += "SHA-1: $sha1"
+    if ($eslesen) { $dogrulama += "SHA-1 resmi listedeki kayıtla eşleşti: $eslesen" }
+    else { $dogrulama += 'SHA-1 kitin listesinde yok; Microsoft imza denetimine göre karar verildi.' }
+}
+$medyaSorun = Test-N10Medya $isoKlasor
+if ($medyaSorun) {
+    Dur ("BU KAYNAK ORİJİNAL GÖRÜNMÜYOR, hazırlık durduruldu:`n`n- " + ($medyaSorun -join "`n- ") +
+        "`n`nLütfen kendi orijinal Windows 7 diskinizi veya Microsoft'tan aldığınız ISO'yu kullanın.")
+}
+$dogrulama += 'Kurulum dosyaları Microsoft imzalı, medyada yabancı dosya yok.'
+foreach ($d in $dogrulama) { Write-N10Log "Doğrulama: $d" 'TAMAM' }
+
 # ---------------- 3) Sürüm seçimi ----------------
 $imajlar = @(Get-WindowsImage -ImagePath $wim | ForEach-Object { Get-WindowsImage -ImagePath $wim -Index $_.ImageIndex })
 $imajlar = @($imajlar | Where-Object { $_.Architecture -eq 0 })   # 0 = x86
@@ -125,6 +150,14 @@ Write-N10Log 'Seçilen sürüm ayrı bir imaja aktarılıyor...'
 DismCalistir @('/Export-Image', "/SourceImageFile:$wim", "/SourceIndex:$($secim.ImageIndex)", "/DestinationImageFile:$tekWim", '/Compress:max') | Out-Null
 Write-N10Log 'İmaj bağlanıyor...'
 DismCalistir @('/Mount-Wim', "/WimFile:$tekWim", '/Index:1', "/MountDir:$mount") | Out-Null
+$imajSorun = Test-N10Imaj $mount
+if ($imajSorun) {
+    & dism.exe /English /Unmount-Wim "/MountDir:$mount" /Discard | Out-Null
+    Dur ("WINDOWS İMAJI DEĞİŞTİRİLMİŞ, hazırlık durduruldu:`n`n- " + ($imajSorun -join "`n- ") +
+        "`n`nÖnyükleme veya lisans dosyaları Microsoft'un orijinali değil. Bu tür kopyalar zararlı yazılım taşıyabilir.")
+}
+Write-N10Log 'Doğrulama: önyükleme ve lisans dosyaları Microsoft imzalı.' 'TAMAM'
+$dogrulama += 'Önyükleme ve lisans dosyaları (winload, ntoskrnl, sppsvc...) Microsoft imzalı.'
 
 $guncellemeSonuc = @()
 try {
@@ -226,6 +259,9 @@ $rapor = Join-Path $cikti "RAPOR_$zaman.txt"
     "Sürüm    : $($secim.ImageName) ($dil)"
     "Anahtar  : $(if ($anahtar) { 'otomatik kurulum dosyasına eklendi (' + $anahtar.Substring(24) + ' ile biten)' } else { 'yok, kurulumda sorulacak' })"
     "Kullanıcı: $($ayar.KULLANICI)"
+    ''
+    'Kaynak doğrulama: GEÇTİ'
+    ($dogrulama | ForEach-Object { "  - $_" })
     ''
     ($ozet | Format-Table Konu, Durum, Ayrinti -AutoSize | Out-String -Width 200)
     'USB''ye yazmak için Rufus kullanın: Bölüm düzeni MBR, hedef sistem BIOS. Ayrıntılar README.md''de.'

@@ -248,4 +248,48 @@ public class N10IsoYaz {
     if ($bootAkis) { $bootAkis.Close() }
 }
 
+# ---------------- Kaynak doğrulama (değiştirilmiş / "hazır etkinleştirilmiş" kopyaları yakalar) ----------------
+# Dosya Microsoft imzalı mı? (gömülü Authenticode imzası, imzalayan Microsoft olmalı)
+# -KatalogOlabilir: Windows 7'de bazı dosyalar yalnızca katalogla imzalıdır; başka bir bilgisayarda "NotSigned"
+# görünürler. Bunlar için yalnızca bozulmuş imza (HashMismatch) hata sayılır.
+function Test-N10MsImza([string]$Yol, [switch]$KatalogOlabilir) {
+    if (-not (Test-Path $Yol)) { return "YOK: $Yol" }
+    $i = Get-AuthenticodeSignature -FilePath $Yol
+    if ($KatalogOlabilir -and $i.Status -eq 'NotSigned') { return $null }
+    # Değiştirilmiş dosya (HashMismatch) ya da imzası sökülmüş dosya kesin hatadır.
+    if ($i.Status -eq 'HashMismatch' -or $i.Status -eq 'NotSigned') { return "İMZA BOZUK ($($i.Status)): $Yol" }
+    # Sertifika zinciri bu bilgisayarda doğrulanamadıysa (eski kök sertifika vb.) yalnızca uyarı verilir.
+    if ($i.Status -ne 'Valid') { Write-N10Log "Uyarı: imza zinciri doğrulanamadı ($($i.Status)): $Yol" 'UYARI'; return $null }
+    if ($i.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation') { return "Microsoft dışı imza: $Yol ($($i.SignerCertificate.Subject))" }
+    return $null
+}
+
+# Kurulum medyası: setup dosyalarının imzası, kökte yabancı dosya ve hazır yanıt/OEM klasörü olmamalı.
+function Test-N10Medya([string]$Kok) {
+    $sorunlar = @()
+    foreach ($f in 'setup.exe', 'sources\setup.exe', 'boot\bootsect.exe') { $h = Test-N10MsImza (Join-Path $Kok $f); if ($h) { $sorunlar += $h } }
+    $bilinen = '^(boot|efi|sources|support|upgrade|autorun\.inf|bootmgr|bootmgr\.efi|setup\.exe)$'
+    foreach ($o in Get-ChildItem -Force $Kok) { if ($o.Name -notmatch $bilinen) { Write-N10Log "Uyarı: medya kökünde beklenmeyen dosya: \$($o.Name)" 'UYARI' } }
+    if (Test-Path (Join-Path $Kok 'sources\$OEM$')) { $sorunlar += 'Medyada önceden eklenmiş $OEM$ klasörü var (değiştirilmiş kopya).' }
+    foreach ($y in 'autounattend.xml', 'sources\autounattend.xml', 'sources\unattend.xml') {
+        if (Test-Path (Join-Path $Kok $y)) { $sorunlar += "Medyada hazır yanıt dosyası var: $y (değiştirilmiş kopya)." }
+    }
+    , $sorunlar
+}
+
+# Bağlanmış Windows imajı: önyükleme ve lisans bileşenleri Microsoft imzalı olmalı (kırılmış kopyalarda bunlar değişir).
+function Test-N10Imaj([string]$Mount) {
+    $sorunlar = @()
+    foreach ($f in 'Windows\System32\winload.exe', 'Windows\System32\ntoskrnl.exe', 'Windows\System32\ci.dll', 'Windows\System32\hal.dll') {
+        $h = Test-N10MsImza (Join-Path $Mount $f); if ($h) { $sorunlar += $h }
+    }
+    foreach ($f in 'Windows\System32\sppsvc.exe', 'Windows\System32\slc.dll', 'Windows\System32\sppobjs.dll') {
+        $h = Test-N10MsImza (Join-Path $Mount $f) -KatalogOlabilir; if ($h) { $sorunlar += $h }
+    }
+    foreach ($y in 'Windows\Setup\Scripts\SetupComplete.cmd', 'Windows\Panther\unattend.xml') {
+        if (Test-Path (Join-Path $Mount $y)) { $sorunlar += "İmajda önceden eklenmiş dosya: $y (değiştirilmiş kopya)." }
+    }
+    , $sorunlar
+}
+
 Export-ModuleMember -Function *-N10*

@@ -61,6 +61,29 @@ $boy = (Get-Item (Join-Path $Is 'deneme.iso')).Length
 Write-Host "Deneme ISO: $boy bayt"
 if ($boy -lt 32768) { $hata++ }
 
+# 5) İmza denetimi: gerçek Windows 7 x86 dosyaları (Ocak 2020 toplu güncellemesinin içinden) geçmeli,
+#    bir baytı değiştirilmiş kopya da yakalanmalı.
+$msu = Get-ChildItem (Join-Path $onbellek 'guncellemeler') -Filter '*kb4534310*.msu' | Select-Object -First 1
+$imza = Join-Path $Is 'imza'
+New-Item -ItemType Directory -Force $imza | Out-Null
+& expand.exe -F:*.cab $msu.FullName $imza | Out-Null
+$cab = Get-ChildItem $imza -Filter 'Windows6.1-KB4534310*.cab' | Select-Object -First 1
+& expand.exe -F:ntoskrnl.exe $cab.FullName $imza | Out-Null
+$nt = Get-ChildItem $imza -Recurse -Filter ntoskrnl.exe | Select-Object -First 1
+if (-not $nt) { Write-Host 'İMZA TESTİ: ntoskrnl.exe çıkarılamadı'; $hata++ } else {
+    $r = Test-N10MsImza $nt.FullName
+    Write-Host "İmza (orijinal ntoskrnl.exe): $(if ($r) { $r } else { 'geçerli, Microsoft' })"
+    if ($r) { $hata++ }
+    $bozuk = Join-Path $imza 'bozuk-ntoskrnl.exe'
+    $b = [IO.File]::ReadAllBytes($nt.FullName); $b[4096] = $b[4096] -bxor 0xFF; [IO.File]::WriteAllBytes($bozuk, $b)
+    $r2 = Test-N10MsImza $bozuk
+    Write-Host "İmza (değiştirilmiş kopya): $r2"
+    if (-not $r2) { Write-Host 'İMZA TESTİ: değiştirilmiş dosya yakalanmadı'; $hata++ }
+}
+$sahte = Join-Path $Is 'sahte-medya'
+New-Item -ItemType Directory -Force "$sahte\sources\`$OEM`$" | Out-Null
+if (-not (Test-N10Medya $sahte)) { Write-Host 'MEDYA TESTİ: $OEM$ içeren medya yakalanmadı'; $hata++ } else { Write-Host 'Medya testi: değiştirilmiş medya yakalandı.' }
+
 Copy-Item (Join-Path $onbellek 'indirme-ozeti.json') $Is
 if ($hata) { Write-Host "$hata sorun var."; exit 1 }
 Write-Host 'Tüm testler geçti.'

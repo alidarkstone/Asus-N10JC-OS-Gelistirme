@@ -1,0 +1,5 @@
+﻿# Resmi Windows 7 ISO SHA-1 özetleri: "SHA1  dosya adı" biçiminde, satır başına bir tane.
+# HAZIRLA seçtiğiniz ISO'nun SHA-1 değerini hesaplar. Değer bu listedeki bir kayıtla eşleşirse raporda belirtilir.
+# Liste boş başlıyor, çünkü Microsoft bu değerleri artık herkese açık yayınlamıyor ve doğrulanmamış bir değeri buraya yazmıyoruz.
+# Visual Studio (MSDN) aboneliğiniz varsa oradaki SHA-1 değerini buraya ekleyebilirsiniz.
+# Liste boş olsa da her ISO, Microsoft imzaları ve değiştirilmiş kopya izleri açısından ayrıca denetlenir.
