@@ -9,3 +9,9 @@ sed -i 's#<keyboard>#<keyboard>\
     <keybind key="W-b"><action name="Execute"><command>chromium</command></action></keybind>#' \
   /etc/skel/.config/openbox/rc.xml
 sed -i 's#<name>Clearlooks</name>#<name>WhiteSur-Light</name>#' /etc/skel/.config/openbox/rc.xml || true
+
+# Session start must not depend on files in the user's home: startx without
+# ~/.xinitrc runs Xsession -> x-session-manager, so point that at openbox-session
+# and put our autostart in the system-wide openbox autostart.
+update-alternatives --set x-session-manager /usr/bin/openbox-session
+cat /etc/xdg/openbox/n10-autostart >> /etc/xdg/openbox/autostart
