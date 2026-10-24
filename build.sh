@@ -10,7 +10,12 @@ apt-get install -y --no-install-recommends live-build debootstrap \
   build-essential bc bison flex libssl-dev libelf-dev cpio kmod rsync \
   python3 curl xz-utils dpkg-dev debhelper ca-certificates gcc-multilib
 
-"$ROOT/kernel/build-kernel.sh" "$SERIES"
+if [ "${SKIP_KERNEL:-0}" = 1 ] && ls "$ROOT"/build/debs/linux-image-*n10jc*.deb >/dev/null 2>&1; then
+  echo ">> Using prebuilt kernel: $(cat "$ROOT/build/debs/KERNELRELEASE")"
+else
+  "$ROOT/kernel/build-kernel.sh" "$SERIES"
+fi
+[ "${KERNEL_ONLY:-0}" = 1 ] && exit 0
 
 cd "$ROOT/live"
 mkdir -p config/packages.chroot

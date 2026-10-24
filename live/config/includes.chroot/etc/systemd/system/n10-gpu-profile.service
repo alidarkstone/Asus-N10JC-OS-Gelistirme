@@ -1,0 +1,12 @@
+[Unit]
+Description=Apply N10JC GPU-switch power/graphics profile
+After=systemd-udev-settle.service systemd-modules-load.service
+Before=display-manager.service getty@tty1.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/n10-gpu-profile
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

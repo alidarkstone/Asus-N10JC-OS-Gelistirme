@@ -8,7 +8,7 @@ Asus N10JC netbook'u (Atom N270, 1 GB DDR2, GMA 950 + GeForce 9300M GS, SSD) iç
   - İşlemci: `MATOM`, `-march=bonnell`
   - Bellek: highmem kapalı. `VMSPLIT_2G` ile 1 GB'ın tamamı doğrudan adreslenir, PAE/NX de korunur. MGLRU açık, zram (lz4) kullanılıyor.
   - Gecikme: `PREEMPT_DYNAMIC`, `HZ=300`
-- **systemd yok:** sysvinit + elogind. Bir sonraki adım runit.
+- **Init:** v0.1 güvenilirlik için systemd kullanıyor (journal RAM'de, 16 MB sınırlı). runit/sysvinit sonraki sürümde.
 - **Masaüstü:** Openbox + tint2 + plank + rofi. Görünüm WhiteSur teması ve Inter yazı tipi. Yalnızca gölge yapan hafif bir kompozitör (xrender) var.
 
 ## Hibrit grafik

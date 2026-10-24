@@ -26,8 +26,10 @@ cd "linux-$VER"
 if [ ! -f "$WORK/debian-686-pae.config" ]; then
   tmp="$(mktemp -d)"
   ( cd "$tmp"
-    pkg="$(curl -fsSL https://deb.debian.org/debian/dists/bookworm/main/binary-i386/Packages.xz \
-      | xz -d | awk '/^Package: linux-image-[0-9.-]+-686-pae-unsigned$/{p=1} p&&/^Filename:/{print $2; exit}')"
+    # Download first: awk exits early, which would SIGPIPE a streaming xz under pipefail.
+    curl -fsSLo Packages.xz https://deb.debian.org/debian/dists/bookworm/main/binary-i386/Packages.xz
+    xz -d Packages.xz
+    pkg="$(awk '/^Package: linux-image-[0-9.-]+-686-pae-unsigned$/{p=1} p&&/^Filename:/{print $2; exit}' Packages)"
     curl -fsSLo k.deb "https://deb.debian.org/debian/$pkg"
     dpkg-deb -x k.deb x
     cp x/boot/config-* "$WORK/debian-686-pae.config" )

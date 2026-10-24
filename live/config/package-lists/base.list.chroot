@@ -1,11 +1,9 @@
-# Init: sysvinit (no systemd as PID 1). runit is the planned next step.
-sysvinit-core
-orphan-sysvinit-scripts
-elogind
-libpam-elogind
+# Init: systemd for v0.1 (most reliable on Debian); runit/sysvinit is a later option.
+# Journal is volatile and capped, see etc/systemd/journald.conf.d.
+systemd-sysv
 live-boot
 live-config
-live-config-sysvinit
+live-config-systemd
 initramfs-tools
 sudo
 # Memory / responsiveness

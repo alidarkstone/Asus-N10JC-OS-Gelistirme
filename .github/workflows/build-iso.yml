@@ -6,20 +6,50 @@ on:
         description: Kernel series
         default: "6.18"
   push:
-    branches: [n10os, main]
+    branches: [main]
     tags: ["v*"]
     paths-ignore: ["**.md"]
 
+env:
+  KERNEL_SERIES: ${{ inputs.kernel_series || '6.18' }}
+
 jobs:
-  iso:
+  # The kernel takes most of the time, so it is its own job and cached by config.
+  # A failing ISO step can then be re-run without rebuilding the kernel.
+  kernel:
     runs-on: ubuntu-24.04
-    timeout-minutes: 240
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
-      - name: Build inside Debian bookworm
+      - id: cache
+        uses: actions/cache@v4
+        with:
+          path: build/debs
+          key: kernel-${{ env.KERNEL_SERIES }}-${{ hashFiles('kernel/**') }}
+      - name: Build kernel inside Debian bookworm
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          docker run --rm --privileged -v "$PWD:/src" -w /src \
-            -e KERNEL_SERIES="${{ inputs.kernel_series || '6.18' }}" \
+          docker run --rm -v "$PWD:/src" -w /src -e KERNEL_SERIES -e KERNEL_ONLY=1 \
+            debian:bookworm ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: n10os-kernel
+          path: build/debs/
+          retention-days: 14
+
+  iso:
+    needs: kernel
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: n10os-kernel
+          path: build/debs/
+      - name: Build ISO inside Debian bookworm
+        run: |
+          docker run --rm --privileged -v "$PWD:/src" -w /src -e KERNEL_SERIES -e SKIP_KERNEL=1 \
             debian:bookworm ./build.sh
       - uses: actions/upload-artifact@v4
         with:
@@ -27,5 +57,4 @@ jobs:
           path: |
             build/*.iso
             build/*.sha256
-            build/debs/*.deb
           retention-days: 14
