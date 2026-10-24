@@ -10,6 +10,10 @@ on:
     tags: ["v*"]
     paths-ignore: ["**.md"]
 
+concurrency:
+  group: iso-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   KERNEL_SERIES: ${{ inputs.kernel_series || '6.18' }}
 

@@ -4,6 +4,13 @@ systemd-sysv
 live-boot
 live-config
 live-config-systemd
+# live-config components need these (recommends are off)
+user-setup
+locales
+keyboard-configuration
+console-setup
+dbus
+polkitd
 initramfs-tools
 sudo
 # Memory / responsiveness
