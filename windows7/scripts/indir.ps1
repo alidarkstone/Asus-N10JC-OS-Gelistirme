@@ -188,6 +188,12 @@ if ($TurkceDilPaketi) {
                 Write-N10Log ("  dil paketi: {0} dosya, {1:N0} MB" -f $tum.Count, ($boyut / 1MB))
                 if (-not ($kok | Where-Object { $_.Extension -eq '.mum' })) { throw 'dil paketinde .mum bildirimi yok' }
                 if ($boyut -lt 50MB) { throw "dil paketi beklenenden küçük ($([math]::Round($boyut / 1MB)) MB)" }
+                # Windows Update paketi update.mum içermez; DISM'in klasörü paket olarak tanıması için
+                # SP1 dil paketi sarmalayıcısının bildirimi ve imzalı kataloğu update.mum/update.cat adıyla kopyalanır.
+                $sarma = Get-ChildItem $acik -Filter 'microsoft-windows-client-languagepack-package-wrapper~*~x86~tr-tr~6.1.7601.17514.mum' | Select-Object -First 1
+                if (-not $sarma) { throw 'dil paketi sarmalayıcı bildirimi bulunamadı' }
+                Copy-Item -Force $sarma.FullName (Join-Path $acik 'update.mum')
+                Copy-Item -Force ($sarma.FullName -replace '\.mum$', '.cat') (Join-Path $acik 'update.cat')
                 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $lpKlasor
                 New-Item -ItemType Directory -Force (Split-Path $lpKlasor) | Out-Null
                 Move-Item $acik $lpKlasor

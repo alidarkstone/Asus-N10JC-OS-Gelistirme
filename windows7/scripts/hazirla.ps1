@@ -175,15 +175,18 @@ try {
     # Türkçe dil paketi (güncellemelerden önce eklenir ki güncellemelerin Türkçe dosyaları da gelsin)
     $lp = Join-Path $onbellek 'guncellemeler\dil-tr\paket'
     # Açılmış pakette update.mum yok; DISM'e dil paketinin kendi bildirimi (.mum) verilir. Önce SP1 sarmalayıcısı denenir.
-    $lpMum = @('microsoft-windows-client-languagepack-package-wrapper~*~x86~tr-tr~6.1.7601.17514.mum',
-               'microsoft-windows-client-languagepack-package~*~x86~tr-tr~6.1.7601.17514.mum') |
-        ForEach-Object { Get-ChildItem $lp -Filter $_ -ErrorAction SilentlyContinue | Select-Object -First 1 }
-    if ($turkceArayuz -and $lpMum) {
+    # Önce klasörün kendisi (update.mum), olmazsa paketin kendi bildirimleri denenir.
+    $lpYollar = @()
+    if (Test-Path (Join-Path $lp 'update.mum')) { $lpYollar += $lp }
+    $lpYollar += @('microsoft-windows-client-languagepack-package-wrapper~*~x86~tr-tr~6.1.7601.17514.mum',
+                   'microsoft-windows-client-languagepack-package~*~x86~tr-tr~6.1.7601.17514.mum') |
+        ForEach-Object { Get-ChildItem $lp -Filter $_ -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName }
+    if ($turkceArayuz -and $lpYollar) {
         Write-N10Log 'Türkçe dil paketi ekleniyor...'
         $eklendi = $false
-        foreach ($m in $lpMum) {
-            try { DismCalistir @($img, '/Add-Package', "/PackagePath:$($m.FullName)") -Kabul 0, 3010 | Out-Null; $eklendi = $true; break }
-            catch { Write-N10Log "  $($m.Name) eklenemedi: $($_.Exception.Message)" 'UYARI' }
+        foreach ($y in $lpYollar) {
+            try { DismCalistir @($img, '/Add-Package', "/PackagePath:$y") -Kabul 0, 3010 | Out-Null; $eklendi = $true; break }
+            catch { Write-N10Log "  $(Split-Path -Leaf $y) ile eklenemedi: $($_.Exception.Message)" 'UYARI' }
         }
         if ($eklendi) {
             DismCalistir @($img, '/Set-AllIntl:tr-TR') | Out-Null

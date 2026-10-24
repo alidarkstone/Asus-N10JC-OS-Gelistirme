@@ -45,7 +45,8 @@ if (Test-Path $lpKlasor) {
     else {
         $imza = Get-AuthenticodeSignature ($sarma.FullName -replace '\.mum$', '.cat')
         Write-Host "Sarmalayıcı katalog imzası: $($imza.Status), $($imza.SignerCertificate.Subject)"
-        & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$($sarma.FullName)" 2>&1 | Select-Object -First 25 | ForEach-Object { Write-Host "  $_" }
+        if (-not (Test-Path (Join-Path $lpKlasor 'update.mum'))) { Write-Host 'update.mum YOK'; $hata++ }
+        & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$lpKlasor" 2>&1 | Select-Object -First 25 | ForEach-Object { Write-Host "  $_" }
     }
 }
 Write-Host '--- Hazırlanan sürücüler ---'
