@@ -3,7 +3,6 @@ feh --no-fehbg --bg-fill /usr/share/backgrounds/n10os/default.jpg &
 tint2 &
 (sleep 2; plank) &
 nm-applet &
-volumeicon &
 dunst &
 # Startup chime (also an instant check that sound works)
 (sleep 1; pw-play /usr/share/sounds/n10os/acilis.wav 2>/dev/null || aplay -q /usr/share/sounds/n10os/acilis.wav) &

@@ -6,7 +6,9 @@ done
 # console-setup only sets the text-console font and keymap. It fails here and
 # adds a red [FAILED] line to the boot, so mask it (the keymap is set by X).
 systemctl mask console-setup.service || true
-# Bluetooth tray daemon is not autostarted (saves ~90 MB); keep the mechanism on demand
+# blueman's root helper took 15 s at boot on the N10JC: start it only when the
+# Bluetooth manager asks for it (D-Bus activation still works)
+systemctl disable blueman-mechanism.service 2>/dev/null || true
 # Logs: volatile journal (journald.conf.d); keep rotated text logs compressed
 sed -i 's/^#\?\s*compress/compress/' /etc/logrotate.conf 2>/dev/null || true
 # /tmp in RAM, capped
