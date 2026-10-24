@@ -14,6 +14,10 @@ plank
 rofi
 picom
 feh
+dconf-cli
+dconf-gsettings-backend
+gtk2-engines-murrine
+gtk2-engines-pixbuf
 dunst
 network-manager-gnome
 pcmanfm

@@ -1,26 +1,53 @@
 #!/bin/sh
-# macOS-like but cheap: WhiteSur GTK theme + icons, Inter font, grayscale AA.
+# macOS look on a budget: WhiteSur GTK + icons + cursors, plank theme, Inter font.
+# Build tools are installed only for this hook and removed afterwards.
 set -e
-apt-get install -y --no-install-recommends git ca-certificates
+TOOLS="git ca-certificates sassc libglib2.0-dev-bin libxml2-utils"
+apt-get install -y --no-install-recommends $TOOLS
 tmp=$(mktemp -d)
-git clone --depth 1 https://github.com/vinceliuice/WhiteSur-gtk-theme "$tmp/gtk" \
-  && (cd "$tmp/gtk" && ./install.sh -d /usr/share/themes -c light -o normal -l) \
-  || echo "WARN: WhiteSur GTK theme not installed"
+
+if git clone --depth 1 https://github.com/vinceliuice/WhiteSur-gtk-theme "$tmp/gtk"; then
+  (cd "$tmp/gtk" && ./install.sh -d /usr/share/themes -c light -o normal -l) \
+    || echo "WARN: WhiteSur GTK install failed"
+  # Plank dock theme shipped in the same repo
+  for p in "$tmp/gtk/src/other/plank/theme-Light" "$tmp/gtk/src/other/plank/theme-light"; do
+    [ -d "$p" ] && mkdir -p /usr/share/plank/themes && cp -r "$p" /usr/share/plank/themes/WhiteSur-Light && break
+  done
+fi
 git clone --depth 1 https://github.com/vinceliuice/WhiteSur-icon-theme "$tmp/icons" \
   && (cd "$tmp/icons" && ./install.sh -d /usr/share/icons) \
   || echo "WARN: WhiteSur icons not installed (Papirus stays as fallback)"
-rm -rf "$tmp"
-apt-get purge -y git && apt-get autoremove -y
+git clone --depth 1 https://github.com/vinceliuice/WhiteSur-cursors "$tmp/cursors" \
+  && cp -r "$tmp/cursors/dist" /usr/share/icons/WhiteSur-cursors \
+  || echo "WARN: WhiteSur cursors not installed"
 
-mkdir -p /etc/skel/.config/gtk-3.0
-cat > /etc/skel/.config/gtk-3.0/settings.ini <<EOT
-[Settings]
-gtk-theme-name=WhiteSur-Light
-gtk-icon-theme-name=WhiteSur
-gtk-font-name=Inter 10
-gtk-xft-antialias=1
-gtk-xft-hinting=1
-gtk-xft-hintstyle=hintslight
-gtk-xft-rgba=none
-gtk-enable-animations=0
+rm -rf "$tmp"
+apt-get purge -y $TOOLS || true
+apt-get autoremove -y
+ls /usr/share/themes /usr/share/icons /usr/share/plank/themes 2>/dev/null || true
+
+# GTK2 apps follow the same theme
+mkdir -p /etc/gtk-2.0
+cat > /etc/gtk-2.0/gtkrc <<EOT
+gtk-theme-name="WhiteSur-Light"
+gtk-icon-theme-name="WhiteSur"
+gtk-cursor-theme-name="WhiteSur-cursors"
+gtk-font-name="Inter 10"
+EOT
+# Plank defaults (theme, size, items) via the system dconf database
+dconf update
+# Fontconfig: grayscale AA + slight hinting looks closest to macOS on a 1024x600 panel
+mkdir -p /etc/fonts/conf.d
+cat > /etc/fonts/local.conf <<EOT
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <match target="font">
+    <edit name="antialias" mode="assign"><bool>true</bool></edit>
+    <edit name="hinting" mode="assign"><bool>true</bool></edit>
+    <edit name="hintstyle" mode="assign"><const>hintslight</const></edit>
+    <edit name="rgba" mode="assign"><const>none</const></edit>
+  </match>
+  <alias><family>sans-serif</family><prefer><family>Inter</family></prefer></alias>
+</fontconfig>
 EOT

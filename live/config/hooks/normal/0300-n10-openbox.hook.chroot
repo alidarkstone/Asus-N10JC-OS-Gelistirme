@@ -1,14 +1,21 @@
 #!/bin/sh
-# Openbox defaults + keybindings: Alt+Space = rofi ("Spotlight"), Super+Enter = terminal.
+# Openbox: macOS-like window buttons on the left, N10-Mac theme, Inter font, keybindings.
+# Applied to the system rc.xml (fallback) and to the skel copy users get.
 set -e
-mkdir -p /etc/skel/.config/openbox
-cp /etc/xdg/openbox/rc.xml /etc/skel/.config/openbox/rc.xml
+rc=/etc/xdg/openbox/rc.xml
 sed -i 's#<keyboard>#<keyboard>\
     <keybind key="A-space"><action name="Execute"><command>rofi -show drun</command></action></keybind>\
+    <keybind key="W-space"><action name="Execute"><command>rofi -show drun</command></action></keybind>\
     <keybind key="W-Return"><action name="Execute"><command>lxterminal</command></action></keybind>\
-    <keybind key="W-b"><action name="Execute"><command>chromium</command></action></keybind>#' \
-  /etc/skel/.config/openbox/rc.xml
-sed -i 's#<name>Clearlooks</name>#<name>WhiteSur-Light</name>#' /etc/skel/.config/openbox/rc.xml || true
+    <keybind key="W-b"><action name="Execute"><command>chromium</command></action></keybind>\
+    <keybind key="W-e"><action name="Execute"><command>pcmanfm</command></action></keybind>\
+    <keybind key="W-q"><action name="Close"/></keybind>#' "$rc"
+sed -i '/<theme>/,/<\/theme>/ s#<name>[^<]*</name>#<name>N10-Mac</name>#' "$rc"
+sed -i 's#<titleLayout>[^<]*</titleLayout>#<titleLayout>CIML</titleLayout>#' "$rc"
+sed -i '/<font place=/,/<\/font>/ s#<name>[^<]*</name>#<name>Inter</name>#' "$rc"
+grep -n "N10-Mac\|CIML\|A-space" "$rc"
+mkdir -p /etc/skel/.config/openbox
+cp "$rc" /etc/skel/.config/openbox/rc.xml
 
 # Session start must not depend on files in the user's home: startx without
 # ~/.xinitrc runs Xsession -> x-session-manager, so point that at openbox-session

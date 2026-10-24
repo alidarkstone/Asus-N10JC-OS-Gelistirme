@@ -1,11 +1,10 @@
 # N10 OS session (system-wide; appended to /etc/xdg/openbox/autostart by hook 0300)
-xsetroot -solid '#1d1f24' &
-[ -f "$HOME/.fehbg" ] && sh "$HOME/.fehbg" &
+feh --no-fehbg --bg-fill /usr/share/backgrounds/n10os/default.jpg &
 tint2 &
-plank &
+(sleep 2; plank) &
 nm-applet &
 volumeicon &
 xfce4-power-manager &
 dunst &
 # Light compositor: shadows only, xrender backend (GMA 950 friendly)
-picom --backend xrender --vsync --no-fading-openclose --shadow -b &
+picom --backend xrender --vsync --no-fading-openclose --shadow --shadow-radius 14 --shadow-opacity 0.25 --corner-radius 8 --shadow-exclude "class_g = 'Plank'" --shadow-exclude "class_g = 'Tint2'" -b &

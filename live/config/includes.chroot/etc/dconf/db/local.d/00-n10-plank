@@ -1,0 +1,11 @@
+[net/launchpad/plank/docks/dock1]
+theme='WhiteSur-Light'
+position='bottom'
+alignment='center'
+icon-size=40
+zoom-enabled=true
+zoom-percent=140
+hide-mode='window-dodge'
+pressure-reveal=false
+show-dock-item=false
+dock-items=['pcmanfm.dockitem', 'chromium.dockitem', 'lxterminal.dockitem', 'mousepad.dockitem', 'mpv.dockitem', 'pavucontrol.dockitem']
