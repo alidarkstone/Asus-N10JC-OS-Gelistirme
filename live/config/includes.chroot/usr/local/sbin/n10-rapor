@@ -75,7 +75,11 @@ ta /usr/local/bin/n10-hiz-olc > "$dir/hiz.txt" 2>&1
 journalctl -b --no-pager -p warning > "$dir/journal-uyarilar.txt" 2>&1
 journalctl -b --no-pager > "$dir/journal-tam.txt" 2>&1
 lspci -nnvk > "$dir/lspci.txt" 2>&1
-{ cat /etc/X11/xorg.conf.d/20-n10jc-gpu.conf; ta glxinfo -B; ta vdpauinfo; } > "$dir/gpu.txt" 2>&1
+{ cat /etc/X11/xorg.conf.d/20-n10jc-gpu.conf; ta glxinfo -B; ta vdpauinfo; n10-gpu-pstate; } > "$dir/gpu.txt" 2>&1
+# Short 3D benchmark, comparable across GPU modes and performance levels
+timeout 90 runuser -u "$user" -- env DISPLAY=:0 XAUTHORITY="$home/.Xauthority" \
+  glmark2 --off-screen -s 640x360 -b build:use-vbo=true -b texture -b shading:shading=phong -b jellyfish -b refract \
+  > "$dir/gpu-test.txt" 2>&1
 cat > "$dir/OKU-BENI.txt" <<TXT
 N10 OS otomatik raporu - $(date)
 Çekirdek: $(uname -r)

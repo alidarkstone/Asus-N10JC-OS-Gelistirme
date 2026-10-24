@@ -16,6 +16,7 @@ python3-gi
 gir1.2-gtk-3.0
 x11-utils
 vdpauinfo
+glmark2-x11
 vdpau-driver-all
 openbox
 obconf
