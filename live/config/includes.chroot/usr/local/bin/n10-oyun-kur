@@ -1,0 +1,12 @@
+#!/bin/sh
+# Optional gaming pack, installed on demand so the base system stays light.
+# Wine (32-bit) for XP-era Windows games, RetroArch for retro consoles.
+# Best results in NVIDIA mode (side switch + reboot): nouveau gives OpenGL 3.3 on the 9300M GS.
+set -e
+[ "$(id -u)" = 0 ] || exec sudo "$0" "$@"
+apt-get update
+apt-get install -y --no-install-recommends wine wine32 winetricks \
+  retroarch libretro-nestopia libretro-snes9x libretro-mgba libretro-genesisplusgx \
+  mesa-utils
+echo "Kuruldu. Windows oyunu: wine oyun.exe   |   Retro: retroarch"
+echo "GPU modu: $(cat /run/n10-gpu-mode 2>/dev/null)  (3D oyunlar için yandaki anahtarı NVIDIA'ya alıp yeniden başlatın)"
