@@ -14,13 +14,15 @@ ls -l "$work/iso/live"
 cp "$(ls "$work/iso"/live/vmlinuz* | head -1)" "$work/vmlinuz"
 cp "$(ls "$work/iso"/live/initrd* | head -1)" "$work/initrd"
 sudo unsquashfs -q -d "$work/root" "$work/iso/live/filesystem.squashfs" \
-  etc/profile.d etc/xdg/openbox usr/local/bin etc/alternatives/x-session-manager usr/bin/calamares usr/lib/firmware/nouveau >/dev/null
+  etc/profile.d etc/xdg/openbox usr/local/bin etc/alternatives/x-session-manager usr/bin/calamares usr/lib/firmware/nouveau etc/ssl/certs/ca-certificates.crt >/dev/null
 {
   echo "== /etc/profile.d/n10jc.sh"; cat "$work/root/etc/profile.d/n10jc.sh"
   echo "== /usr/local/bin"; ls -l "$work/root/usr/local/bin"
   echo "== x-session-manager -> $(readlink "$work/root/etc/alternatives/x-session-manager")"
   echo "== installer: $(ls "$work/root/usr/bin/calamares" 2>/dev/null || echo MISSING)"
   echo "== nouveau video firmware: $(ls "$work/root/usr/lib/firmware/nouveau" 2>/dev/null | tr '\n' ' ')"
+  echo "== CA bundle: $(ls "$work/root/etc/ssl/certs/ca-certificates.crt" 2>/dev/null || echo MISSING)"
+  echo "== yt-dlp: $(ls "$work/root/usr/local/bin/yt-dlp" 2>/dev/null || echo MISSING), quickjs: $(ls "$work/root/usr/local/bin/qjs" 2>/dev/null || echo MISSING)"
   echo "== /etc/xdg/openbox"; ls -l "$work/root/etc/xdg/openbox"
 } > "$out/image-files.txt" 2>&1
 sudo umount "$work/iso"
