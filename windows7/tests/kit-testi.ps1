@@ -42,7 +42,7 @@ if (Test-Path $lpCab) {
 $sp1Mum = Get-ChildItem (Join-Path $onbellek 'guncellemeler\sp1\paket') -Filter 'Windows7SP1-KB976933~*~x86~~6.1.1.17514.mum' -ErrorAction SilentlyContinue | Select-Object -First 1
 if (-not $sp1Mum) { Write-Host 'SP1 PAKETİ HAZIR DEĞİL'; $hata++ } else {
     $t = Get-Content -Raw $sp1Mum.FullName
-    Write-Host "SP1 bildirimi: $($sp1Mum.Name), allowedOffline=true: $($t -match 'allowedOffline=""true""'), false kaldı: $($t -match 'allowedOffline=""false""')"
+    Write-Host "SP1 bildirimi: $($sp1Mum.Name), allowedOffline=true: $($t -match 'allowedOffline="true"'), false kaldı: $($t -match 'allowedOffline="false"')"
     if ($t -match 'allowedOffline="false"') { $hata++ }
     $ses = Get-Content -Raw (Join-Path $sp1Mum.DirectoryName 'update.ses')
     Write-Host "update.ses: OfflineInstall=$($ses -match 'OfflineInstall'), OnlineInstall kaldı=$($ses -match 'OnlineInstall')"
