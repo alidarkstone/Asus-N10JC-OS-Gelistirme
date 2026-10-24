@@ -1,0 +1,34 @@
+#!/bin/sh
+# The ROG menu: N10 OS's equivalent of the macOS Apple menu (top-left of the bar).
+pkill -x rofi && exit 0
+sleep 0.12
+theme='window { location: northwest; anchor: northwest; x-offset: 6px; y-offset: 34px; width: 250px; border-radius: 10px; padding: 6px; }
+mainbox { children: [ listview ]; spacing: 0; }
+listview { columns: 1; lines: 11; fixed-height: false; spacing: 0; }
+element { orientation: horizontal; padding: 5px 12px; border-radius: 6px; spacing: 0; }
+element-icon { size: 0; }
+element-text { horizontal-align: 0; font: "Inter 10"; }
+element selected.normal { background-color: #0a84ff; text-color: #ffffff; }'
+sel=$(printf '%s\n' \
+  "Bu Netbook Hakkında" \
+  "Sistem Ayarları…" \
+  "Uygulamalar" \
+  "────────────────" \
+  "Uygulamayı Kapanmaya Zorla…" \
+  "────────────────" \
+  "Uyut" \
+  "Yeniden Başlat…" \
+  "Kapat…" \
+  "────────────────" \
+  "Oturumu Kapat" |
+  rofi -config /etc/xdg/rofi/config.rasi -dmenu -i -p "" -theme-str "$theme" -no-custom) || exit 0
+case $sel in
+  "Bu Netbook Hakkında") exec n10-hakkinda ;;
+  "Sistem Ayarları…")    exec n10-kontrol ;;
+  "Uygulamalar")         exec n10-menu drun ;;
+  "Uygulamayı Kapanmaya Zorla…") exec xkill ;;
+  "Uyut")                exec systemctl suspend ;;
+  "Yeniden Başlat…")     exec systemctl reboot ;;
+  "Kapat…")              exec systemctl poweroff ;;
+  "Oturumu Kapat")       exec openbox --exit ;;
+esac

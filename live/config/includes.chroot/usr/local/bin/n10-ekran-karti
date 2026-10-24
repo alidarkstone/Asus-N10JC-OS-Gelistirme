@@ -1,0 +1,133 @@
+#!/usr/bin/python3
+# N10 OS "Ekran Kartı Ayarları": active GPU, driver, acceleration, video decode and,
+# in NVIDIA mode, the GeForce performance level (nouveau pstate reclocking).
+import subprocess
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, Gdk
+
+def sh(*cmd, timeout=8):
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout).stdout.strip()
+    except Exception:
+        return ""
+
+CSS = b"""
+window { background: #f4f4f6; }
+.card { background: #ffffff; border-radius: 12px; padding: 14px; }
+.h1 { font-family: Inter; font-weight: 700; font-size: 15pt; color: #1d1d1f; }
+.h2 { font-family: Inter; font-weight: 600; font-size: 10pt; color: #1d1d1f; }
+.k  { font-family: Inter; font-size: 9.5pt; color: #86868b; }
+.v  { font-family: Inter; font-size: 9.5pt; color: #1d1d1f; }
+.ok { color: #248a3d; font-weight: 600; }
+.bad { color: #d70015; font-weight: 600; }
+.note { font-family: Inter; font-size: 8.5pt; color: #86868b; }
+"""
+
+def row(grid, r, key, val, cls=None):
+    k = Gtk.Label(label=key, xalign=0); k.get_style_context().add_class("k")
+    v = Gtk.Label(label=val, xalign=0, selectable=True, wrap=True); v.get_style_context().add_class("v")
+    if cls: v.get_style_context().add_class(cls)
+    grid.attach(k, 0, r, 1, 1); grid.attach(v, 1, r, 1, 1)
+    return v
+
+def card(title):
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    box.get_style_context().add_class("card")
+    l = Gtk.Label(label=title, xalign=0); l.get_style_context().add_class("h2")
+    box.pack_start(l, False, False, 0)
+    return box
+
+class App(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="Ekran Kartı Ayarları")
+        self.set_default_size(520, -1); self.set_border_width(16)
+        outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        self.add(outer)
+
+        mode = open("/run/n10-gpu-mode").read().strip() if self._exists("/run/n10-gpu-mode") else "?"
+        name = {"nvidia": "NVIDIA GeForce 9300M GS", "intel": "Intel GMA 950"}.get(mode, "Bilinmiyor")
+        h = Gtk.Label(label=name, xalign=0); h.get_style_context().add_class("h1")
+        outer.pack_start(h, False, False, 0)
+        sub = Gtk.Label(xalign=0, wrap=True,
+                        label="Hangi kartın çalışacağını netbook'un yanındaki fiziksel düğme seçer; değiştirdikten sonra yeniden başlat.")
+        sub.get_style_context().add_class("note")
+        outer.pack_start(sub, False, False, 0)
+
+        glx = sh("glxinfo", "-B")
+        def g(key):
+            for line in glx.splitlines():
+                if line.strip().startswith(key):
+                    return line.split(":", 1)[1].strip()
+            return "?"
+        renderer = g("OpenGL renderer string")
+        soft = "llvmpipe" in renderer or renderer == "?"
+        drv = "nouveau (açık kaynak)" if mode == "nvidia" else "i915 + Intel SNA"
+        xdrv = sh("sh", "-c", "grep -h Driver /etc/X11/xorg.conf.d/20-n10jc-gpu.conf | awk '{print $2}' | tr -d '\"'") or "otomatik"
+
+        c = card("Durum"); grid = Gtk.Grid(column_spacing=16, row_spacing=6); c.pack_start(grid, False, False, 0)
+        row(grid, 0, "Sürücü", drv)
+        row(grid, 1, "Xorg sürücüsü", xdrv)
+        row(grid, 2, "Donanım hızlandırma", "Kapalı (yazılım)" if soft else "Açık", "bad" if soft else "ok")
+        row(grid, 3, "OpenGL", renderer)
+        row(grid, 4, "OpenGL sürümü", g("OpenGL version string"))
+        vd = sh("vdpauinfo")
+        h264 = "H264_HIGH" in vd or "H264_MAIN" in vd
+        if mode == "nvidia":
+            fw = self._exists("/lib/firmware/nouveau/.n10-ok")
+            row(grid, 5, "H.264 donanım çözme", "Açık" if (h264 and fw) else
+                "Kapalı (firmware internete bağlanınca kendiliğinden iner)", "ok" if (h264 and fw) else "bad")
+        else:
+            row(grid, 5, "Video çözme", "İşlemci (GMA 950'de donanım video çözücü yok)")
+        outer.pack_start(c, False, False, 0)
+
+        if mode == "nvidia":
+            outer.pack_start(self.pstate_card(), False, False, 0)
+
+        close = Gtk.Button(label="Kapat"); close.connect("clicked", lambda *_: self.destroy())
+        bb = Gtk.Box(); bb.pack_end(close, False, False, 0)
+        outer.pack_start(bb, False, False, 0)
+
+    def _exists(self, p):
+        try:
+            open(p).close(); return True
+        except Exception:
+            return False
+
+    def pstate_card(self):
+        c = card("Performans seviyesi")
+        out = sh("n10-gpu-pstate")
+        levels = []
+        for line in out.splitlines():
+            # e.g. "03: core 169 MHz memory 100 MHz *"  /  "AC: core 400 MHz memory 400 MHz"
+            if ":" in line and line[:2].strip() and line[:2] not in ("AC", "DC"):
+                levels.append(line)
+        cur = [l for l in out.splitlines() if l.startswith("AC")]
+        lab = Gtk.Label(xalign=0, wrap=True, selectable=True,
+                        label=("Şu an: " + cur[0][3:].strip()) if cur else (out or "Okunamadı"))
+        lab.get_style_context().add_class("v")
+        c.pack_start(lab, False, False, 0)
+        if levels:
+            combo = Gtk.ComboBoxText()
+            for l in levels:
+                combo.append(l.split(":")[0].strip(), l.rstrip(" *"))
+            combo.set_active(len(levels) - 1)
+            btn = Gtk.Button(label="Uygula")
+            def apply(*_):
+                lid = combo.get_active_id()
+                res = sh("n10-gpu-pstate", lid)
+                cur = [l for l in res.splitlines() if l.startswith("AC")]
+                lab.set_text(("Şu an: " + cur[0][3:].strip()) if cur else res or "Uygulanamadı")
+            btn.connect("clicked", apply)
+            hb = Gtk.Box(spacing=8); hb.pack_start(combo, True, True, 0); hb.pack_start(btn, False, False, 0)
+            c.pack_start(hb, False, False, 0)
+        n = Gtk.Label(xalign=0, wrap=True, label=(
+            "En yüksek seviye oyunlarda ve 3B'de en hızlısıdır ama daha çok ısınır ve pil yer. "
+            "Ayar yeniden başlatınca sıfırlanır; ekran donarsa yeniden başlatman yeterli."))
+        n.get_style_context().add_class("note")
+        c.pack_start(n, False, False, 0)
+        return c
+
+prov = Gtk.CssProvider(); prov.load_from_data(CSS)
+Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), prov, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+w = App(); w.connect("destroy", Gtk.main_quit); w.show_all(); Gtk.main()

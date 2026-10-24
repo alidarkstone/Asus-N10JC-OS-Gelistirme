@@ -18,8 +18,8 @@ border_color_hover = #000000 0
 background_color_pressed = #000000 20
 border_color_pressed = #000000 0
 
-# P = start button (ROG), F = free space, E = GPU status, S = tray, B = battery, C = clock
-panel_items = PFESBC
+# Like the macOS menu bar: ROG menu | ... GPU, tray, battery, Spotlight, Control Centre, clock
+panel_items = PFESBPPC
 panel_size = 100% 32
 panel_margin = 0 0
 panel_padding = 8 0 8
@@ -42,9 +42,27 @@ button_max_icon_size = 32
 button_padding = 10 0 6
 button_background_id = 2
 button_centered = 1
-button_lclick_command = n10-menu drun
+button_lclick_command = n10-rog-menu
 button_rclick_command = n10-menu drun
-button_tooltip = Uygulamalar (Alt+Boşluk)
+button_tooltip = ROG menüsü
+
+# Spotlight (search apps)
+button = new
+button_icon = /usr/share/n10os/ara.png
+button_max_icon_size = 22
+button_padding = 4 0
+button_background_id = 2
+button_lclick_command = n10-menu drun
+button_tooltip = Spotlight (Alt+Boşluk)
+
+# Control Centre
+button = new
+button_icon = /usr/share/n10os/kontrol.png
+button_max_icon_size = 22
+button_padding = 4 0
+button_background_id = 2
+button_lclick_command = n10-kontrol
+button_tooltip = Denetim Merkezi
 
 systray_padding = 6 0 10
 systray_background_id = 0
@@ -71,7 +89,7 @@ execp_font = Inter Medium 9
 execp_font_color = #1d1d1f 100
 execp_padding = 6 0
 execp_background_id = 2
-execp_lclick_command = n10-gpu-durum --detay
+execp_lclick_command = n10-ekran-karti
 
 # Battery (replaces xfce4-power-manager's tray icon; logind handles the lid)
 battery_hide = 101

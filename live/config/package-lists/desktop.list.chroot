@@ -3,6 +3,7 @@ xserver-xorg-input-libinput
 xinit
 x11-xserver-utils
 xdotool
+picom
 x11-utils
 x11-xkb-utils
 mesa-utils
@@ -11,6 +12,9 @@ mesa-vdpau-drivers
 # GMA 950 2D acceleration (SNA) in Intel mode
 xserver-xorg-video-intel
 libnotify-bin
+python3-gi
+gir1.2-gtk-3.0
+x11-utils
 vdpauinfo
 vdpau-driver-all
 openbox
@@ -18,7 +22,7 @@ obconf
 tint2
 plank
 rofi
-picom
+
 feh
 dconf-cli
 dconf-gsettings-backend

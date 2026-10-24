@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Ekran Kartı Ayarları
+Comment=Etkin ekran kartı, sürücü, hızlandırma ve NVIDIA performans seviyesi
+Exec=n10-ekran-karti
+Icon=video-display
+Terminal=false
+Categories=Settings;HardwareSettings;
+Keywords=nvidia;gpu;ekran;kart;geforce;intel;

@@ -1,0 +1,12 @@
+#!/bin/sh
+# "About this netbook" (like macOS "About This Mac")
+cpu=$(sed -n 's/^model name\s*: //p' /proc/cpuinfo | head -1 | tr -s ' ')
+mem=$(free -m | awk '/^Mem:/{printf "%.1f GB", $2/1024}')
+gpu=$(n10-gpu-durum 2>/dev/null | sed 's/^[^ ]* //')
+disk=$(df -h / | awk 'NR==2{print $2" ("$4" boş)"}')
+notify-send -i /usr/share/n10os/rog-eye-256.png -t 12000 "N10 OS" "ASUS N10JC
+İşlemci: $cpu
+Bellek: $mem
+Ekran kartı: $gpu
+Çekirdek: $(uname -r)
+Disk: $disk"

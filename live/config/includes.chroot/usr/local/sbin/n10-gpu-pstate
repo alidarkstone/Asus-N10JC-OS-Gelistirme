@@ -1,0 +1,9 @@
+#!/bin/sh
+# GeForce 9300M GS (nouveau) performance levels.
+#   n10-gpu-pstate          list levels; the active one is marked with "*"
+#   n10-gpu-pstate <id>     switch to level <id> (e.g. 0f), or "auto"
+# Levels come from the card's VBIOS. A switch lasts until the next reboot.
+[ "$(id -u)" = 0 ] || exec sudo -n "$0" "$@"
+f=$(ls /sys/kernel/debug/dri/*/pstate 2>/dev/null | head -1)
+[ -n "$f" ] || { echo "pstate yok (NVIDIA modunda değil ya da sürücü desteklemiyor)"; exit 1; }
+if [ $# -eq 0 ]; then cat "$f"; else echo "$1" > "$f" && cat "$f"; fi

@@ -1,0 +1,169 @@
+#!/usr/bin/python3
+# N10 OS Control Center (like macOS Control Centre): Wi-Fi, Bluetooth, sound,
+# brightness and quick links, in a small popup under the top-right of the bar.
+# Runs only while open (GTK 3, ~25 MB); click outside or Esc closes it.
+import os, subprocess, sys
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, Gdk, GLib
+
+LOCK = "/tmp/n10-kontrol-%d" % os.getuid()
+
+def sh(*cmd):
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=5).stdout.strip()
+    except Exception:
+        return ""
+
+def bg(*cmd):
+    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+CSS = b"""
+window { background: #f4f4f6; border: 1px solid #c8c8cc; }
+.panel { background: #f4f4f6; padding: 12px; }
+.tile { background: #ffffff; border-radius: 12px; padding: 10px 12px; }
+.title { font-family: Inter; font-weight: 600; font-size: 10pt; color: #1d1d1f; }
+.sub { font-family: Inter; font-size: 8.5pt; color: #86868b; }
+.round { border-radius: 999px; min-width: 32px; min-height: 32px; padding: 0; border: none; background: #e5e5ea; }
+.round.on { background: #0a84ff; color: #ffffff; }
+.round image { color: inherit; }
+scale trough { min-height: 22px; border-radius: 11px; background: #e5e5ea; border: none; }
+scale highlight { border-radius: 11px; background: #ffffff; border: 1px solid #d1d1d6; }
+scale slider { min-width: 22px; min-height: 22px; border-radius: 11px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: none; }
+.link { font-family: Inter; font-size: 9pt; color: #1d1d1f; background: #ffffff; border-radius: 10px; border: none; padding: 7px 10px; }
+.link:hover { background: #e8f0fe; }
+"""
+
+class Toggle(Gtk.Box):
+    def __init__(self, icon, title, get, set_):
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.get, self.set_ = get, set_
+        self.btn = Gtk.Button()
+        self.btn.set_image(Gtk.Image.new_from_icon_name(icon, Gtk.IconSize.BUTTON))
+        self.btn.get_style_context().add_class("round")
+        self.btn.connect("clicked", self.flip)
+        col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        t = Gtk.Label(label=title, xalign=0); t.get_style_context().add_class("title")
+        self.sub = Gtk.Label(xalign=0); self.sub.get_style_context().add_class("sub")
+        col.pack_start(t, False, False, 0); col.pack_start(self.sub, False, False, 0)
+        self.pack_start(self.btn, False, False, 0); self.pack_start(col, True, True, 0)
+        self.refresh()
+
+    def refresh(self):
+        on, text = self.get()
+        ctx = self.btn.get_style_context()
+        (ctx.add_class if on else ctx.remove_class)("on")
+        self.sub.set_text(text)
+
+    def flip(self, *_):
+        self.set_(not self.get()[0])
+        GLib.timeout_add(700, lambda: (self.refresh(), False)[1])
+
+def wifi_get():
+    on = sh("nmcli", "radio", "wifi") == "enabled"
+    ssid = ""
+    for line in sh("nmcli", "-t", "-f", "ACTIVE,SSID", "dev", "wifi").splitlines():
+        if line.startswith("yes:"):
+            ssid = line[4:]
+    return on, (ssid or ("Açık" if on else "Kapalı"))
+
+def bt_get():
+    on = "Powered: yes" in sh("bluetoothctl", "show")
+    return on, "Açık" if on else "Kapalı"
+
+def vol_get():
+    out = sh("wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@")  # "Volume: 0.40 [MUTED]"
+    try:
+        return float(out.split()[1]) * 100
+    except Exception:
+        return 50.0
+
+def bri_get():
+    try:
+        cur, mx = int(sh("brightnessctl", "g")), int(sh("brightnessctl", "m"))
+        return cur * 100.0 / mx
+    except Exception:
+        return 70.0
+
+def slider(icon, value, on_change):
+    box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+    box.pack_start(Gtk.Image.new_from_icon_name(icon, Gtk.IconSize.MENU), False, False, 0)
+    s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
+    s.set_draw_value(False); s.set_value(value)
+    s.connect("value-changed", lambda w: on_change(int(w.get_value())))
+    box.pack_start(s, True, True, 0)
+    return box
+
+def tile(title, child):
+    t = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    t.get_style_context().add_class("tile")
+    if title:
+        l = Gtk.Label(label=title, xalign=0); l.get_style_context().add_class("title")
+        t.pack_start(l, False, False, 0)
+    t.pack_start(child, False, False, 0)
+    return t
+
+def link(text, cmd):
+    b = Gtk.Button(label=text); b.get_style_context().add_class("link")
+    b.get_child().set_xalign(0)
+    b.connect("clicked", lambda *_: (bg(*cmd), Gtk.main_quit()))
+    return b
+
+def main():
+    # Clicking the bar icon again closes an open Control Center
+    try:
+        pid = int(open(LOCK).read())
+        os.kill(pid, 15); os.remove(LOCK); return
+    except Exception:
+        pass
+    open(LOCK, "w").write(str(os.getpid()))
+
+    prov = Gtk.CssProvider(); prov.load_from_data(CSS)
+    Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), prov,
+                                             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    w = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
+    w.set_decorated(False); w.set_skip_taskbar_hint(True); w.set_keep_above(True)
+    w.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+    # No compositor in N10 OS (no effects): a plain opaque, square window
+
+    panel = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    panel.get_style_context().add_class("panel")
+
+    radios = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    radios.pack_start(Toggle("network-wireless-symbolic", "Wi-Fi", wifi_get,
+                             lambda on: bg("nmcli", "radio", "wifi", "on" if on else "off")), False, False, 0)
+    radios.pack_start(Toggle("bluetooth-symbolic", "Bluetooth", bt_get,
+                             lambda on: bg("bluetoothctl", "power", "on" if on else "off")), False, False, 0)
+    panel.pack_start(tile(None, radios), False, False, 0)
+
+    panel.pack_start(tile("Ekran", slider("display-brightness-symbolic", bri_get(),
+                     lambda v: bg("brightnessctl", "-q", "set", "%d%%" % max(v, 5)))), False, False, 0)
+    panel.pack_start(tile("Ses", slider("audio-volume-high-symbolic", vol_get(),
+                     lambda v: bg("wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "%d%%" % v))), False, False, 0)
+
+    grid = Gtk.Grid(column_spacing=8, row_spacing=8, column_homogeneous=True)
+    grid.attach(link("Wi-Fi ağları…", ["nm-connection-editor"]), 0, 0, 1, 1)
+    grid.attach(link("Bluetooth…", ["blueman-manager"]), 1, 0, 1, 1)
+    grid.attach(link("Ses çıkışları…", ["pavucontrol"]), 0, 1, 1, 1)
+    grid.attach(link("Görünüm…", ["lxappearance"]), 1, 1, 1, 1)
+    grid.attach(link("Ekran kartı…", ["n10-ekran-karti"]), 0, 2, 1, 1)
+    grid.attach(link("Bu Netbook", ["n10-hakkinda"]), 1, 2, 1, 1)
+    panel.pack_start(grid, False, False, 0)
+
+    w.add(panel)
+    w.set_size_request(300, -1)
+    w.connect("key-press-event", lambda _w, e: e.keyval == Gdk.KEY_Escape and Gtk.main_quit())
+    w.connect("focus-out-event", lambda *_: Gtk.main_quit())
+    w.connect("destroy", Gtk.main_quit)
+    w.show_all()
+    sw = w.get_screen().get_width()
+    w.move(sw - 300 - 8, 36)
+    w.present()
+    try:
+        Gtk.main()
+    finally:
+        try: os.remove(LOCK)
+        except Exception: pass
+
+if __name__ == "__main__":
+    main()

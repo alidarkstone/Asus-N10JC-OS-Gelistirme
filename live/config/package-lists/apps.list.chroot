@@ -1,10 +1,12 @@
 chromium
 chromium-l10n
-netsurf-gtk
 mpv
 mousepad
 ristretto
 xarchiver
+# 7-Zip (7z command, used by xarchiver for 7z/zip/rar/iso…)
+p7zip-full
+7zip
 htop
 hdparm
 curl
