@@ -40,7 +40,13 @@ if (Test-Path $lpKlasor) {
     Write-Host ("Dil paketi: {0:N0} MB, bildirimler: {1}" -f $mb, (($mum | ForEach-Object Name) -join ', '))
     if (-not $mum -or $mb -lt 50) { Write-Host 'DİL PAKETİ EKSİK'; $hata++ }
     # DISM'in paketi okuyabildiğini dene (çalışan sisteme göre; yalnızca tanı)
-    & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$lpKlasor" 2>&1 | Select-Object -First 25 | ForEach-Object { Write-Host "  $_" }
+    $sarma = Get-ChildItem $lpKlasor -Filter 'microsoft-windows-client-languagepack-package-wrapper~*~x86~tr-tr~6.1.7601.17514.mum' | Select-Object -First 1
+    if (-not $sarma) { Write-Host 'DİL PAKETİ SARMALAYICI BİLDİRİMİ YOK'; $hata++ }
+    else {
+        $imza = Get-AuthenticodeSignature ($sarma.FullName -replace '\.mum$', '.cat')
+        Write-Host "Sarmalayıcı katalog imzası: $($imza.Status), $($imza.SignerCertificate.Subject)"
+        & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$($sarma.FullName)" 2>&1 | Select-Object -First 25 | ForEach-Object { Write-Host "  $_" }
+    }
 }
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
