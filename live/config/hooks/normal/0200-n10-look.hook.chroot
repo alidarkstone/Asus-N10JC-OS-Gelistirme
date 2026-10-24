@@ -2,12 +2,14 @@
 # macOS look on a budget: WhiteSur GTK + icons + cursors, plank theme, Inter font.
 # Build tools are installed only for this hook and removed afterwards.
 set -e
-TOOLS="git ca-certificates sassc libglib2.0-dev-bin libxml2-utils"
-apt-get install -y --no-install-recommends $TOOLS
+# ca-certificates stays installed: later hooks and the live system need HTTPS
+TOOLS="git sassc libglib2.0-dev-bin libxml2-utils"
+apt-get install -y --no-install-recommends ca-certificates $TOOLS
 tmp=$(mktemp -d)
 
 if git clone --depth 1 https://github.com/vinceliuice/WhiteSur-gtk-theme "$tmp/gtk"; then
-  (cd "$tmp/gtk" && ./install.sh -d /usr/share/themes -c light -o normal -l) \
+  # install.sh looks up the invoking user via logname, which has no answer in a chroot
+  (cd "$tmp/gtk" && SUDO_USER=root USER=root HOME=/root bash ./install.sh -d /usr/share/themes -c light -o normal -l) \
     || echo "WARN: WhiteSur GTK install failed"
   # Plank dock theme shipped in the same repo
   for p in "$tmp/gtk/src/other/plank/theme-Light" "$tmp/gtk/src/other/plank/theme-light"; do
