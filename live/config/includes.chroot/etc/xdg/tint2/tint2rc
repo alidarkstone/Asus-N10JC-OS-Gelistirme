@@ -78,7 +78,7 @@ execp_lclick_command = n10-gpu-durum --detay
 # Battery (replaces xfce4-power-manager's tray icon; logind handles the lid)
 battery_hide = 101
 battery_low_status = 10
-battery_low_cmd = notify-send -u critical "Pil zayıf" "Şarj cihazını tak"
+battery_low_cmd = sh -c "ls /sys/class/power_supply/BAT* >/dev/null 2>&1 && notify-send -u critical \"Pil zayıf\" \"Şarj cihazını tak\""
 bat1_font = Inter Medium 9
 bat2_font = Inter 7
 battery_font_color = #1d1d1f 100

@@ -4,4 +4,4 @@
 # button first; otherwise rofi cannot grab the pointer/keyboard and quits.
 pkill -x rofi && exit 0
 sleep 0.15
-exec rofi -show "${1:-drun}"
+exec rofi -config /etc/xdg/rofi/config.rasi -show "${1:-drun}"

@@ -20,5 +20,5 @@ lb config noauto \
   --updates true \
   --iso-application "N10 OS" \
   --iso-volume "N10OS" \
-  --bootappend-live "boot=live components quiet loglevel=3 timezone=Europe/Istanbul i915.fastboot=1 zswap.enabled=0 preempt=full mem_sleep_default=deep" \
+  --bootappend-live "boot=live components quiet loglevel=3 locales=tr_TR.UTF-8 timezone=Europe/Istanbul i915.fastboot=1 zswap.enabled=0 preempt=full mem_sleep_default=deep" \
   "$@"
