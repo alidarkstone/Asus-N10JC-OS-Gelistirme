@@ -23,9 +23,12 @@ curl -fsSL -o /usr/local/bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/la
 # QuickJS for yt-dlp's YouTube challenge solver (small, builds in a minute)
 apt-get install -y --no-install-recommends gcc make libc6-dev git >/dev/null
 tmp=$(mktemp -d)
-if git clone -q --depth 1 https://github.com/bellard/quickjs "$tmp/qjs" && make -C "$tmp/qjs" -j2 qjs >/dev/null 2>&1; then
+# Temporal/Intl needs 128-bit integers, which gcc 12 lacks on i386; yt-dlp doesn't use them
+if git clone -q --depth 1 https://github.com/bellard/quickjs "$tmp/qjs" \
+   && make -C "$tmp/qjs" -j2 CONFIG_TEMPORAL_INTL= qjs >"$tmp/make.log" 2>&1; then
   install -m 755 "$tmp/qjs/qjs" /usr/local/bin/qjs && /usr/local/bin/qjs -e 'print("qjs ok")'
 else
+  tail -20 "$tmp/make.log" 2>/dev/null || true
   echo "WARN: QuickJS build failed (yt-dlp may not play some YouTube videos)"
 fi
 rm -rf "$tmp"
