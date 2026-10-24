@@ -105,7 +105,7 @@ function Find-N10Katalog([string]$Sorgu) {
             Surum = $(if ($s.ContainsKey(5)) { $s[5] } else { '' })
         }
     })
-    if ($sonuc.Count -eq 0) { return , @() }
+    if ($sonuc.Count -eq 0) { return }
     , @($sonuc | Sort-Object Tarih -Descending)
 }
 
