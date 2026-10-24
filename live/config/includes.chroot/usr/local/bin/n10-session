@@ -7,8 +7,11 @@ exec >"$HOME/.cache/n10-session.log" 2>&1
 set -x
 date
 
+# The tty login leaves XDG_SESSION_TYPE=tty; plank refuses to start unless it is x11
+export XDG_SESSION_TYPE=x11 XDG_CURRENT_DESKTOP=N10:Openbox XDG_SESSION_DESKTOP=openbox DESKTOP_SESSION=openbox
+
 # Let D-Bus/systemd user services (nm-applet, blueman, notifications) see the display
-dbus-update-activation-environment --systemd DISPLAY XAUTHORITY 2>/dev/null || true
+dbus-update-activation-environment --systemd DISPLAY XAUTHORITY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP 2>/dev/null || true
 xrdb -merge /etc/X11/Xresources/* 2>/dev/null || true
 setxkbmap tr 2>/dev/null || true
 xsetroot -cursor_name left_ptr 2>/dev/null || true
