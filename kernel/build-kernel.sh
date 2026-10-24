@@ -12,6 +12,8 @@ mkdir -p "$WORK" "$OUT"
 cd "$WORK"
 # Debian's deb packaging rules call the i686 cross compiler, so use it for every step.
 export ARCH=i386 CROSS_COMPILE=i686-linux-gnu-
+# Only the image package: the headers package would rebuild host tools against i386 libc.
+export DEB_BUILD_PROFILES="pkg.linux-upstream.nokernelheaders pkg.linux-upstream.nokerneldbg"
 
 # Latest stable release in the series, from kernel.org.
 VER="$(curl -fsSL https://www.kernel.org/releases.json \
