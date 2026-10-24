@@ -96,6 +96,6 @@ jobs:
         run: |
           cp -r smoke /tmp/smoke
           git config user.name "n10os-ci"; git config user.email "ci@users.noreply.github.com"
-          git checkout --orphan ci-shots && git rm -rqf . && rm -rf build
+          git checkout --orphan ci-shots && git rm -rqf . && rm -rf build smoke
           cp -r /tmp/smoke/* . && echo "${{ github.sha }}" > SOURCE_SHA
           git add -A && git commit -qm "Smoke test for ${{ github.sha }}" && git push -f origin ci-shots

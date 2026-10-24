@@ -10,7 +10,9 @@ work=$(mktemp -d)
 # What actually landed in the image
 mkdir -p "$work/iso"
 sudo mount -o loop,ro "$iso" "$work/iso"
-cp "$work/iso"/live/vmlinuz* "$work/vmlinuz"; cp "$work/iso"/live/initrd.img* "$work/initrd"
+ls -l "$work/iso/live"
+cp "$(ls "$work/iso"/live/vmlinuz* | head -1)" "$work/vmlinuz"
+cp "$(ls "$work/iso"/live/initrd* | head -1)" "$work/initrd"
 sudo unsquashfs -q -d "$work/root" "$work/iso/live/filesystem.squashfs" \
   etc/profile.d etc/xdg/openbox usr/local/bin etc/alternatives/x-session-manager >/dev/null
 {
