@@ -4,6 +4,7 @@ xsetroot -solid '#1d1f24' &
 tint2 &
 plank &
 nm-applet &
+volumeicon &
 xfce4-power-manager &
 dunst &
 # Light compositor: shadows only, xrender backend (GMA 950 friendly)
