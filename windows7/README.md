@@ -8,6 +8,7 @@ Kendi orijinal Windows 7 ISO'nuzdan, Asus N10JC için hazırlanmış bir kurulum
   - Intel GMA 950, Realtek ALC662 ses, Atheros AR9281 Wi-Fi, RTL8111 Ethernet, ASUS BT-183 Bluetooth, ATK0100 (Fn tuşları), Chicony kamera, UPEK parmak izi: Microsoft'un resmi Windows Update Kataloğu'ndan, imzalı sürücüler.
   - Katalogda bulunamayan bir aygıt Windows 7'nin kendi sürücüsünü kullanır. Rapor hangisinin hangisi olduğunu söyler.
 - **Güncellemeleri gömer:** SHA-2 desteği, servis yığınları, 2016 toplu güncellemesi (KB3125574) ve son ücretsiz aylık toplu güncelleme (Ocak 2020, KB4534310). ISO'nuz SP1 içermiyorsa SP1'i de ekler.
+- **Türkçe menüler:** Ultimate sürümünü seçerseniz Microsoft'un resmi Türkçe dil paketi (KB2483139) kuruluma eklenir. Paket SHA-1 özeti ve Microsoft imzasıyla doğrulanır. Diğer sürümlerde Microsoft dil paketine izin vermediği için menüler İngilizce kalır; bölge, klavye ve saat yine Türkçe olur.
 - **Hafifletir:** Media Center, Tablet PC, Faks, XPS, Araçlar (gadget) ve internet oyunları kapatılır. Superfetch, Windows Search, telemetri, Defender ve otomatik Windows Update taraması kapalıdır. Windows 7 artık güncelleme almadığı için bu tarama Atom işlemciyi saatlerce %100'de tutuyordu.
 - **SSD ve 2 GB RAM ayarları:** TRIM açık, birleştirme görevi kapalı, hazırda bekletme kapalı (2 GB yer açılır), sayfa dosyası sabit 1-3 GB, sistem geri yükleme kapalı.
 - **Görünüm:** Aero açık ama şeffaflık, animasyonlar, gölgeler ve Aero Peek kapalı. Opak koyu gri çerçeveler, ClearType, N10 OS duvar kağıdı, Türkçe Q klavye ve Türkiye saati kullanılır.
