@@ -1,0 +1,10 @@
+#!/bin/sh
+# N10 OS speed report: boot time, slowest services, idle memory, CPU state, disk speed.
+# Run it after the desktop has been idle ~1 minute and share the output.
+echo "== Açılış süresi =="; systemd-analyze 2>/dev/null
+echo "== En yavaş 10 servis =="; systemd-analyze blame 2>/dev/null | head -10
+echo "== Bellek (boşta) =="; free -m; echo; zramctl 2>/dev/null
+echo "== En çok bellek kullanan 8 süreç =="; ps -eo rss,comm --sort=-rss | head -9 | awk 'NR==1{print "MB  SÜREÇ";next}{printf "%-4d %s\n",$1/1024,$2}'
+echo "== CPU =="; cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq 2>/dev/null; uptime
+echo "== Disk okuma hızı =="; dev=$(lsblk -ndo NAME,TYPE | awk '$2=="disk"{print $1; exit}'); [ -n "$dev" ] && sudo hdparm -t "/dev/$dev" 2>/dev/null | tail -1
+echo "== GPU =="; echo "mod: $(cat /run/n10-gpu-mode 2>/dev/null)"; glxinfo -B 2>/dev/null | grep -E "renderer|OpenGL version"
