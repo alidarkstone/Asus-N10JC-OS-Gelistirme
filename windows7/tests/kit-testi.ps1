@@ -85,6 +85,9 @@ New-Item -ItemType Directory -Force $imza | Out-Null
 & expand.exe -F:*.cab $msu.FullName $imza | Out-Null
 $cab = Get-ChildItem $imza -Filter 'Windows6.1-KB4534310*.cab' | Select-Object -First 1
 & expand.exe -F:ntoskrnl.exe $cab.FullName $imza | Out-Null
+# Karşılaştırma: bilinen sağlam bir Windows 7 paketini bu sunucudaki DISM nasıl okuyor? (yalnızca tanı)
+Write-Host '--- DISM karşılaştırma (KB4534310 cab, çalışan sisteme göre) ---'
+& dism.exe /English /Online /Get-PackageInfo "/PackagePath:$($cab.FullName)" 2>&1 | Where-Object { $_ -match 'Error|error|Package Identity|Applicable|State' } | Select-Object -First 8 | ForEach-Object { Write-Host "  $_" }
 $nt = Get-ChildItem $imza -Recurse -Filter ntoskrnl.exe | Select-Object -First 1
 if (-not $nt) { Write-Host 'İMZA TESTİ: ntoskrnl.exe çıkarılamadı'; $hata++ } else {
     $r = Test-N10MsImza $nt.FullName
