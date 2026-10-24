@@ -1,0 +1,26 @@
+#!/bin/sh
+# Top-bar GPU indicator: which GPU the hardware switch selected and whether
+# OpenGL runs on it (hardware) or falls back to the CPU (llvmpipe).
+# --detay: show the full details as a notification.
+mode=$(cat /run/n10-gpu-mode 2>/dev/null || echo ?)
+info=$(glxinfo -B 2>/dev/null)
+renderer=$(printf '%s\n' "$info" | sed -n 's/^OpenGL renderer string: //p')
+glver=$(printf '%s\n' "$info" | sed -n 's/^OpenGL version string: //p')
+case $mode in nvidia) name="GeForce 9300M" ;; intel) name="Intel GMA 950" ;; *) name="GPU ?" ;; esac
+case $renderer in
+  *llvmpipe*|*softpipe*|"") accel=0 ;;
+  *) accel=1 ;;
+esac
+if [ "${1:-}" = --detay ]; then
+  vd=$(vdpauinfo 2>/dev/null | grep -c "H264" )
+  [ "$mode" = nvidia ] && [ "$vd" -eq 0 ] && vdtxt="H.264 donanım çözme: kapalı (n10-nouveau-firmware)" || vdtxt="H.264 donanım çözme: ${vd:+açık}"
+  [ "$mode" = intel ] && vdtxt="Video: CPU (GMA 950'de donanım çözme yok)"
+  drv=$(grep -h Driver /etc/X11/xorg.conf.d/20-n10jc-gpu.conf 2>/dev/null | awk '{print $2}' | tr -d '"')
+  notify-send -i video-display "Ekran kartı: $name" "Hızlandırma: $([ $accel = 1 ] && echo AÇIK || echo KAPALI)
+OpenGL: ${renderer:-yok}
+Sürüm: ${glver:-?}
+Xorg sürücüsü: ${drv:-?}
+$vdtxt"
+  exit 0
+fi
+[ $accel = 1 ] && echo "⚡ $name" || echo "⚠ $name (yazılım)"

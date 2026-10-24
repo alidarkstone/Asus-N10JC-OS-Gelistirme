@@ -18,8 +18,8 @@ border_color_hover = #000000 0
 background_color_pressed = #000000 20
 border_color_pressed = #000000 0
 
-# P = start button (ROG eye), F = free space, S = tray, C = clock
-panel_items = PFSC
+# P = start button (ROG eye), F = free space, E = GPU status, S = tray, C = clock
+panel_items = PFESC
 panel_size = 100% 28
 panel_margin = 0 0
 panel_padding = 8 0 8
@@ -62,3 +62,15 @@ clock_font_color = #1d1d1f 100
 clock_padding = 6 0
 clock_background_id = 2
 clock_tooltip = %A %d %B %Y
+
+# Active GPU and whether OpenGL is hardware accelerated (click: details)
+execp = new
+execp_command = n10-gpu-durum
+execp_interval = 0
+execp_continuous = 0
+execp_has_icon = 0
+execp_font = Inter Medium 9
+execp_font_color = #1d1d1f 100
+execp_padding = 6 0
+execp_background_id = 2
+execp_lclick_command = n10-gpu-durum --detay

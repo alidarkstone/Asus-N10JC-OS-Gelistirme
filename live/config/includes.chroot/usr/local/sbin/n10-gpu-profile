@@ -10,6 +10,32 @@ if grep -qs '^0x10de$' /sys/bus/pci/devices/*/vendor; then
 fi
 echo "$mode" > /run/n10-gpu-mode
 
+# Xorg driver per mode (this runs before the desktop starts):
+#  intel : GMA 950 with the intel DDX and SNA, the fastest 2D path for this
+#          old chip (glamor needs more GL than the GMA 950 really has)
+#  nvidia: GeForce 9300M GS with nouveau + modesetting/glamor (OpenGL 3.3 via Mesa)
+mkdir -p /etc/X11/xorg.conf.d
+if [ "$mode" = nvidia ]; then
+  cat > /etc/X11/xorg.conf.d/20-n10jc-gpu.conf <<'XORG'
+Section "Device"
+    Identifier "GPU"
+    Driver     "modesetting"
+    Option     "AccelMethod" "glamor"
+EndSection
+XORG
+elif grep -qs '^0x8086$' /sys/class/drm/card0/device/vendor; then
+  cat > /etc/X11/xorg.conf.d/20-n10jc-gpu.conf <<'XORG'
+Section "Device"
+    Identifier "GPU"
+    Driver     "intel"
+    Option     "AccelMethod" "sna"
+    Option     "TearFree" "true"
+EndSection
+XORG
+else
+  rm -f /etc/X11/xorg.conf.d/20-n10jc-gpu.conf   # other GPU (e.g. a VM): let Xorg pick
+fi
+
 # Ambient light sensor makes brightness jump around: turn it off.
 for f in /sys/devices/platform/asus_laptop/ls_switch; do [ -w "$f" ] && echo 0 > "$f"; done
 
