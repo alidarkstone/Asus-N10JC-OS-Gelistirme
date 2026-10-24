@@ -57,6 +57,12 @@ try {
     Set-N10Kayit 'N10_SW\Microsoft\Windows\Windows Error Reporting' Disabled REG_DWORD 1
     Set-N10Kayit 'N10_SW\Policies\Microsoft\Windows NT\SystemRestore' DisableSR REG_DWORD 1
     Set-N10Kayit 'N10_SW\Policies\Microsoft\Windows\Gwx' DisableGwx REG_DWORD 1
+    # --- YouTube: VP9/AV1 yerine H.264 iste (9300M yalnızca H.264'ü donanımla çözer; Atom VP9'a yetişemez) ---
+    # Supermium, Chromium ilke yolunu okur; ikinci yol markalı derlemeler için.
+    foreach ($ilke in 'Chromium', 'Supermium') {
+        Set-N10Kayit "N10_SW\Policies\$ilke\ExtensionInstallForcelist" 1 REG_SZ 'omkfmpieigblcllmkgbflkikinpkodlk;https://clients2.google.com/service/update2/crx'
+        Set-N10Kayit "N10_SW\Policies\$ilke" HardwareAccelerationModeEnabled REG_DWORD 1
+    }
     # --- Sistem bilgisi ---
     Set-N10Kayit 'N10_SW\Microsoft\Windows\CurrentVersion\OEMInformation' Manufacturer REG_SZ 'ASUS'
     Set-N10Kayit 'N10_SW\Microsoft\Windows\CurrentVersion\OEMInformation' Model REG_SZ 'Eee PC N10JC (N10 Windows 7)'
