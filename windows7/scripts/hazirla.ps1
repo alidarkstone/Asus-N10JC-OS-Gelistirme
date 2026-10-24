@@ -172,9 +172,11 @@ $guncellemeSonuc = @()
 try {
     $img = "/Image:$mount"
     # SP1 (gerekirse)
-    $sp1 = Join-Path $onbellek 'guncellemeler\sp1\windows6.1-KB976932-X86.cab'
+    # indir.ps1 SP1'i çevrimdışı entegrasyon için açar; DISM'e KB976933 bildirimi verilir.
+    $sp1 = Get-ChildItem (Join-Path $onbellek 'guncellemeler\sp1\paket') -Filter 'Windows7SP1-KB976933~31bf3856ad364e35~x86~~6.1.1.17514.mum' -ErrorAction SilentlyContinue |
+        Select-Object -First 1 -ExpandProperty FullName
     if ($yapi -lt 7601) {
-        if (-not (Test-Path $sp1)) { throw 'ISO SP1 içermiyor ve SP1 paketi indirilemedi.' }
+        if (-not $sp1) { throw 'ISO SP1 içermiyor ve SP1 paketi hazırlanamadı.' }
         Write-N10Log 'Service Pack 1 ekleniyor (uzun sürer)...'
         DismCalistir @($img, '/Add-Package', "/PackagePath:$sp1") -Kabul 0, 3010 | Out-Null
     }

@@ -39,6 +39,16 @@ if (Test-Path $lpCab) {
     if ((Get-Item $lpCab).Length -lt 20MB) { Write-Host 'DİL PAKETİ ÇOK KÜÇÜK'; $hata++ }
     & expand.exe -D $lpCab | Select-String -Pattern 'update\.(mum|cat)|LanguagePack-Package' | Select-Object -First 4 | ForEach-Object { Write-Host "  $_" }
 }
+$sp1Mum = Get-ChildItem (Join-Path $onbellek 'guncellemeler\sp1\paket') -Filter 'Windows7SP1-KB976933~*~x86~~6.1.1.17514.mum' -ErrorAction SilentlyContinue | Select-Object -First 1
+if (-not $sp1Mum) { Write-Host 'SP1 PAKETİ HAZIR DEĞİL'; $hata++ } else {
+    $t = Get-Content -Raw $sp1Mum.FullName
+    Write-Host "SP1 bildirimi: $($sp1Mum.Name), allowedOffline=true: $($t -match 'allowedOffline=""true""'), false kaldı: $($t -match 'allowedOffline=""false""')"
+    if ($t -match 'allowedOffline="false"') { $hata++ }
+    $ses = Get-Content -Raw (Join-Path $sp1Mum.DirectoryName 'update.ses')
+    Write-Host "update.ses: OfflineInstall=$($ses -match 'OfflineInstall'), OnlineInstall kaldı=$($ses -match 'OnlineInstall')"
+    if ($ses -match 'operationMode="OnlineInstall"') { $hata++ }
+    Write-Host ("SP1 paketi: {0} dosya, {1:N0} MB" -f @(Get-ChildItem $sp1Mum.DirectoryName -Recurse -File).Count, ((Get-ChildItem $sp1Mum.DirectoryName -Recurse -File | Measure-Object Length -Sum).Sum / 1MB))
+}
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
     $inf = Get-ChildItem $_.FullName -Recurse -Filter *.inf

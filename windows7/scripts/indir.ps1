@@ -226,7 +226,46 @@ if ($SP1Gerekli) {
             Write-N10Log ("Service Pack 1 hazır ({0:N0} MB, SHA-1 ve Microsoft imzası doğrulandı)." -f ((Get-Item $sp1Cab).Length / 1MB)) 'TAMAM'
         } catch { Write-N10Log "Service Pack 1 alınamadı: $($_.Exception.Message)" 'HATA' }
     }
-    Add-N10Ozet 'Service Pack 1' $(if (Test-Path $sp1Cab) { 'TAMAM' } else { 'YOK' })
+    # SP1 paketi "yalnızca çalışan sisteme kurulur" olarak işaretlidir; DISM onu çevrimdışı imaja eklemez (0x800F082E).
+    # Bilinen entegrasyon yöntemi: paketi ve içindeki NestedMPPContent.cab'ı açıp kurulum bildirimlerinde
+    # çevrimdışı kuruluma izin verilir, sonra KB976933 bildirimi DISM'e verilir. Dosya içerikleri değişmez.
+    $sp1Paket = Join-Path $guncel 'sp1\paket'
+    $sp1Mum = { Get-ChildItem $sp1Paket -Filter 'Windows7SP1-KB976933~31bf3856ad364e35~x86~~6.1.1.17514.mum' -ErrorAction SilentlyContinue | Select-Object -First 1 }
+    if ((Test-Path $sp1Cab) -and -not (& $sp1Mum)) {
+        try {
+            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $sp1Paket
+            New-Item -ItemType Directory -Force $sp1Paket | Out-Null
+            Write-N10Log 'SP1 çevrimdışı entegrasyon için açılıyor (birkaç dakika sürer)...'
+            Expand-N10Cab $sp1Cab $sp1Paket
+            $ic = Join-Path $sp1Paket 'NestedMPPContent.cab'
+            if (-not (Test-Path $ic)) { throw 'NestedMPPContent.cab bulunamadı' }
+            Expand-N10Cab $ic $sp1Paket
+            foreach ($lc in Get-ChildItem $sp1Paket -Filter 'KB976933-LangsCab*.cab') { Expand-N10Cab $lc.FullName $sp1Paket }
+            Get-ChildItem $sp1Paket -Filter *.cab | Remove-Item -Force
+            function Degistir([string]$Yol, [string]$Desen, [string]$Yeni) {
+                $okuyucu = New-Object IO.StreamReader($Yol, $true)
+                $metin = $okuyucu.ReadToEnd(); $kod = $okuyucu.CurrentEncoding; $okuyucu.Close()
+                $yeniMetin = [regex]::Replace($metin, $Desen, $Yeni)
+                if ($yeniMetin -eq $metin) { return $false }
+                [IO.File]::WriteAllText($Yol, $yeniMetin, $kod); return $true
+            }
+            $ses = Join-Path $sp1Paket 'update.ses'
+            if (-not (Test-Path $ses)) { throw 'update.ses bulunamadı' }
+            [void](Degistir $ses 'operationMode="OnlineInstall"' 'operationMode="OfflineInstall"')
+            [void](Degistir $ses 'operationMode="OnlineUninstall"' 'operationMode="OfflineUninstall"')
+            $mum = & $sp1Mum
+            if (-not $mum) { throw 'KB976933 bildirimi bulunamadı' }
+            foreach ($m in @((Join-Path $sp1Paket 'update.mum'), $mum.FullName)) {
+                if (Test-Path $m) { [void](Degistir $m 'allowedOffline="false"' 'allowedOffline="true"') }
+            }
+            if ((Get-Content -Raw $mum.FullName) -match 'allowedOffline="false"') { throw 'bildirim düzenlenemedi' }
+            Write-N10Log 'SP1 çevrimdışı entegrasyona hazır.' 'TAMAM'
+        } catch {
+            Write-N10Log "SP1 çevrimdışı hazırlığı olmadı: $($_.Exception.Message)" 'HATA'
+            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $sp1Paket
+        }
+    }
+    Add-N10Ozet 'Service Pack 1' $(if (& $sp1Mum) { 'TAMAM' } else { 'YOK' })
 }
 
 # ------------------------------------------------------------------
