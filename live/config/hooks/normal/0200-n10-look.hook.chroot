@@ -8,11 +8,12 @@ apt-get install -y --no-install-recommends ca-certificates $TOOLS
 tmp=$(mktemp -d)
 
 if git clone --depth 1 https://github.com/vinceliuice/WhiteSur-gtk-theme "$tmp/gtk"; then
-  # install.sh looks up the invoking user via logname, which has no answer in a chroot.
+  # install.sh looks up the invoking user via logname and calls setterm, which have no
+  # user or terminal in a chroot.
   # No -l (libadwaita/GTK4): it refuses to run as root and N10 OS has no GTK4 apps.
   # The installer hides its own stderr in a log it deletes on exit: keep stderr visible
   sed -i 's|exec 2> "${WHITESUR_TMP_DIR}/error_log.txt"|:|' "$tmp/gtk/libs/lib-core.sh"
-  (cd "$tmp/gtk" && SUDO_USER=root USER=root HOME=/root bash -x ./install.sh -d /usr/share/themes -c light -o normal >"$tmp/gtk.log" 2>&1) \
+  (cd "$tmp/gtk" && TERM=xterm SUDO_USER=root USER=root HOME=/root bash -x ./install.sh -d /usr/share/themes -c light -o normal >"$tmp/gtk.log" 2>&1) \
     || { tail -80 "$tmp/gtk.log"; echo "WARN: WhiteSur GTK install failed"; }
   # It also installs a GNOME/GTK4 theme switcher that is useless here
   rm -f /usr/bin/gnome-theme-switcher /usr/share/applications/org.gnome.GTK4ThemeSwitcher.desktop
