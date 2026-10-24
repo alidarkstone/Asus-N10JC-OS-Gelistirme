@@ -33,7 +33,6 @@ if ($env:N10_KATALOG_DOKUM -and (Test-Path $env:N10_KATALOG_DOKUM)) {
     }
 }
 Import-Module (Join-Path $kit 'scripts\N10Ortak.psm1') -Force
-Find-N10Katalog 'PCI\VEN_168C&DEV_002A Windows 7' | Select-Object -First 8 | Format-Table Baslik, Urunler, Sinif, Tarih -AutoSize | Out-String -Width 250 | Write-Host
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
     $inf = Get-ChildItem $_.FullName -Recurse -Filter *.inf

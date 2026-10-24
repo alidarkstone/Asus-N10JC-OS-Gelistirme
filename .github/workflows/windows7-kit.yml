@@ -13,8 +13,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/n10w7/onbellek
-          key: w7-onbellek-${{ hashFiles('windows7/scripts/indir.ps1') }}
-          restore-keys: w7-onbellek-
+          key: w7-onbellek-v2-${{ hashFiles('windows7/scripts/indir.ps1') }}
+          restore-keys: w7-onbellek-v2-
       - name: Kit testi
         shell: powershell
         env:

@@ -151,7 +151,9 @@ function Test-N10Inf([string]$Klasor, [string]$HwId) {
     foreach ($inf in Get-ChildItem -Path $Klasor -Filter *.inf -Recurse -ErrorAction SilentlyContinue) {
         $metin = Get-Content -Raw -Path $inf.FullName
         if ($metin -notmatch [regex]::Escape($HwId)) { continue }
-        if ($metin -match '(?i)NTx86' -or $metin -notmatch '(?i)NTamd64|NTia64') { return $true }
+        # Yalnızca Windows 10'a özel (NTx86.10.0) bölümleri olan paketler Windows 7'ye kurulmaz.
+        if ($metin -match '(?im)NTx86(\.[56]\.\d+)?\s*(\]|,|$)') { return $true }
+        if ($metin -notmatch '(?i)NTamd64|NTia64|NTx86|\.10\.0') { return $true }
     }
     return $false
 }
