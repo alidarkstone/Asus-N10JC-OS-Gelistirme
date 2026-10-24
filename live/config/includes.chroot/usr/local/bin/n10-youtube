@@ -1,0 +1,19 @@
+#!/bin/sh
+# YouTube for the N10JC: search (or paste a link) in a Spotlight-style box and
+# watch in mpv at H.264 480p. Much lighter than youtube.com in a browser.
+theme='window { width: 640px; } listview { columns: 1; lines: 10; } element { orientation: horizontal; padding: 8px 12px; } element-icon { size: 0; } element-text { horizontal-align: 0; font: "Inter 10"; }'
+q=$(rofi -dmenu -p "" -theme-str "$theme listview { lines: 0; }" -mesg "YouTube'da ara ya da bağlantı yapıştır") || exit 0
+[ -n "$q" ] || exit 0
+case $q in
+  http*://*) url=$q ;;
+  *)
+    notify-send -t 3000 -i YouTube-youtube.com "YouTube" "Aranıyor: $q"
+    list=$(yt-dlp --flat-playlist --no-warnings \
+             --print "%(id)s	%(title)s  ·  %(channel)s  ·  %(duration_string)s" "ytsearch15:$q") \
+      || { notify-send -u critical "YouTube" "Arama başarısız. İnternet bağlı mı?"; exit 1; }
+    pick=$(printf '%s\n' "$list" | cut -f2- | rofi -dmenu -i -p "" -format i -theme-str "$theme" -mesg "$q") || exit 0
+    id=$(printf '%s\n' "$list" | sed -n "$((pick + 1))p" | cut -f1)
+    url="https://www.youtube.com/watch?v=$id" ;;
+esac
+notify-send -t 4000 -i YouTube-youtube.com "YouTube" "Video açılıyor…"
+exec mpv --force-window=immediate --title="YouTube" "$url"

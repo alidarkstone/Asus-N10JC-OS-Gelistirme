@@ -12,4 +12,5 @@ sh NVIDIA-Linux-x86-325.15.run --extract-only
 python3 extract_firmware.py
 mkdir -p /lib/firmware/nouveau
 cp -d nv* vuc-* /lib/firmware/nouveau/
-echo "Firmware installed. Reboot in NVIDIA mode, then check: vdpauinfo"
+touch /lib/firmware/nouveau/.n10-ok
+echo "Firmware installed. In NVIDIA mode mpv/Chromium can now decode H.264 on the GPU (check: vdpauinfo)"

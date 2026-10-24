@@ -1,43 +1,92 @@
-/* N10 OS: Spotlight-style launcher (Alt+Space) */
+/* N10 OS app menu: macOS Launchpad-style grid with Spotlight search on top.
+   Opened by the ROG button and Alt+Space (n10-menu). Type to search. */
 configuration {
-  modi: "drun,run";
+  modi: "drun";
   show-icons: true;
   icon-theme: "WhiteSur";
-  font: "Inter 11";
+  font: "Inter 10";
   drun-display-format: "{name}";
   display-drun: "";
-  display-run: "";
+  drun-match-fields: "name,generic,keywords,categories";
+  sort: true;
+  sorting-method: "fzf";
+  matching: "fuzzy";
+  hover-select: true;
+  me-select-entry: "";
+  me-accept-entry: "MousePrimary";
+  click-to-exit: true;
+  disable-history: false;
+  scroll-method: 0;
 }
 * {
-  bg: #f5f5f7f0;
-  fg: #1d1d1f;
-  muted: #6e6e73;
-  sel: #0a84ff;
+  bg:      #f6f6f8f4;
+  card:    #ffffff;
+  fg:      #1d1d1f;
+  muted:   #86868b;
+  accent:  #0a84ff;
+  hover:   #dbe8fc;
   background-color: transparent;
   text-color: @fg;
+  font: "Inter 10";
 }
 window {
-  width: 560px;
-  location: north;
-  anchor: north;
-  y-offset: 110px;
-  border: 1px;
-  border-color: #00000020;
-  border-radius: 12px;
+  location: center;
+  anchor: center;
+  width: 720px;
+  border: 1px solid;
+  border-color: #0000001a;
+  border-radius: 18px;
   background-color: @bg;
-  padding: 12px;
+  padding: 22px 22px 16px 22px;
 }
-mainbox { spacing: 8px; }
+mainbox { border: 0; spacing: 18px; children: [ inputbar, listview ]; }
 inputbar {
-  children: [ entry ];
-  padding: 9px 12px;
-  background-color: #ffffff;
-  border-radius: 8px;
+  children: [ icon-search, entry ];
+  border: 0;
+  spacing: 8px;
+  padding: 9px 14px;
+  margin: 0 150px;
+  border-radius: 10px;
+  background-color: #7676801f;
 }
-entry { placeholder: "Uygulama ara"; placeholder-color: @muted; font: "Inter 14"; }
-listview { lines: 7; scrollbar: false; spacing: 2px; }
-element, element normal.normal, element alternate.normal { background-color: transparent; text-color: @fg; }
-element { padding: 6px 10px; border-radius: 6px; spacing: 10px; }
-element selected { background-color: @sel; text-color: #ffffff; }
-element-icon { size: 22px; }
-element-text { text-color: inherit; vertical-align: 0.5; }
+icon-search { expand: false; filename: "system-search-symbolic"; size: 16px; vertical-align: 0.5; }
+entry {
+  placeholder: "Ara";
+  placeholder-color: @muted;
+  font: "Inter 12";
+  vertical-align: 0.5;
+  cursor: text;
+}
+listview {
+  border: 0;
+  columns: 5;
+  lines: 3;
+  fixed-height: true;
+  fixed-columns: true;
+  spacing: 6px;
+  scrollbar: false;
+  cycle: false;
+  layout: vertical;
+  flow: horizontal;
+}
+element {
+  orientation: vertical;
+  padding: 12px 6px 10px 6px;
+  spacing: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+element normal.normal, element alternate.normal, element normal.active, element alternate.active {
+  background-color: transparent; text-color: @fg;
+}
+element selected.normal, element selected.active {
+  background-color: @hover; text-color: @fg;
+}
+element-icon { size: 48px; horizontal-align: 0.5; cursor: inherit; }
+element-text {
+  horizontal-align: 0.5;
+  vertical-align: 0.5;
+  font: "Inter Medium 9";
+  text-color: inherit;
+  cursor: inherit;
+}

@@ -36,13 +36,33 @@ else
   rm -f /etc/X11/xorg.conf.d/20-n10jc-gpu.conf   # other GPU (e.g. a VM): let Xorg pick
 fi
 
+# mpv (YouTube via n10-youtube): H.264 only (VP9/AV1 are far too heavy for the
+# Atom), cheap decoder shortcuts, and the fastest video output for each GPU.
+mkdir -p /etc/mpv
+cat > /etc/mpv/mpv.conf <<'MPV'
+ytdl-format=bestvideo[height<=?480][vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[height<=?480][vcodec^=avc1]/best[height<=?480]
+cache=yes
+demuxer-max-bytes=48MiB
+framedrop=vo
+vd-lavc-fast=yes
+vd-lavc-skiploopfilter=nonkey
+vd-lavc-threads=2
+keep-open=yes
+osd-font="Inter"
+MPV
+if [ "$mode" = nvidia ]; then
+  printf 'vo=gpu,xv,\ngpu-api=opengl\nhwdec=vdpau\n' >> /etc/mpv/mpv.conf
+else
+  printf 'vo=xv,gpu,\nhwdec=no\n' >> /etc/mpv/mpv.conf
+fi
+
 # Ambient light sensor makes brightness jump around: turn it off.
 for f in /sys/devices/platform/asus_laptop/ls_switch; do [ -w "$f" ] && echo 0 > "$f"; done
 
 if [ "$mode" = nvidia ]; then
   # 3D / video profile: nouveau, VDPAU if firmware is present.
   modprobe nouveau 2>/dev/null || true
-  [ -d /lib/firmware/nouveau ] || logger -t n10 "No VP3 firmware: run n10-nouveau-firmware for H.264 hardware decode"
+  [ -e /lib/firmware/nouveau/.n10-ok ] || logger -t n10 "No VP3 firmware: run n10-nouveau-firmware for H.264 hardware decode"
   echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null || true
 else
   # Battery profile on the GMA 950.

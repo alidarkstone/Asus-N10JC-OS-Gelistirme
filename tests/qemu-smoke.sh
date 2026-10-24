@@ -32,7 +32,7 @@ accel="-accel tcg -cpu n270"
 qemu-system-i386 $accel -m 1024 -smp 2 -vga std -display none -device intel-hda -device hda-duplex,audiodev=snd0 -audiodev none,id=snd0 \
   -drive file="$work/usb.img",if=none,id=usb,format=raw -device qemu-xhci -device usb-storage,drive=usb,removable=on \
   -kernel "$work/vmlinuz" -initrd "$work/initrd" \
-  -append "boot=live components locales=tr_TR.UTF-8 keyboard-layouts=tr timezone=Europe/Istanbul console=ttyS0,115200 console=tty1" \
+  -append "boot=live components timezone=Europe/Istanbul console=ttyS0,115200 console=tty1" \
   -serial file:"$out/serial.log" -monitor unix:"$work/mon",server,nowait &
 qemu=$!
 

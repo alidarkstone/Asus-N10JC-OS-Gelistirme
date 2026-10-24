@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=YouTube
+Comment=YouTube'da ara ve hafif oynatıcıda izle (480p)
+Exec=n10-youtube
+Icon=YouTube-youtube.com
+Terminal=false
+Categories=AudioVideo;Video;Network;
+Keywords=youtube;video;izle;

@@ -18,8 +18,8 @@ border_color_hover = #000000 0
 background_color_pressed = #000000 20
 border_color_pressed = #000000 0
 
-# P = start button (ROG eye), F = free space, E = GPU status, S = tray, C = clock
-panel_items = PFESC
+# P = start button (ROG), F = free space, E = GPU status, S = tray, B = battery, C = clock
+panel_items = PFESBC
 panel_size = 100% 28
 panel_margin = 0 0
 panel_padding = 8 0 8
@@ -74,3 +74,17 @@ execp_font_color = #1d1d1f 100
 execp_padding = 6 0
 execp_background_id = 2
 execp_lclick_command = n10-gpu-durum --detay
+
+# Battery (replaces xfce4-power-manager's tray icon; logind handles the lid)
+battery_hide = 101
+battery_low_status = 10
+battery_low_cmd = notify-send -u critical "Pil zayıf" "Şarj cihazını tak"
+bat1_font = Inter Medium 9
+bat2_font = Inter 7
+battery_font_color = #1d1d1f 100
+bat1_format = %p
+bat2_format =
+battery_padding = 4 0
+battery_background_id = 2
+battery_tooltip = 1
+battery_lclick_command = notify-send "Pil" "%$(cat /sys/class/power_supply/BAT*/capacity)"

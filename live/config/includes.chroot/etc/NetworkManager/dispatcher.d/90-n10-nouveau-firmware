@@ -1,0 +1,11 @@
+#!/bin/sh
+# In NVIDIA mode, get the GeForce 9300M video-decode firmware the first time the
+# machine is online (it can't be shipped; n10-nouveau-firmware extracts it from
+# NVIDIA's own driver). nouveau loads it on first use, so no reboot is needed.
+[ "$2" = up ] || exit 0
+[ "$(cat /run/n10-gpu-mode 2>/dev/null)" = nvidia ] || exit 0
+[ -e /lib/firmware/nouveau/.n10-ok ] && exit 0
+[ -e /run/n10-fw-running ] && exit 0
+touch /run/n10-fw-running
+( /usr/local/sbin/n10-nouveau-firmware >/var/log/n10-nouveau-firmware.log 2>&1 \
+    && logger -t n10 "nouveau video firmware installed" ) &

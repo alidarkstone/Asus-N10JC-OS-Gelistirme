@@ -1,0 +1,58 @@
+#!/bin/sh
+# App menu clean-up + YouTube support.
+set -e
+
+# Hide tools that clutter the Launchpad-style menu (overrides in /usr/local/share
+# win over /usr/share in XDG_DATA_DIRS)
+mkdir -p /usr/local/share/applications
+for f in rofi rofi-theme-selector tint2 tint2conf plank debian-uxterm debian-xterm \
+         vim obconf display-im6.q16 install-debian calamares blueman-adapters \
+         lstopo yad-icon-browser xfce4-power-manager-settings htop; do
+  src=/usr/share/applications/$f.desktop
+  [ -f "$src" ] || continue
+  sed '/^NoDisplay=/d' "$src" > /usr/local/share/applications/$f.desktop
+  sed -i '0,/^\[Desktop Entry\]/s//[Desktop Entry]\nNoDisplay=true/' /usr/local/share/applications/$f.desktop
+done
+
+# yt-dlp from Debian (2023) can't open YouTube any more: ship the current release
+# (self-contained zipapp, runs on the system python3) and let n10-youtube update it.
+curl -fsSL -o /usr/local/bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
+  && chmod 755 /usr/local/bin/yt-dlp && /usr/local/bin/yt-dlp --version \
+  || echo "WARN: yt-dlp download failed"
+
+# QuickJS for yt-dlp's YouTube challenge solver (small, builds in a minute)
+apt-get install -y --no-install-recommends gcc make libc6-dev git >/dev/null
+tmp=$(mktemp -d)
+if git clone -q --depth 1 https://github.com/bellard/quickjs "$tmp/qjs" && make -C "$tmp/qjs" -j2 qjs >/dev/null 2>&1; then
+  install -m 755 "$tmp/qjs/qjs" /usr/local/bin/qjs && /usr/local/bin/qjs -e 'print("qjs ok")'
+else
+  echo "WARN: QuickJS build failed (yt-dlp may not play some YouTube videos)"
+fi
+rm -rf "$tmp"
+apt-get purge -y gcc make libc6-dev git >/dev/null 2>&1 || true
+apt-get autoremove -y --purge >/dev/null 2>&1 || true
+
+# Chromium: ask YouTube for H.264 instead of VP9/AV1 (enhanced-h264ify, installed
+# from the Chrome Web Store on first start), which the Atom can decode
+mkdir -p /etc/chromium/policies/managed
+cat > /etc/chromium/policies/managed/n10-youtube.json <<'JSON'
+{
+  "ExtensionInstallForcelist": ["omkfmpieigblcllmkgbflkikinpkodlk;https://clients2.google.com/service/update2/crx"]
+}
+JSON
+
+# Turkish locale, keyboard and time zone baked in, so live-config does not
+# regenerate them on every boot (that alone took ~20 s on the N270)
+sed -i 's/^# *tr_TR.UTF-8 UTF-8/tr_TR.UTF-8 UTF-8/' /etc/locale.gen
+grep -q '^tr_TR.UTF-8' /etc/locale.gen || echo 'tr_TR.UTF-8 UTF-8' >> /etc/locale.gen
+locale-gen
+echo 'LANG=tr_TR.UTF-8' > /etc/default/locale
+cat > /etc/default/keyboard <<'KB'
+XKBMODEL="pc105"
+XKBLAYOUT="tr"
+XKBVARIANT=""
+XKBOPTIONS=""
+BACKSPACE="guess"
+KB
+ln -sf /usr/share/zoneinfo/Europe/Istanbul /etc/localtime
+echo Europe/Istanbul > /etc/timezone

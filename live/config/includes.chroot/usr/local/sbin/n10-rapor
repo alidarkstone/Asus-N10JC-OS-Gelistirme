@@ -56,14 +56,15 @@ systemctl --failed --no-pager > "$dir/servis-hatalari.txt" 2>&1
 ps -eo pid,rss,etime,args --sort=-rss > "$dir/surecler.txt" 2>&1
 sync
 t() { timeout 30 "$@"; }
+ta() { timeout 30 runuser -u "$user" -- env XDG_RUNTIME_DIR=/run/user/1000 DISPLAY=:0 XAUTHORITY="$home/.Xauthority" "$@"; }
 t /usr/local/bin/n10-hwcheck > "$dir/donanim.txt" 2>&1
-t asuser /usr/local/bin/n10-hiz-olc > "$dir/hiz.txt" 2>&1
+ta /usr/local/bin/n10-hiz-olc > "$dir/hiz.txt" 2>&1
 {
   echo "== aplay -l"; aplay -l
   echo "== amixer (card 0)"; amixer -c 0
   echo "== codec"; cat /proc/asound/card0/codec#* 2>/dev/null | head -60
-  echo "== wpctl status"; t asuser wpctl status
-  echo "== user services"; t asuser systemctl --user --no-pager status pipewire wireplumber pipewire-pulse 2>&1 | head -40
+  echo "== wpctl status"; ta wpctl status
+  echo "== user services"; ta systemctl --user --no-pager status pipewire wireplumber pipewire-pulse 2>&1 | head -40
 } > "$dir/ses.txt" 2>&1
 {
   echo "== nmcli"; t nmcli dev; t nmcli radio
@@ -74,7 +75,7 @@ t asuser /usr/local/bin/n10-hiz-olc > "$dir/hiz.txt" 2>&1
 journalctl -b --no-pager -p warning > "$dir/journal-uyarilar.txt" 2>&1
 journalctl -b --no-pager > "$dir/journal-tam.txt" 2>&1
 lspci -nnvk > "$dir/lspci.txt" 2>&1
-{ cat /etc/X11/xorg.conf.d/20-n10jc-gpu.conf; t asuser glxinfo -B; t asuser vdpauinfo; } > "$dir/gpu.txt" 2>&1
+{ cat /etc/X11/xorg.conf.d/20-n10jc-gpu.conf; ta glxinfo -B; ta vdpauinfo; } > "$dir/gpu.txt" 2>&1
 cat > "$dir/OKU-BENI.txt" <<TXT
 N10 OS otomatik raporu - $(date)
 Çekirdek: $(uname -r)
