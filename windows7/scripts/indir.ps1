@@ -4,6 +4,7 @@
 param(
     [Parameter(Mandatory)][string]$Onbellek,
     [switch]$SP1Gerekli,
+    [switch]$TurkceDilPaketi,
     [switch]$NetFx48,
     [string]$Gunluk
 )
@@ -146,6 +147,34 @@ foreach ($k in $kbListesi) {
     Add-N10Ozet "$($k.KB) $($k.Not)" $(if ($dosya) { 'TAMAM' } else { 'YOK' })
 }
 $sira | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $guncel 'sira.json')
+
+if ($TurkceDilPaketi) {
+    # Türkçe arayüz dil paketi (KB2483139, SP1 için). Microsoft yalnızca Ultimate/Enterprise'ta dil paketine izin verir.
+    $lpCab = Join-Path $guncel 'dil-tr\lp.cab'
+    if (-not (Test-Path $lpCab)) {
+        try {
+            $adaylar = @((Find-N10Katalog 'KB2483139 Turkish') | Where-Object { $_.Baslik -match 'Turkish|Türkçe' -and $_.Baslik -notmatch 'x64|Server' })
+            if (-not $adaylar) { $adaylar = @((Find-N10Katalog 'KB2483139 tr-tr') | Where-Object { $_.Baslik -notmatch 'x64|Server' }) }
+            foreach ($a in $adaylar) {
+                $url = @(Get-N10KatalogUrl $a.Id | Where-Object { $_ -notmatch 'x64|amd64' }) | Select-Object -First 1
+                if (-not $url) { continue }
+                $dosya = Join-Path $ham ([IO.Path]::GetFileName(([uri]$url).AbsolutePath))
+                if (-not (Get-N10Dosya -Urls @($url) -Hedef $dosya)) { continue }
+                New-Item -ItemType Directory -Force (Split-Path $lpCab) | Out-Null
+                if ($dosya -match '\.cab$') { Copy-Item -Force $dosya $lpCab }
+                else {
+                    $acik = Join-Path $ham 'dil-tr-acik'
+                    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik
+                    & (Get-N10SevenZip $arac) x -y "-o$acik" $dosya | Out-Null
+                    $c = Get-ChildItem $acik -Recurse -Filter *.cab | Sort-Object Length -Descending | Select-Object -First 1
+                    if ($c) { Copy-Item -Force $c.FullName $lpCab }
+                }
+                if (Test-Path $lpCab) { Write-N10Log "Türkçe dil paketi hazır: $($a.Baslik)" 'TAMAM'; break }
+            }
+        } catch { Write-N10Log "Türkçe dil paketi alınamadı: $($_.Exception.Message)" 'HATA' }
+    }
+    Add-N10Ozet 'Türkçe arayüz dil paketi (KB2483139)' $(if (Test-Path $lpCab) { 'TAMAM' } else { 'YOK' })
+}
 
 if ($SP1Gerekli) {
     # SP1 içermeyen (7600) ISO için Service Pack 1 paketini çıkarır.

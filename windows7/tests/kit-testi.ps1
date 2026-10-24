@@ -14,10 +14,10 @@ foreach ($f in Get-ChildItem $kit -Recurse -Include *.ps1, *.psm1) {
 
 # 2) İndirme ve sürücü hazırlığı
 $onbellek = Join-Path $Is 'onbellek'
-& (Join-Path $kit 'scripts\indir.ps1') -Onbellek $onbellek -Gunluk (Join-Path $Is 'indir.log')
+& (Join-Path $kit 'scripts\indir.ps1') -Onbellek $onbellek -Gunluk (Join-Path $Is 'indir.log') -TurkceDilPaketi
 $ozet = Get-Content -Raw (Join-Path $onbellek 'indirme-ozeti.json') | ConvertFrom-Json
 $ozet | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
-$zorunlu = 'NVIDIA*', 'KB4490628*', 'KB4474419*', 'KB3125574*', 'KB4536952*', 'KB4534310*', 'DirectX*', 'Supermium*'
+$zorunlu = 'NVIDIA*', 'KB4490628*', 'KB4474419*', 'KB3125574*', 'KB4536952*', 'KB4534310*', 'DirectX*', 'Supermium*', 'Türkçe arayüz*'
 foreach ($z in $zorunlu) {
     $s = $ozet | Where-Object { $_.Konu -like $z }
     if (-not $s -or $s.Durum -ne 'TAMAM') { Write-Host "EKSİK: $z"; $hata++ }

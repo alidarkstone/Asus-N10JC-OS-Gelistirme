@@ -138,6 +138,9 @@ if ($anahtar -and $anahtar -notmatch '^[A-Z0-9]{5}(-[A-Z0-9]{5}){4}$') { Dur "Ü
 # ---------------- 5) İndirmeler ----------------
 $indirArg = @{ Onbellek = $onbellek; Gunluk = $gunluk }
 if ($yapi -lt 7601) { $indirArg['SP1Gerekli'] = $true }
+# Türkçe menüler yalnızca Ultimate/Enterprise'ta dil paketiyle mümkün; diğer sürümlerde bölge/klavye/saat Türkçe olur.
+$turkceArayuz = ($dil -ne 'tr-TR') -and ($secim.ImageName -match 'Ultimate|Enterprise')
+if ($turkceArayuz) { $indirArg['TurkceDilPaketi'] = $true }
 if ($ayar.NETFX48 -eq '1') { $indirArg['NetFx48'] = $true }
 & (Join-Path $PSScriptRoot 'indir.ps1') @indirArg
 Import-Module (Join-Path $PSScriptRoot 'N10Ortak.psm1') -Force
@@ -169,6 +172,16 @@ try {
         Write-N10Log 'Service Pack 1 ekleniyor (uzun sürer)...'
         DismCalistir @($img, '/Add-Package', "/PackagePath:$sp1") -Kabul 0, 3010 | Out-Null
     }
+    # Türkçe dil paketi (güncellemelerden önce eklenir ki güncellemelerin Türkçe dosyaları da gelsin)
+    $lp = Join-Path $onbellek 'guncellemeler\dil-tr\lp.cab'
+    if ($turkceArayuz -and (Test-Path $lp)) {
+        Write-N10Log 'Türkçe dil paketi ekleniyor...'
+        $c = DismCalistir @($img, '/Add-Package', "/PackagePath:$lp") -Kabul 0, 3010
+        DismCalistir @($img, '/Set-AllIntl:tr-TR') | Out-Null
+        DismCalistir @($img, '/Set-SKUIntlDefaults:tr-TR') -Kabul 0, 87 | Out-Null
+        $dil = 'tr-TR'
+        Write-N10Log 'Türkçe arayüz eklendi.' 'TAMAM'
+    } elseif ($turkceArayuz) { Write-N10Log 'Türkçe dil paketi bulunamadı; menüler İngilizce kalacak.' 'UYARI' }
     # Güncellemeler
     $siraDosya = Join-Path $onbellek 'guncellemeler\sira.json'
     foreach ($g in @(Get-Content -Raw $siraDosya | ConvertFrom-Json) | Sort-Object Sira) {
