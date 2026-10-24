@@ -33,3 +33,9 @@ libv4l-0
 fprintd
 # Network
 network-manager
+rfkill
+iw
+wireless-regdb
+wpasupplicant
+pciutils
+usbutils
