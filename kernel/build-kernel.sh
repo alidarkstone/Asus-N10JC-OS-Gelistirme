@@ -40,5 +40,7 @@ make ARCH=i386 olddefconfig
 
 make ARCH=i386 -j"$(nproc)" KCFLAGS="-march=bonnell -mtune=bonnell -O2" \
   KDEB_PKGVERSION="$VER-1n10" bindeb-pkg
+make -s ARCH=i386 kernelrelease > "$OUT/KERNELRELEASE"
 mv ../linux-image-*n10jc*.deb "$OUT/"
+rm -f "$OUT"/linux-image-*-dbg_*.deb
 ls -l "$OUT"

@@ -6,7 +6,9 @@ on:
         description: Kernel series
         default: "6.18"
   push:
+    branches: [n10os, main]
     tags: ["v*"]
+    paths-ignore: ["**.md"]
 
 jobs:
   iso:

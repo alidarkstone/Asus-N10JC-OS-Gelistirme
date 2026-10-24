@@ -16,7 +16,7 @@ cd "$ROOT/live"
 mkdir -p config/packages.chroot
 cp "$ROOT"/build/debs/linux-image-*n10jc*.deb config/packages.chroot/
 lb clean --purge || true
-./auto-config.sh
+N10_KREL="$(cat "$ROOT/build/debs/KERNELRELEASE")" ./auto-config.sh
 lb build
 mkdir -p "$ROOT/build"
 iso="$ROOT/build/n10os-$(date +%Y%m%d).iso"

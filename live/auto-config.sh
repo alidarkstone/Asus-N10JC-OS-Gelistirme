@@ -1,15 +1,19 @@
 #!/bin/bash
 # live-build configuration for N10 OS (Debian bookworm, i386).
-# Run from live/: ./auto-config.sh && sudo lb build
+# Run from live/: N10_KREL=<kernelrelease> ./auto-config.sh && sudo lb build
+# N10_KREL is our kernel's release (e.g. 6.18.5-n10jc); live-build then installs
+# the package linux-image-$N10_KREL from config/packages.chroot.
 set -euo pipefail
+: "${N10_KREL:?set N10_KREL (see build/debs/KERNELRELEASE)}"
 lb config noauto \
   --distribution bookworm \
   --architectures i386 \
   --archive-areas "main contrib non-free non-free-firmware" \
   --debian-installer none \
-  --linux-packages none \
+  --linux-packages linux-image \
+  --linux-flavours "$N10_KREL" \
   --binary-images iso-hybrid \
-  --bootloaders "syslinux,grub-efi" \
+  --bootloaders syslinux \
   --memtest none \
   --apt-recommends false \
   --security true \
