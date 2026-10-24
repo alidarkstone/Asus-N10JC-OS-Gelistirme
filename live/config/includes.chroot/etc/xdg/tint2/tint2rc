@@ -18,7 +18,8 @@ border_color_hover = #000000 0
 background_color_pressed = #000000 20
 border_color_pressed = #000000 0
 
-panel_items = BFSC
+# P = start button (ROG eye), F = free space, S = tray, C = clock
+panel_items = PFSC
 panel_size = 100% 24
 panel_margin = 0 0
 panel_padding = 8 0 8

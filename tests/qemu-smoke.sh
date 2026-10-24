@@ -28,7 +28,7 @@ cp "$iso" "$work/usb.img"; truncate -s +256M "$work/usb.img"
 
 accel="-accel tcg -cpu n270"
 [ -w /dev/kvm ] && accel="-enable-kvm -cpu host"
-qemu-system-i386 $accel -m 1024 -smp 2 -vga std -display none \
+qemu-system-i386 $accel -m 1024 -smp 2 -vga std -display none -device intel-hda -device hda-duplex,audiodev=snd0 -audiodev none,id=snd0 \
   -drive file="$work/usb.img",if=none,id=usb,format=raw -device qemu-xhci -device usb-storage,drive=usb,removable=on \
   -kernel "$work/vmlinuz" -initrd "$work/initrd" \
   -append "boot=live components locales=tr_TR.UTF-8 keyboard-layouts=tr timezone=Europe/Istanbul console=ttyS0,115200 console=tty1" \
@@ -38,7 +38,7 @@ qemu=$!
 shot() { echo "screendump $work/$1.ppm" | socat - unix-connect:"$work/mon" >/dev/null
          sleep 1; convert "$work/$1.ppm" "$out/$1.png" 2>/dev/null; }
 t=0
-for at in 45 90 150 240; do  # n10-rapor runs at ~100 s
+for at in 45 90 150 300; do  # n10-rapor runs at ~100 s
   sleep $((at - t)); t=$at
   kill -0 $qemu 2>/dev/null || break
   shot "desktop-${at}s"

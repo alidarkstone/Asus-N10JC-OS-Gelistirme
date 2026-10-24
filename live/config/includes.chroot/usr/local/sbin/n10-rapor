@@ -47,28 +47,33 @@ mkdir -p "$dir"
 user=$(getent passwd 1000 | cut -d: -f1); home=$(getent passwd 1000 | cut -d: -f6)
 asuser() { runuser -u "$user" -- env XDG_RUNTIME_DIR=/run/user/1000 DISPLAY=:0 XAUTHORITY="$home/.Xauthority" "$@"; }
 
-/usr/local/bin/n10-hwcheck   > "$dir/donanim.txt" 2>&1
-asuser /usr/local/bin/n10-hiz-olc > "$dir/hiz.txt" 2>&1
+# Logs first (cheap), then the reports; every probe is time-limited so one
+# hanging tool (e.g. bluetoothctl without a controller) can't block the rest.
+cp "$home/.cache/n10-session.log" "$home/.cache/startx.log" "$dir/" 2>/dev/null
+cp "$home/.local/share/xorg/Xorg.0.log" /var/log/Xorg.0.log "$dir/" 2>/dev/null
+dmesg > "$dir/dmesg.txt" 2>&1
+systemctl --failed --no-pager > "$dir/servis-hatalari.txt" 2>&1
+ps -eo pid,rss,etime,args --sort=-rss > "$dir/surecler.txt" 2>&1
+sync
+t() { timeout 30 "$@"; }
+t /usr/local/bin/n10-hwcheck > "$dir/donanim.txt" 2>&1
+t asuser /usr/local/bin/n10-hiz-olc > "$dir/hiz.txt" 2>&1
 {
   echo "== aplay -l"; aplay -l
   echo "== amixer (card 0)"; amixer -c 0
   echo "== codec"; cat /proc/asound/card0/codec#* 2>/dev/null | head -60
-  echo "== wpctl status"; asuser wpctl status
-  echo "== user services"; asuser systemctl --user --no-pager status pipewire wireplumber pipewire-pulse 2>&1 | head -40
+  echo "== wpctl status"; t asuser wpctl status
+  echo "== user services"; t asuser systemctl --user --no-pager status pipewire wireplumber pipewire-pulse 2>&1 | head -40
 } > "$dir/ses.txt" 2>&1
 {
-  echo "== nmcli"; nmcli dev; nmcli radio
+  echo "== nmcli"; t nmcli dev; t nmcli radio
   echo "== rfkill"; rfkill list
   echo "== iw"; iw dev
-  echo "== bluetooth"; bluetoothctl show 2>&1 | head -20
+  echo "== bluetooth"; t bluetoothctl show </dev/null 2>&1 | head -20
 } > "$dir/ag.txt" 2>&1
-dmesg > "$dir/dmesg.txt" 2>&1
 journalctl -b --no-pager -p warning > "$dir/journal-uyarilar.txt" 2>&1
 journalctl -b --no-pager > "$dir/journal-tam.txt" 2>&1
-systemctl --failed --no-pager > "$dir/servis-hatalari.txt" 2>&1
 lspci -nnvk > "$dir/lspci.txt" 2>&1
-cp "$home/.cache/n10-session.log" "$home/.cache/startx.log" "$dir/" 2>/dev/null
-cp "$home/.local/share/xorg/Xorg.0.log" /var/log/Xorg.0.log "$dir/" 2>/dev/null
 cat > "$dir/OKU-BENI.txt" <<TXT
 N10 OS otomatik raporu - $(date)
 Çekirdek: $(uname -r)
