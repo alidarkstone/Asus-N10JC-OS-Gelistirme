@@ -196,13 +196,35 @@ if ($TurkceDilPaketi) {
 
 if ($SP1Gerekli) {
     # SP1 içermeyen (7600) ISO için Service Pack 1 paketini çıkarır.
+    # Microsoft'un eski indirme sayfası kapandı; paket Windows Update Kataloğu'ndan (download.windowsupdate.com) alınır.
     $sp1Exe = Join-Path $ham 'windows6.1-KB976932-X86.exe'
     $sp1Cab = Join-Path $guncel 'sp1\windows6.1-KB976932-X86.cab'
     if (-not (Test-Path $sp1Cab)) {
-        if (Get-N10Dosya -Urls @('https://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/windows6.1-KB976932-X86.exe') -Hedef $sp1Exe) {
-            $p = Start-Process $sp1Exe -ArgumentList "/x:`"$(Split-Path $sp1Cab)`"" -Wait -PassThru
-            Write-N10Log "SP1 paketi açıldı (kod $($p.ExitCode))."
-        }
+        try {
+            $urls = @()
+            try {
+                foreach ($a in @(Find-N10Katalog 'KB976932' | Where-Object { $_.Baslik -match 'Windows 7' -and $_.Baslik -notmatch 'x64|Itanium|Server' })) {
+                    $urls += @(Get-N10KatalogUrl $a.Id | Where-Object { $_ -match 'kb976932-x86.*\.exe$' })
+                    if ($urls) { break }
+                }
+            } catch { Write-N10Log "Katalog araması olmadı (KB976932): $($_.Exception.Message)" 'UYARI' }
+            $ad = 'windows6.1-kb976932-x86_c3516bc5c9e69fee6d9ac4f981f5b95977a8a2fa.exe'
+            $urls += "https://download.windowsupdate.com/msdownload/update/software/svpk/2011/02/$ad",
+                     "http://download.windowsupdate.com/msdownload/update/software/svpk/2011/02/$ad"
+            if (-not (Get-N10Dosya -Urls ($urls | Select-Object -Unique) -Hedef $sp1Exe)) { throw 'SP1 indirilemedi' }
+            $sha = (Get-FileHash -Algorithm SHA1 $sp1Exe).Hash.ToLower()
+            if ($sha -ne 'c3516bc5c9e69fee6d9ac4f981f5b95977a8a2fa') { Remove-Item -Force $sp1Exe; throw "SP1 SHA-1 uyuşmadı ($sha)" }
+            $imzaSorun = Test-N10MsImza $sp1Exe
+            if ($imzaSorun) { throw $imzaSorun }
+            $sp1Klasor = Split-Path $sp1Cab
+            New-Item -ItemType Directory -Force $sp1Klasor | Out-Null
+            # Paketin kendi açma seçeneği (/x) sessiz çalışır; olmazsa 7-Zip ile açılır.
+            $p = Start-Process $sp1Exe -ArgumentList "/x:`"$sp1Klasor`"" -PassThru
+            if (-not $p.WaitForExit(900000)) { $p.Kill(); Write-N10Log 'SP1 /x zaman aşımı' 'UYARI' }
+            if (-not (Test-Path $sp1Cab)) { & (Get-N10SevenZip $arac) e -y "-o$sp1Klasor" $sp1Exe 'windows6.1-KB976932-X86.cab' | Out-Null }
+            if (-not (Test-Path $sp1Cab)) { throw 'SP1 paketinden windows6.1-KB976932-X86.cab çıkmadı' }
+            Write-N10Log ("Service Pack 1 hazır ({0:N0} MB, SHA-1 ve Microsoft imzası doğrulandı)." -f ((Get-Item $sp1Cab).Length / 1MB)) 'TAMAM'
+        } catch { Write-N10Log "Service Pack 1 alınamadı: $($_.Exception.Message)" 'HATA' }
     }
     Add-N10Ozet 'Service Pack 1' $(if (Test-Path $sp1Cab) { 'TAMAM' } else { 'YOK' })
 }
