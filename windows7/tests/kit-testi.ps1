@@ -33,6 +33,13 @@ if ($env:N10_KATALOG_DOKUM -and (Test-Path $env:N10_KATALOG_DOKUM)) {
     }
 }
 Import-Module (Join-Path $kit 'scripts\N10Ortak.psm1') -Force
+Write-Host '--- KB2483139 katalog satırları (tanı) ---'
+foreach ($q in 'KB2483139 Turkish', 'KB2483139') {
+    Import-Module (Join-Path $kit 'scripts\N10Ortak.psm1') -Force
+    $r = @(Find-N10Katalog $q)
+    Write-Host "$q -> $($r.Count) satır"
+    $r | Select-Object -First 12 | Format-Table Baslik, Urunler, Sinif -AutoSize | Out-String -Width 250 | Write-Host
+}
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
     $inf = Get-ChildItem $_.FullName -Recurse -Filter *.inf
