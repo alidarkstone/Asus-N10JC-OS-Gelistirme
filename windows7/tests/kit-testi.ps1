@@ -94,7 +94,9 @@ New-Item -ItemType Directory -Force "$sahte\sources\`$OEM`$" | Out-Null
 # HAZIRLA'nın kullandığı yolla: temiz medya boş liste, $OEM$'li medya bulgu, hata veren denetim de bulgu vermeli.
 $temiz = Join-Path $Is 'temiz-medya'
 New-Item -ItemType Directory -Force "$temiz\sources", "$temiz\boot" | Out-Null
-foreach ($f in 'setup.exe', 'sources\setup.exe', 'boot\bootsect.exe') { Copy-Item "$env:windir\explorer.exe" (Join-Path $temiz $f) }
+Copy-Item "$env:windir\explorer.exe" (Join-Path $temiz 'setup.exe')
+# Orijinal Windows 7 medyasındaki gibi: bu iki dosya gömülü imzasız (katalog imzalı)
+foreach ($f in 'sources\setup.exe', 'boot\bootsect.exe') { [IO.File]::WriteAllBytes((Join-Path $temiz $f), [byte[]](0x4D, 0x5A, 0, 0)) }
 $r = Invoke-N10Denetim { Test-N10Medya $temiz } 'Medya denetimi'
 if ($r.Count) { Write-Host "MEDYA TESTİ: temiz medya reddedildi: $($r -join ' | ')"; $hata++ } else { Write-Host 'Medya testi: temiz medya geçti.' }
 $r = Invoke-N10Denetim { Test-N10Medya $sahte } 'Medya denetimi'

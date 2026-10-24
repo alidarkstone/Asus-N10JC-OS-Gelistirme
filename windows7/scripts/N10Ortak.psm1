@@ -267,7 +267,13 @@ function Test-N10MsImza([string]$Yol, [switch]$KatalogOlabilir) {
 # Kurulum medyası: setup dosyalarının imzası, kökte yabancı dosya ve hazır yanıt/OEM klasörü olmamalı.
 function Test-N10Medya([string]$Kok) {
     $sorunlar = @()
-    foreach ($f in 'setup.exe', 'sources\setup.exe', 'boot\bootsect.exe') { $h = Test-N10MsImza (Join-Path $Kok $f); if ($h) { $sorunlar += $h } }
+    # Kök setup.exe gömülü imzalıdır. sources\setup.exe ve boot\bootsect.exe ise orijinal Windows 7 medyasında yalnızca
+    # katalogla imzalıdır; başka bir Windows'ta "NotSigned" görünürler. Onlarda yalnızca bozulmuş imza hata sayılır.
+    $h = Test-N10MsImza (Join-Path $Kok 'setup.exe'); if ($h) { $sorunlar += $h }
+    foreach ($f in 'sources\setup.exe', 'boot\bootsect.exe') {
+        if (-not (Test-Path (Join-Path $Kok $f))) { $sorunlar += "YOK: $f"; continue }
+        $h = Test-N10MsImza (Join-Path $Kok $f) -KatalogOlabilir; if ($h) { $sorunlar += $h }
+    }
     $bilinen = '^(boot|efi|sources|support|upgrade|autorun\.inf|bootmgr|bootmgr\.efi|setup\.exe)$'
     foreach ($o in Get-ChildItem -Force $Kok) { if ($o.Name -notmatch $bilinen) { Write-N10Log "Uyarı: medya kökünde beklenmeyen dosya: \$($o.Name)" 'UYARI' } }
     if (Test-Path (Join-Path $Kok 'sources\$OEM$')) { $sorunlar += 'Medyada önceden eklenmiş $OEM$ klasörü var (değiştirilmiş kopya).' }

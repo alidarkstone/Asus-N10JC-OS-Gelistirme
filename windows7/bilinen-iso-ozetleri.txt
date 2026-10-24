@@ -1,5 +1,7 @@
 ﻿# Resmi Windows 7 ISO SHA-1 özetleri: "SHA1  dosya adı" biçiminde, satır başına bir tane.
 # HAZIRLA seçtiğiniz ISO'nun SHA-1 değerini hesaplar. Değer bu listedeki bir kayıtla eşleşirse raporda belirtilir.
-# Liste boş başlıyor, çünkü Microsoft bu değerleri artık herkese açık yayınlamıyor ve doğrulanmamış bir değeri buraya yazmıyoruz.
+# Yalnızca Microsoft'un yayımladığı ve birden fazla bağımsız kaynakta aynı görünen değerler eklenir.
 # Visual Studio (MSDN) aboneliğiniz varsa oradaki SHA-1 değerini buraya ekleyebilirsiniz.
 # Liste boş olsa da her ISO, Microsoft imzaları ve değiştirilmiş kopya izleri açısından ayrıca denetlenir.
+# Windows 7 Ultimate x86 İngilizce (RTM 7600.16385). Microsoft'un Temmuz 2009'da yayımladığı perakende özeti; MSDN adı en_windows_7_ultimate_x86_dvd_x15-65921.iso
+5395DC4B38F7BDB1E005FF414DEEDFDB16DBF610  en_windows_7_ultimate_x86_dvd_x15-65921.iso
