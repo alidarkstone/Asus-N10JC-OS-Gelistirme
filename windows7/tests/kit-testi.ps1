@@ -58,7 +58,7 @@ if (Test-Path $lpKlasor) {
         foreach ($k in $konumlar) {
             $uz = [BitConverter]::ToUInt32($b, $k + 8)
             Write-Host "  MSCF @$k uzunluk $uz"
-            if ($uz -gt 50MB -and $k + $uz -le $b.Length) {
+            if ($uz -gt 20MB -and $k + $uz -le $b.Length) {
                 $kesik = Join-Path $Is 'lp-kesik.cab'
                 $fs = [IO.File]::Create($kesik); $fs.Write($b, $k, $uz); $fs.Close()
                 & expand.exe -D $kesik | Select-Object -First 6 | ForEach-Object { Write-Host "    $_" }
