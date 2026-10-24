@@ -20,7 +20,7 @@ border_color_pressed = #000000 0
 
 # P = start button (ROG eye), F = free space, S = tray, C = clock
 panel_items = PFSC
-panel_size = 100% 24
+panel_size = 100% 28
 panel_margin = 0 0
 panel_padding = 8 0 8
 panel_background_id = 1
@@ -37,11 +37,15 @@ mouse_effects = 1
 
 button = new
 button_icon = /usr/share/n10os/rog-eye.png
-button_padding = 8 3
+button_text = ROG
+button_font = Inter Black 11
+button_font_color = #e4002b 100
+button_max_icon_size = 24
+button_padding = 8 2 6
 button_background_id = 2
 button_centered = 1
-button_lclick_command = rofi -show drun
-button_rclick_command = rofi -show run
+button_lclick_command = n10-menu drun
+button_rclick_command = n10-menu drun
 button_tooltip = Uygulamalar (Alt+Boşluk)
 
 systray_padding = 6 0 10

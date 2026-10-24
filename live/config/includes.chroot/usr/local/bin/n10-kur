@@ -1,0 +1,4 @@
+#!/bin/sh
+# Start the Calamares installer as root (the live user has passwordless sudo;
+# there is no polkit agent in the Openbox session, so pkexec would fail).
+exec sudo -E calamares -d >"$HOME/.cache/calamares.log" 2>&1

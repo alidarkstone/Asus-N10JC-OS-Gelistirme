@@ -1,0 +1,12 @@
+# "Diske Kur": Calamares graphical installer for the internal mSATA SSD
+calamares
+calamares-settings-debian
+qml-module-qtquick2
+qml-module-qtquick-window2
+qml-module-qtquick-controls
+qml-module-qtquick-layouts
+grub-pc
+os-prober
+rsync
+squashfs-tools
+e2fsprogs

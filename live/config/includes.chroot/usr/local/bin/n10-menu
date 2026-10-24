@@ -1,0 +1,7 @@
+#!/bin/sh
+# App menu (rofi) for the top-bar ROG button and Alt+Space.
+# Clicking again closes it. The short delay lets the panel release the mouse
+# button first; otherwise rofi cannot grab the pointer/keyboard and quits.
+pkill -x rofi && exit 0
+sleep 0.15
+exec rofi -show "${1:-drun}"

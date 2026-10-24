@@ -14,11 +14,12 @@ ls -l "$work/iso/live"
 cp "$(ls "$work/iso"/live/vmlinuz* | head -1)" "$work/vmlinuz"
 cp "$(ls "$work/iso"/live/initrd* | head -1)" "$work/initrd"
 sudo unsquashfs -q -d "$work/root" "$work/iso/live/filesystem.squashfs" \
-  etc/profile.d etc/xdg/openbox usr/local/bin etc/alternatives/x-session-manager >/dev/null
+  etc/profile.d etc/xdg/openbox usr/local/bin etc/alternatives/x-session-manager usr/bin/calamares >/dev/null
 {
   echo "== /etc/profile.d/n10jc.sh"; cat "$work/root/etc/profile.d/n10jc.sh"
   echo "== /usr/local/bin"; ls -l "$work/root/usr/local/bin"
   echo "== x-session-manager -> $(readlink "$work/root/etc/alternatives/x-session-manager")"
+  echo "== installer: $(ls "$work/root/usr/bin/calamares" 2>/dev/null || echo MISSING)"
   echo "== /etc/xdg/openbox"; ls -l "$work/root/etc/xdg/openbox"
 } > "$out/image-files.txt" 2>&1
 sudo umount "$work/iso"
@@ -43,6 +44,8 @@ for at in 45 90 150 300; do  # n10-rapor runs at ~100 s
   kill -0 $qemu 2>/dev/null || break
   shot "desktop-${at}s"
 done
+# App menu via Alt+Space (same rofi menu as the ROG button)
+echo "sendkey alt-spc" | socat - unix-connect:"$work/mon" >/dev/null; sleep 4; shot menu
 echo quit | socat - unix-connect:"$work/mon" >/dev/null 2>&1
 wait $qemu 2>/dev/null
 echo "accel: $accel" >> "$out/image-files.txt"

@@ -49,7 +49,7 @@ asuser() { runuser -u "$user" -- env XDG_RUNTIME_DIR=/run/user/1000 DISPLAY=:0 X
 
 # Logs first (cheap), then the reports; every probe is time-limited so one
 # hanging tool (e.g. bluetoothctl without a controller) can't block the rest.
-cp "$home/.cache/n10-session.log" "$home/.cache/startx.log" "$dir/" 2>/dev/null
+cp "$home/.cache/n10-session.log" "$home/.cache/startx.log" "$home/.cache/calamares.log" "$dir/" 2>/dev/null
 cp "$home/.local/share/xorg/Xorg.0.log" /var/log/Xorg.0.log "$dir/" 2>/dev/null
 dmesg > "$dir/dmesg.txt" 2>&1
 systemctl --failed --no-pager > "$dir/servis-hatalari.txt" 2>&1

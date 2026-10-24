@@ -34,8 +34,9 @@ inputbar {
   background-color: #ffffff;
   border-radius: 8px;
 }
-entry { placeholder: "Spotlight'ta Ara"; placeholder-color: @muted; font: "Inter 14"; }
+entry { placeholder: "Uygulama ara"; placeholder-color: @muted; font: "Inter 14"; }
 listview { lines: 7; scrollbar: false; spacing: 2px; }
+element, element normal.normal, element alternate.normal { background-color: transparent; text-color: @fg; }
 element { padding: 6px 10px; border-radius: 6px; spacing: 10px; }
 element selected { background-color: @sel; text-color: #ffffff; }
 element-icon { size: 22px; }

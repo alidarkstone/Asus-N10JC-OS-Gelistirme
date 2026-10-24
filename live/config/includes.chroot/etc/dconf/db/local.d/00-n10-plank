@@ -8,4 +8,4 @@ zoom-percent=140
 hide-mode='window-dodge'
 pressure-reveal=false
 show-dock-item=false
-dock-items=['pcmanfm.dockitem', 'chromium.dockitem', 'lxterminal.dockitem', 'mousepad.dockitem', 'mpv.dockitem', 'pavucontrol.dockitem']
+dock-items=['pcmanfm.dockitem', 'chromium.dockitem', 'lxterminal.dockitem', 'mousepad.dockitem', 'mpv.dockitem', 'pavucontrol.dockitem', 'n10-kur.dockitem']

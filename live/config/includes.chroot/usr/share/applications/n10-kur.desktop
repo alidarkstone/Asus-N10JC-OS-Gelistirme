@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Diske Kur
+Name[en]=Install to Disk
+Comment=N10 OS'u netbook'un SSD'sine kalıcı olarak kur
+Exec=n10-kur
+Icon=calamares
+Terminal=false
+Categories=System;

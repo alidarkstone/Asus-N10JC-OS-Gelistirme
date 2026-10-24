@@ -4,8 +4,8 @@
 set -e
 rc=/etc/xdg/openbox/rc.xml
 sed -i 's#<keyboard>#<keyboard>\
-    <keybind key="A-space"><action name="Execute"><command>rofi -show drun</command></action></keybind>\
-    <keybind key="W-space"><action name="Execute"><command>rofi -show drun</command></action></keybind>\
+    <keybind key="A-space"><action name="Execute"><command>n10-menu drun</command></action></keybind>\
+    <keybind key="W-space"><action name="Execute"><command>n10-menu drun</command></action></keybind>\
     <keybind key="W-Return"><action name="Execute"><command>lxterminal</command></action></keybind>\
     <keybind key="W-b"><action name="Execute"><command>chromium</command></action></keybind>\
     <keybind key="W-e"><action name="Execute"><command>pcmanfm</command></action></keybind>\
