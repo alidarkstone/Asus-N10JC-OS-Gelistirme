@@ -292,4 +292,11 @@ function Test-N10Imaj([string]$Mount) {
     , $sorunlar
 }
 
+# Bir denetimi çalıştırır ve bulguları düz bir metin listesi olarak döndürür (boş liste = temiz).
+# Denetim hata verirse bu da bulgu sayılır; çalışamayan denetim hiçbir zaman "geçti" sayılmaz.
+function Invoke-N10Denetim([scriptblock]$Denetim, [string]$Ad) {
+    try { $r = & $Denetim } catch { return , @("$Ad çalıştırılamadı: $($_.Exception.Message)") }
+    , @($r | ForEach-Object { $_ } | Where-Object { $_ } | ForEach-Object { [string]$_ })
+}
+
 Export-ModuleMember -Function *-N10*

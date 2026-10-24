@@ -91,6 +91,18 @@ if (-not $nt) { Write-Host 'İMZA TESTİ: ntoskrnl.exe çıkarılamadı'; $hata+
 }
 $sahte = Join-Path $Is 'sahte-medya'
 New-Item -ItemType Directory -Force "$sahte\sources\`$OEM`$" | Out-Null
+# HAZIRLA'nın kullandığı yolla: temiz medya boş liste, $OEM$'li medya bulgu, hata veren denetim de bulgu vermeli.
+$temiz = Join-Path $Is 'temiz-medya'
+New-Item -ItemType Directory -Force "$temiz\sources", "$temiz\boot" | Out-Null
+foreach ($f in 'setup.exe', 'sources\setup.exe', 'boot\bootsect.exe') { Copy-Item "$env:windir\explorer.exe" (Join-Path $temiz $f) }
+$r = Invoke-N10Denetim { Test-N10Medya $temiz } 'Medya denetimi'
+if ($r.Count) { Write-Host "MEDYA TESTİ: temiz medya reddedildi: $($r -join ' | ')"; $hata++ } else { Write-Host 'Medya testi: temiz medya geçti.' }
+$r = Invoke-N10Denetim { Test-N10Medya $sahte } 'Medya denetimi'
+if (-not $r.Count -or ($r -join '') -notmatch 'OEM') { Write-Host "MEDYA TESTİ: Invoke-N10Denetim `$OEM`$ bulgusunu vermedi: $($r -join ' | ')"; $hata++ }
+$ErrorActionPreference = 'Continue'   # HAZIRLA'daki gibi
+$r = Invoke-N10Denetim { Test-YokBoyleBirKomut 'x' } 'Medya denetimi'
+$ErrorActionPreference = 'Stop'
+if (-not $r.Count) { Write-Host 'MEDYA TESTİ: çalışamayan denetim geçti sayıldı'; $hata++ } else { Write-Host "Çalışamayan denetim: $($r -join ' | ')" }
 if (-not (Test-N10Medya $sahte)) { Write-Host 'MEDYA TESTİ: $OEM$ içeren medya yakalanmadı'; $hata++ } else { Write-Host 'Medya testi: değiştirilmiş medya yakalandı.' }
 
 Copy-Item (Join-Path $onbellek 'indirme-ozeti.json') $Is
