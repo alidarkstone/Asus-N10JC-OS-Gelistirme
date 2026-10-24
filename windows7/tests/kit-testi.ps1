@@ -33,42 +33,11 @@ if ($env:N10_KATALOG_DOKUM -and (Test-Path $env:N10_KATALOG_DOKUM)) {
     }
 }
 Import-Module (Join-Path $kit 'scripts\N10Ortak.psm1') -Force
-$lpKlasor = Join-Path $onbellek 'guncellemeler\dil-tr\paket'
-if (Test-Path $lpKlasor) {
-    $mum = @(Get-ChildItem $lpKlasor -Filter *.mum)
-    $mb = (Get-ChildItem $lpKlasor -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
-    Write-Host ("Dil paketi: {0:N0} MB, bildirimler: {1}" -f $mb, (($mum | ForEach-Object Name) -join ', '))
-    if (-not $mum -or $mb -lt 50) { Write-Host 'DİL PAKETİ EKSİK'; $hata++ }
-    # DISM'in paketi okuyabildiğini dene (çalışan sisteme göre; yalnızca tanı)
-    $sarma = Get-ChildItem $lpKlasor -Filter 'microsoft-windows-client-languagepack-package-wrapper~*~x86~tr-tr~6.1.7601.17514.mum' | Select-Object -First 1
-    if (-not $sarma) { Write-Host 'DİL PAKETİ SARMALAYICI BİLDİRİMİ YOK'; $hata++ }
-    else {
-        $imza = Get-AuthenticodeSignature ($sarma.FullName -replace '\.mum$', '.cat')
-        Write-Host "Sarmalayıcı katalog imzası: $($imza.Status), $($imza.SignerCertificate.Subject)"
-        if (-not (Test-Path (Join-Path $lpKlasor 'update.mum'))) { Write-Host 'update.mum YOK'; $hata++ }
-        # Deneme A: exe içindeki özgün cab'ı (MSCF imzası) olduğu gibi kesip çıkar
-        $exe = Get-ChildItem (Join-Path $onbellek 'ham') -Filter 'windows6.1-kb2483139-x86-tr-tr_*.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
-        if (-not $exe) { $exe = Get-ChildItem $onbellek -Recurse -Filter 'windows6.1-kb2483139-x86-tr-tr_*.exe' | Select-Object -First 1 }
-        $b = [IO.File]::ReadAllBytes($exe.FullName)
-        $metin = [Text.Encoding]::GetEncoding(28591).GetString($b)
-        $konumlar = @(); $i = $metin.IndexOf("MSCF`0`0`0`0", [StringComparison]::Ordinal)
-        while ($i -ge 0 -and $konumlar.Count -lt 10) { $konumlar += $i; $i = $metin.IndexOf("MSCF`0`0`0`0", $i + 4, [StringComparison]::Ordinal) }
-        $metin = $null
-        Write-Host "exe $($b.Length) bayt, MSCF konumları: $($konumlar -join ', ')"
-        foreach ($k in $konumlar) {
-            $uz = [BitConverter]::ToUInt32($b, $k + 8)
-            Write-Host "  MSCF @$k uzunluk $uz"
-            if ($uz -gt 20MB -and $k + $uz -le $b.Length) {
-                $kesik = Join-Path $Is 'lp-kesik.cab'
-                $fs = [IO.File]::Create($kesik); $fs.Write($b, $k, $uz); $fs.Close()
-                & expand.exe -D $kesik | Select-Object -First 6 | ForEach-Object { Write-Host "    $_" }
-                & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$kesik" 2>&1 | Where-Object { $_ -match 'rror|Identity|Applicable|valid' } | Select-Object -First 4 | ForEach-Object { Write-Host "    kesik: $_" }
-            }
-        }
-        $b = $null
-        # Deneme B: açılmış klasör
-        & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$lpKlasor" 2>&1 | Select-Object -First 25 | ForEach-Object { Write-Host "  $_" }
-    }
+$lpCab = Join-Path $onbellek 'guncellemeler\dil-tr\lp.cab'
+if (Test-Path $lpCab) {
+    Write-Host ("Dil paketi: lp.cab {0:N1} MB" -f ((Get-Item $lpCab).Length / 1MB))
+    if ((Get-Item $lpCab).Length -lt 20MB) { Write-Host 'DİL PAKETİ ÇOK KÜÇÜK'; $hata++ }
+    & expand.exe -D $lpCab | Select-String -Pattern 'update\.(mum|cat)|LanguagePack-Package' | Select-Object -First 4 | ForEach-Object { Write-Host "  $_" }
 }
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {

@@ -150,11 +150,11 @@ $sira | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $guncel 'sira.jso
 
 if ($TurkceDilPaketi) {
     # Türkçe arayüz dil paketi (KB2483139, SP1 için). Microsoft yalnızca Ultimate/Enterprise'ta dil paketine izin verir.
-    # Paket, açılmış hâliyle (kök klasöründe .mum bildirimi olan klasör) tutulur; DISM klasörden de paket ekleyebilir.
-    $lpKlasor = Join-Path $guncel 'dil-tr\paket'
-    $lpHazir = { (Test-Path $lpKlasor) -and @(Get-ChildItem $lpKlasor -Filter *.mum -ErrorAction SilentlyContinue).Count -gt 0 }
-    Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $guncel 'dil-tr\lp.cab')
-    if (-not (& $lpHazir)) {
+    # Windows Update'teki .exe, Microsoft'un lp.cab dosyasını küçük bir başlatıcının arkasında taşır.
+    # Cab olduğu gibi (bayt bayt) kesilip alınır; içeriğine dokunulmaz, imzalı kataloğu da korunur.
+    $lpCab = Join-Path $guncel 'dil-tr\lp.cab'
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue (Join-Path $guncel 'dil-tr\paket')
+    if (-not (Test-Path $lpCab)) {
         try {
             # Dil paketleri katalogda yok; Microsoft'un Windows Update sunucusundaki asıl dosya kullanılır.
             # Dosya adındaki 40 haneli değer dosyanın SHA-1 özetidir; indirilen dosya buna göre doğrulanır.
@@ -168,40 +168,30 @@ if ($TurkceDilPaketi) {
                 if ($sha -ne '228dfa5fbaa4606b17f93d6fcd51c8c85c0f1fd3') { Remove-Item -Force $dosya; throw "SHA-1 uyuşmadı ($sha)" }
                 $imzaSorun = Test-N10MsImza $dosya
                 if ($imzaSorun) { throw $imzaSorun }
-                $acik = Join-Path $ham 'dil-tr-acik'
-                Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik
-                & (Get-N10SevenZip $arac) x -y "-o$acik" $dosya | Out-Null
-                # Kökte .mum yoksa içerik henüz bir lp.mlc/lp.cab içindedir; onu da aç.
-                if (-not (Get-ChildItem $acik -Filter *.mum -ErrorAction SilentlyContinue)) {
-                    $ic = Get-ChildItem $acik -Recurse -File | Where-Object { $_.Extension -in '.mlc', '.cab' } | Sort-Object Length -Descending | Select-Object -First 1
-                    if (-not $ic -or $ic.Length -lt 20MB) { throw 'paketin içinden dil paketi çıkmadı' }
-                    $acik2 = Join-Path $ham 'dil-tr-acik2'
-                    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik2
-                    New-Item -ItemType Directory -Force $acik2 | Out-Null
-                    & expand.exe -F:* $ic.FullName $acik2 | Out-Null
-                    $acik = $acik2
-                }
-                $kok = @(Get-ChildItem $acik -File)
-                foreach ($k in $kok) { Write-N10Log ("  dil paketi kök dosyası: {0} ({1:N1} MB)" -f $k.Name, ($k.Length / 1MB)) }
-                $tum = @(Get-ChildItem $acik -Recurse -File)
-                $boyut = ($tum | Measure-Object Length -Sum).Sum
-                Write-N10Log ("  dil paketi: {0} dosya, {1:N0} MB" -f $tum.Count, ($boyut / 1MB))
-                if (-not ($kok | Where-Object { $_.Extension -eq '.mum' })) { throw 'dil paketinde .mum bildirimi yok' }
-                if ($boyut -lt 50MB) { throw "dil paketi beklenenden küçük ($([math]::Round($boyut / 1MB)) MB)" }
-                # Windows Update paketi update.mum içermez; DISM'in klasörü paket olarak tanıması için
-                # SP1 dil paketi sarmalayıcısının bildirimi ve imzalı kataloğu update.mum/update.cat adıyla kopyalanır.
-                $sarma = Get-ChildItem $acik -Filter 'microsoft-windows-client-languagepack-package-wrapper~*~x86~tr-tr~6.1.7601.17514.mum' | Select-Object -First 1
-                if (-not $sarma) { throw 'dil paketi sarmalayıcı bildirimi bulunamadı' }
-                Copy-Item -Force $sarma.FullName (Join-Path $acik 'update.mum')
-                Copy-Item -Force ($sarma.FullName -replace '\.mum$', '.cat') (Join-Path $acik 'update.cat')
-                Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $lpKlasor
-                New-Item -ItemType Directory -Force (Split-Path $lpKlasor) | Out-Null
-                Move-Item $acik $lpKlasor
-                Write-N10Log 'Türkçe dil paketi hazır (SHA-1 ve Microsoft imzası doğrulandı).' 'TAMAM'
+                $b = [IO.File]::ReadAllBytes($dosya)
+                $k = [Text.Encoding]::GetEncoding(28591).GetString($b).IndexOf("MSCF`0`0`0`0", [StringComparison]::Ordinal)
+                if ($k -lt 0) { throw 'paketin içinde cab bulunamadı' }
+                $uz = [BitConverter]::ToUInt32($b, $k + 8)
+                if ($uz -lt 20MB -or $k + $uz -gt $b.Length) { throw "cab boyutu beklenmedik ($uz bayt)" }
+                New-Item -ItemType Directory -Force (Split-Path $lpCab) | Out-Null
+                $gecici = "$lpCab.part"
+                $fs = [IO.File]::Create($gecici); try { $fs.Write($b, $k, $uz) } finally { $fs.Close() }
+                $b = $null
+                # İçerik denetimi: update.mum ve Microsoft imzalı update.cat olmalı
+                $liste = & expand.exe -D $gecici | Out-String
+                if ($liste -notmatch 'update\.mum' -or $liste -notmatch 'update\.cat') { throw 'cab içinde update.mum/update.cat yok' }
+                $kat = Join-Path $ham 'dil-tr-kat'
+                Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $kat
+                New-Item -ItemType Directory -Force $kat | Out-Null
+                & expand.exe -F:update.cat $gecici $kat | Out-Null
+                $katSorun = Test-N10MsImza (Join-Path $kat 'update.cat')
+                if ($katSorun) { throw "update.cat: $katSorun" }
+                Move-Item -Force $gecici $lpCab
+                Write-N10Log ("Türkçe dil paketi hazır: lp.cab {0:N1} MB (SHA-1, paket ve katalog imzası doğrulandı)." -f ($uz / 1MB)) 'TAMAM'
             }
         } catch { Write-N10Log "Türkçe dil paketi alınamadı: $($_.Exception.Message)" 'HATA' }
     }
-    Add-N10Ozet 'Türkçe arayüz dil paketi (KB2483139)' $(if (& $lpHazir) { 'TAMAM' } else { 'YOK' })
+    Add-N10Ozet 'Türkçe arayüz dil paketi (KB2483139)' $(if (Test-Path $lpCab) { 'TAMAM' } else { 'YOK' })
 }
 
 if ($SP1Gerekli) {
