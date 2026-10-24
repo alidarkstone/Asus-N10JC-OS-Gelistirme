@@ -1,0 +1,10 @@
+# N10 OS session
+xsetroot -solid '#1d1f24' &
+[ -f "$HOME/.fehbg" ] && sh "$HOME/.fehbg" &
+tint2 &
+plank &
+nm-applet &
+xfce4-power-manager &
+dunst &
+# Light compositor: shadows only, xrender backend (GMA 950 friendly)
+picom --backend xrender --vsync --no-fading-openclose --shadow -b &

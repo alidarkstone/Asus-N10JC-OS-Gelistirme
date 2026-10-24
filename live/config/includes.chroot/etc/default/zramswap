@@ -1,0 +1,4 @@
+# N10 OS: zram is the only swap. lz4 keeps the in-order Atom responsive.
+ALGO=lz4
+PERCENT=100
+PRIORITY=100

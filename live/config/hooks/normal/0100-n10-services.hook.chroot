@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+update-rc.d n10-gpu-profile defaults
+# Journal-less sysvinit: keep logs small and in RAM-friendly rotation
+sed -i 's/^#\?\s*compress/compress/' /etc/logrotate.conf 2>/dev/null || true
+# /tmp in RAM, capped
+grep -q ' /tmp ' /etc/fstab 2>/dev/null || echo 'tmpfs /tmp tmpfs defaults,noatime,nosuid,size=128M 0 0' >> /etc/fstab

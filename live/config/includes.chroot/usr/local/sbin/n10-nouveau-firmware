@@ -1,0 +1,15 @@
+#!/bin/bash
+# Install the GeForce 9300M GS (VP3) video-decode firmware for nouveau/VDPAU.
+# The blobs can't be redistributed, so we extract them from NVIDIA's own driver
+# on this machine, following https://nouveau.freedesktop.org/VideoAcceleration.html
+set -euo pipefail
+[ "$(id -u)" = 0 ] || exec sudo "$0" "$@"
+tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
+cd "$tmp"
+curl -fLO https://raw.githubusercontent.com/envytools/firmware/master/extract_firmware.py
+curl -fLO https://us.download.nvidia.com/XFree86/Linux-x86/325.15/NVIDIA-Linux-x86-325.15.run
+sh NVIDIA-Linux-x86-325.15.run --extract-only
+python3 extract_firmware.py
+mkdir -p /lib/firmware/nouveau
+cp -d nv* vuc-* /lib/firmware/nouveau/
+echo "Firmware installed. Reboot in NVIDIA mode, then check: vdpauinfo"

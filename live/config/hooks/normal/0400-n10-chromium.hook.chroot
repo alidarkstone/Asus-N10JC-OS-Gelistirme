@@ -1,0 +1,7 @@
+#!/bin/sh
+# Chromium on 1 GB RAM: fewer processes, no GPU raster on GMA 950.
+set -e
+mkdir -p /etc/chromium.d
+cat > /etc/chromium.d/n10jc <<EOT
+export CHROMIUM_FLAGS="\$CHROMIUM_FLAGS --renderer-process-limit=2 --disable-gpu-rasterization --enable-low-end-device-mode --disk-cache-size=52428800"
+EOT

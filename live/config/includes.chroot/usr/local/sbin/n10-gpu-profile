@@ -1,0 +1,29 @@
+#!/bin/sh
+# Detect which GPU the BIOS exposed (N10JC has a physical switch + reboot)
+# and apply the matching profile. Writes the mode to /run/n10-gpu-mode.
+set -u
+mode=intel
+if grep -qs '^0x10de$' /sys/bus/pci/devices/*/vendor; then
+  for d in /sys/bus/pci/devices/*; do
+    [ "$(cat "$d/vendor")" = 0x10de ] && [ "$(cut -c1-6 "$d/class")" = 0x0300 ] && mode=nvidia
+  done
+fi
+echo "$mode" > /run/n10-gpu-mode
+
+# Ambient light sensor makes brightness jump around: turn it off.
+for f in /sys/devices/platform/asus_laptop/ls_switch; do [ -w "$f" ] && echo 0 > "$f"; done
+
+if [ "$mode" = nvidia ]; then
+  # 3D / video profile: nouveau, VDPAU if firmware is present.
+  modprobe nouveau 2>/dev/null || true
+  [ -d /lib/firmware/nouveau ] || logger -t n10 "No VP3 firmware: run n10-nouveau-firmware for H.264 hardware decode"
+  echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null || true
+else
+  # Battery profile on the GMA 950.
+  echo schedutil > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null || true
+  for h in /sys/class/scsi_host/host*/link_power_management_policy; do
+    [ -w "$h" ] && echo med_power_with_dipm > "$h"
+  done
+  echo 1 > /sys/module/snd_hda_intel/parameters/power_save 2>/dev/null || true
+fi
+logger -t n10 "GPU mode: $mode"

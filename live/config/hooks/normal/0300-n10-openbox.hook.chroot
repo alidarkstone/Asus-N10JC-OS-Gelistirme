@@ -1,0 +1,11 @@
+#!/bin/sh
+# Openbox defaults + keybindings: Alt+Space = rofi ("Spotlight"), Super+Enter = terminal.
+set -e
+mkdir -p /etc/skel/.config/openbox
+cp /etc/xdg/openbox/rc.xml /etc/skel/.config/openbox/rc.xml
+sed -i 's#<keyboard>#<keyboard>\
+    <keybind key="A-space"><action name="Execute"><command>rofi -show drun</command></action></keybind>\
+    <keybind key="W-Return"><action name="Execute"><command>lxterminal</command></action></keybind>\
+    <keybind key="W-b"><action name="Execute"><command>chromium</command></action></keybind>#' \
+  /etc/skel/.config/openbox/rc.xml
+sed -i 's#<name>Clearlooks</name>#<name>WhiteSur-Light</name>#' /etc/skel/.config/openbox/rc.xml || true

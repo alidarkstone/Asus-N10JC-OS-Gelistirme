@@ -1,0 +1,30 @@
+# Init: sysvinit (no systemd as PID 1). runit is the planned next step.
+sysvinit-core
+orphan-sysvinit-scripts
+elogind
+libpam-elogind
+live-boot
+live-config
+live-config-sysvinit
+initramfs-tools
+sudo
+# Memory / responsiveness
+zram-tools
+earlyoom
+# Hardware
+firmware-linux-free
+firmware-realtek
+firmware-atheros
+firmware-misc-nonfree
+alsa-utils
+pipewire
+pipewire-pulse
+wireplumber
+bluez
+acpid
+lm-sensors
+v4l-utils
+libv4l-0
+fprintd
+# Network
+network-manager

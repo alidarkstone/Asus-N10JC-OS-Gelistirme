@@ -1,0 +1,26 @@
+#!/bin/sh
+# macOS-like but cheap: WhiteSur GTK theme + icons, Inter font, grayscale AA.
+set -e
+apt-get install -y --no-install-recommends git ca-certificates
+tmp=$(mktemp -d)
+git clone --depth 1 https://github.com/vinceliuice/WhiteSur-gtk-theme "$tmp/gtk" \
+  && (cd "$tmp/gtk" && ./install.sh -d /usr/share/themes -c light -o normal -l) \
+  || echo "WARN: WhiteSur GTK theme not installed"
+git clone --depth 1 https://github.com/vinceliuice/WhiteSur-icon-theme "$tmp/icons" \
+  && (cd "$tmp/icons" && ./install.sh -d /usr/share/icons) \
+  || echo "WARN: WhiteSur icons not installed (Papirus stays as fallback)"
+rm -rf "$tmp"
+apt-get purge -y git && apt-get autoremove -y
+
+mkdir -p /etc/skel/.config/gtk-3.0
+cat > /etc/skel/.config/gtk-3.0/settings.ini <<EOT
+[Settings]
+gtk-theme-name=WhiteSur-Light
+gtk-icon-theme-name=WhiteSur
+gtk-font-name=Inter 10
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintslight
+gtk-xft-rgba=none
+gtk-enable-animations=0
+EOT

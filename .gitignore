@@ -1,0 +1,7 @@
+build/
+live/.build/
+live/cache/
+live/chroot/
+live/binary/
+live/*.iso
+live/config/packages.chroot/

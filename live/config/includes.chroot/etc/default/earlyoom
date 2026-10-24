@@ -1,0 +1,1 @@
+EARLYOOM_ARGS="-m 4 -s 10 -r 0 --prefer '(chromium|chrome|netsurf)' --avoid '(Xorg|openbox|tint2|plank|pipewire)'"

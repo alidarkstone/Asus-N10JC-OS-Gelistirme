@@ -1,0 +1,29 @@
+name: Build N10 OS ISO
+on:
+  workflow_dispatch:
+    inputs:
+      kernel_series:
+        description: Kernel series
+        default: "6.18"
+  push:
+    tags: ["v*"]
+
+jobs:
+  iso:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build inside Debian bookworm
+        run: |
+          docker run --rm --privileged -v "$PWD:/src" -w /src \
+            -e KERNEL_SERIES="${{ inputs.kernel_series || '6.18' }}" \
+            debian:bookworm ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: n10os-iso
+          path: |
+            build/*.iso
+            build/*.sha256
+            build/debs/*.deb
+          retention-days: 14
