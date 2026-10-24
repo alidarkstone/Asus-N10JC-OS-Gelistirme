@@ -153,23 +153,25 @@ if ($TurkceDilPaketi) {
     $lpCab = Join-Path $guncel 'dil-tr\lp.cab'
     if (-not (Test-Path $lpCab)) {
         try {
-            $adaylar = @((Find-N10Katalog 'KB2483139 Turkish') | Where-Object { $_.Baslik -match 'Turkish|Türkçe' -and $_.Baslik -notmatch 'x64|Server' })
-            if (-not $adaylar) { $adaylar = @((Find-N10Katalog 'KB2483139 tr-tr') | Where-Object { $_.Baslik -notmatch 'x64|Server' }) }
-            foreach ($a in $adaylar) {
-                $url = @(Get-N10KatalogUrl $a.Id | Where-Object { $_ -notmatch 'x64|amd64' }) | Select-Object -First 1
-                if (-not $url) { continue }
-                $dosya = Join-Path $ham ([IO.Path]::GetFileName(([uri]$url).AbsolutePath))
-                if (-not (Get-N10Dosya -Urls @($url) -Hedef $dosya)) { continue }
+            # Dil paketleri katalogda yok; Microsoft'un Windows Update sunucusundaki asıl dosya kullanılır.
+            # Dosya adındaki 40 haneli değer dosyanın SHA-1 özetidir; indirilen dosya buna göre doğrulanır.
+            $ad = 'windows6.1-kb2483139-x86-tr-tr_228dfa5fbaa4606b17f93d6fcd51c8c85c0f1fd3.exe'
+            $dosya = Join-Path $ham $ad
+            $ok = Get-N10Dosya -Hedef $dosya -Urls @(
+                "https://download.windowsupdate.com/msdownload/update/software/updt/2011/02/$ad",
+                "http://download.windowsupdate.com/msdownload/update/software/updt/2011/02/$ad")
+            if ($ok) {
+                $sha = (Get-FileHash -Algorithm SHA1 $dosya).Hash.ToLower()
+                if ($sha -ne '228dfa5fbaa4606b17f93d6fcd51c8c85c0f1fd3') { Remove-Item -Force $dosya; throw "SHA-1 uyuşmadı ($sha)" }
+                $imzaSorun = Test-N10MsImza $dosya
+                if ($imzaSorun) { throw $imzaSorun }
                 New-Item -ItemType Directory -Force (Split-Path $lpCab) | Out-Null
-                if ($dosya -match '\.cab$') { Copy-Item -Force $dosya $lpCab }
-                else {
-                    $acik = Join-Path $ham 'dil-tr-acik'
-                    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik
-                    & (Get-N10SevenZip $arac) x -y "-o$acik" $dosya | Out-Null
-                    $c = Get-ChildItem $acik -Recurse -Filter *.cab | Sort-Object Length -Descending | Select-Object -First 1
-                    if ($c) { Copy-Item -Force $c.FullName $lpCab }
-                }
-                if (Test-Path $lpCab) { Write-N10Log "Türkçe dil paketi hazır: $($a.Baslik)" 'TAMAM'; break }
+                $acik = Join-Path $ham 'dil-tr-acik'
+                Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik
+                & (Get-N10SevenZip $arac) x -y "-o$acik" $dosya | Out-Null
+                $c = Get-ChildItem $acik -Recurse -Filter *.cab | Sort-Object Length -Descending | Select-Object -First 1
+                if ($c) { Copy-Item -Force $c.FullName $lpCab; Write-N10Log "Türkçe dil paketi hazır ($($c.Name), SHA-1 ve Microsoft imzası doğrulandı)." 'TAMAM' }
+                else { throw 'paketten lp.cab çıkmadı' }
             }
         } catch { Write-N10Log "Türkçe dil paketi alınamadı: $($_.Exception.Message)" 'HATA' }
     }
