@@ -49,6 +49,10 @@ if (-not $sp1Mum) { Write-Host 'SP1 PAKETİ HAZIR DEĞİL'; $hata++ } else {
     if ($ses -match 'operationMode="OnlineInstall"') { $hata++ }
     Write-Host ("SP1 paketi: {0} dosya, {1:N0} MB" -f @(Get-ChildItem $sp1Mum.DirectoryName -Recurse -File).Count, ((Get-ChildItem $sp1Mum.DirectoryName -Recurse -File | Measure-Object Length -Sum).Sum / 1MB))
 }
+# HAZIRLA'nın güncelleme sırasını okuduğu yolla: her güncelleme ayrı bir kayıt olmalı
+$sira = @(Get-Content -Raw (Join-Path $onbellek 'guncellemeler\sira.json') | ConvertFrom-Json | ForEach-Object { $_ }) | Sort-Object Sira
+Write-Host "Güncelleme sırası: $(@($sira).Count) kayıt: $((@($sira) | ForEach-Object { $_.KB }) -join ', ')"
+if (@($sira).Count -lt 6 -or (@($sira) | Where-Object { @($_.Dosya).Count -ne 1 })) { Write-Host 'GÜNCELLEME SIRASI HATALI'; $hata++ }
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
     $inf = Get-ChildItem $_.FullName -Recurse -Filter *.inf

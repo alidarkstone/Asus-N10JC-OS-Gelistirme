@@ -155,8 +155,22 @@ Set-N10Log $gunluk
 # ---------------- 6) İmajı tek sürüme indir ve bağla ----------------
 $tekWim = Join-Path $is 'install.wim'
 Remove-Item -Force -ErrorAction SilentlyContinue $tekWim
-Write-N10Log 'Seçilen sürüm ayrı bir imaja aktarılıyor...'
-DismCalistir @('/Export-Image', "/SourceImageFile:$wim", "/SourceIndex:$($secim.ImageIndex)", "/DestinationImageFile:$tekWim", '/Compress:max') | Out-Null
+# SP1 ve dil paketi eklenmiş imaj önbellekte saklanır; sonraki denemelerde bu uzun adım atlanır.
+$noktaKlasor = Join-Path $onbellek 'imaj'
+$noktaAd = ('{0}_{1}_{2}' -f $secim.ImageIndex, $secim.Version, $secim.ImageSize) -replace '[^\w\.-]', ''
+$noktaTr = Join-Path $noktaKlasor "$noktaAd-tr.wim"
+$noktaEn = Join-Path $noktaKlasor "$noktaAd-en.wim"
+$nokta = $null
+if ($turkceArayuz -and (Test-Path $noktaTr)) { $nokta = $noktaTr } elseif (-not $turkceArayuz -and (Test-Path $noktaEn)) { $nokta = $noktaEn }
+$tabanHazir = [bool]$nokta
+if ($tabanHazir) {
+    Write-N10Log "Önceki denemeden kalan SP1'li imaj kullanılıyor: $(Split-Path -Leaf $nokta)" 'TAMAM'
+    Copy-Item -Force $nokta $tekWim
+    if ($nokta -eq $noktaTr) { $dil = 'tr-TR' }
+} else {
+    Write-N10Log 'Seçilen sürüm ayrı bir imaja aktarılıyor...'
+    DismCalistir @('/Export-Image', "/SourceImageFile:$wim", "/SourceIndex:$($secim.ImageIndex)", "/DestinationImageFile:$tekWim", '/Compress:max') | Out-Null
+}
 Write-N10Log 'İmaj bağlanıyor...'
 DismCalistir @('/Mount-Wim', "/WimFile:$tekWim", '/Index:1', "/MountDir:$mount") | Out-Null
 $imajSorun = Invoke-N10Denetim { Test-N10Imaj $mount } 'İmaj denetimi'
@@ -175,14 +189,15 @@ try {
     # indir.ps1 SP1'i çevrimdışı entegrasyon için açar; DISM'e KB976933 bildirimi verilir.
     $sp1 = Get-ChildItem (Join-Path $onbellek 'guncellemeler\sp1\paket') -Filter 'Windows7SP1-KB976933~31bf3856ad364e35~x86~~6.1.1.17514.mum' -ErrorAction SilentlyContinue |
         Select-Object -First 1 -ExpandProperty FullName
-    if ($yapi -lt 7601) {
+    if (-not $tabanHazir -and $yapi -lt 7601) {
         if (-not $sp1) { throw 'ISO SP1 içermiyor ve SP1 paketi hazırlanamadı.' }
         Write-N10Log 'Service Pack 1 ekleniyor (uzun sürer)...'
         DismCalistir @($img, '/Add-Package', "/PackagePath:$sp1") -Kabul 0, 3010 | Out-Null
     }
     # Türkçe dil paketi (güncellemelerden önce eklenir ki güncellemelerin Türkçe dosyaları da gelsin)
     $lp = Join-Path $onbellek 'guncellemeler\dil-tr\lp.cab'
-    if ($turkceArayuz -and (Test-Path $lp)) {
+    if ($tabanHazir) { }
+    elseif ($turkceArayuz -and (Test-Path $lp)) {
         Write-N10Log 'Türkçe dil paketi ekleniyor...'
         $eklendi = $false
         try { DismCalistir @($img, '/Add-Package', "/PackagePath:$lp") -Kabul 0, 3010 | Out-Null; $eklendi = $true }
@@ -194,9 +209,21 @@ try {
             Write-N10Log 'Türkçe arayüz eklendi.' 'TAMAM'
         } else { Write-N10Log 'Türkçe dil paketi eklenemedi; menüler İngilizce kalacak (ayrıntı günlükte).' 'UYARI' }
     } elseif ($turkceArayuz) { Write-N10Log 'Türkçe dil paketi bulunamadı; menüler İngilizce kalacak.' 'UYARI' }
+    if (-not $tabanHazir -and ($yapi -lt 7601 -or $dil -eq 'tr-TR')) {
+        # Ara kayıt: imaj kaydedilip önbelleğe kopyalanır, sonra yeniden bağlanır.
+        Write-N10Log 'SP1/dil paketi eklenmiş imaj önbelleğe kaydediliyor...'
+        DismCalistir @('/Unmount-Wim', "/MountDir:$mount", '/Commit') | Out-Null
+        New-Item -ItemType Directory -Force $noktaKlasor | Out-Null
+        Get-ChildItem $noktaKlasor -Filter "$noktaAd-*.wim" | Remove-Item -Force
+        Copy-Item -Force $tekWim $(if ($dil -eq 'tr-TR') { $noktaTr } else { $noktaEn })
+        DismCalistir @('/Mount-Wim', "/WimFile:$tekWim", '/Index:1', "/MountDir:$mount") | Out-Null
+        Write-N10Log 'Ara kayıt tamam; bir sonraki denemede SP1 ve dil paketi adımı atlanır.' 'TAMAM'
+    }
     # Güncellemeler
     $siraDosya = Join-Path $onbellek 'guncellemeler\sira.json'
-    foreach ($g in @(Get-Content -Raw $siraDosya | ConvertFrom-Json) | Sort-Object Sira) {
+    # ConvertFrom-Json (PowerShell 5) diziyi tek nesne olarak verir; boru hattı onu tek tek güncellemelere açar.
+    $sira = @(Get-Content -Raw $siraDosya | ConvertFrom-Json | ForEach-Object { $_ }) | Sort-Object Sira
+    foreach ($g in $sira) {
         Write-N10Log "Güncelleme ekleniyor: $($g.KB) - $($g.Not)"
         $kod = & dism.exe /English $img /Add-Package "/PackagePath:$(Join-Path $onbellek "guncellemeler\$($g.Dosya)")" 2>&1
         $c = $LASTEXITCODE
@@ -207,9 +234,22 @@ try {
     }
     # Sürücüler
     $surDizin = Join-Path $onbellek 'suruculer'
-    if (Get-ChildItem $surDizin -Recurse -Filter *.inf) {
-        Write-N10Log 'Sürücüler ekleniyor...'
-        DismCalistir @($img, '/Add-Driver', "/Driver:$surDizin", '/Recurse', '/ForceUnsigned') | Out-Null
+    $sonraKurulacak = @()
+    foreach ($k in Get-ChildItem $surDizin -Directory -ErrorAction SilentlyContinue) {
+        if (-not (Get-ChildItem $k.FullName -Recurse -Filter *.inf)) { continue }
+        Write-N10Log "Sürücü ekleniyor: $($k.Name)"
+        try {
+            DismCalistir @($img, '/Add-Driver', "/Driver:$($k.FullName)", '/Recurse', '/ForceUnsigned') | Out-Null
+            Write-N10Log "  $($k.Name): TAMAM" 'TAMAM'
+            $guncellemeSonuc += [pscustomobject]@{ Konu = "Sürücü: $($k.Name)"; Durum = 'TAMAM'; Ayrinti = 'imaja eklendi' }
+        } catch {
+            # Bir sürücünün eklenememesi hazırlığı durdurmaz; sürücü kurulumdan sonra (ilk açılışta) yüklenir.
+            Write-N10Log "  $($k.Name) imaja eklenemedi ($($_.Exception.Message)); Windows kurulduktan sonra yüklenecek." 'UYARI'
+            $sonraKurulacak += $k
+            $guncellemeSonuc += [pscustomobject]@{ Konu = "Sürücü: $($k.Name)"; Durum = 'Kurulumdan sonra'; Ayrinti = 'imaja eklenemedi' }
+            $sapi = Join-Path $mount 'Windows\inf\setupapi.offline.log'
+            if (Test-Path $sapi) { Copy-Item -Force $sapi (Join-Path $cikti "setupapi.offline_$zaman.log") }
+        }
     }
     # Gereksiz özellikler (yer ve bellek)
     foreach ($f in 'MediaCenter', 'TabletPCOC', 'FaxServicesClientPackage', 'Xps-Foundation-Xps-Viewer', 'Printing-XPSServices-Features',
@@ -266,6 +306,11 @@ New-Item -ItemType Directory -Force "$oem\`$`$\Setup\Scripts", "$oem\`$1\N10\uyg
 Copy-Item -Force (Join-Path $kit 'oem\Setup-Scripts\*') "$oem\`$`$\Setup\Scripts"
 Copy-Item -Force (Join-Path $kit 'oem\N10\*') "$oem\`$1\N10"
 Copy-Item -Force (Join-Path $onbellek 'uygulamalar\*') "$oem\`$1\N10\uygulamalar"
+foreach ($k in $sonraKurulacak) {
+    $hedef = "$oem\`$1\N10\suruculer\$($k.Name)"
+    New-Item -ItemType Directory -Force $hedef | Out-Null
+    Copy-Item -Recurse -Force (Join-Path $k.FullName '*') $hedef
+}
 
 # ---------------- 8) ISO ----------------
 $cikIso = Join-Path $cikti "N10JC-Win7-$zaman.iso"

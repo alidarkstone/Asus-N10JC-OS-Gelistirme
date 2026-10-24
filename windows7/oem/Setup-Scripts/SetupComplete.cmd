@@ -66,6 +66,12 @@ if exist "%U%\7zip_x86.exe" "%U%\7zip_x86.exe" /S
 if exist "%U%\mpc-hc_x86.exe" "%U%\mpc-hc_x86.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-
 
 rem ---- Her acilista USB'ye rapor (Output klasoru) ve etkinlestirme denemesi ----
+rem ---- Imaja eklenemeyen suruculer (varsa) ----
+if exist "%N10%\suruculer" (
+  rem Imzasi bozulmus bir paket kurulumu soruyla bekletmesin: her INF en fazla 5 dakika
+  for /r "%N10%\suruculer" %%i in (*.inf) do powershell -NoProfile -Command "$p = Start-Process pnputil.exe -ArgumentList '-i','-a','\"%%i\"' -PassThru -WindowStyle Hidden; if (-not $p.WaitForExit(300000)) { $p.Kill(); 'zaman asimi: %%i' }" >> "%LOG%" 2>&1
+)
+
 schtasks /Create /F /RU SYSTEM /SC ONSTART /DELAY 0002:00 /TN "N10\Rapor" /TR "powershell -NoProfile -ExecutionPolicy Bypass -File C:\N10\n10-rapor.ps1" >> "%LOG%" 2>&1
 powershell -NoProfile -ExecutionPolicy Bypass -File C:\N10\n10-rapor.ps1 >> "%LOG%" 2>&1
 
