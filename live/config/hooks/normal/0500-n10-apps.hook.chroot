@@ -56,3 +56,7 @@ BACKSPACE="guess"
 KB
 ln -sf /usr/share/zoneinfo/Europe/Istanbul /etc/localtime
 echo Europe/Istanbul > /etc/timezone
+
+# GeForce 9300M GS video-decode firmware for nouveau (H.264/VC-1 on the GPU in
+# NVIDIA mode), extracted from NVIDIA's own driver at build time
+/usr/local/sbin/n10-nouveau-firmware || echo "WARN: nouveau video firmware not installed"

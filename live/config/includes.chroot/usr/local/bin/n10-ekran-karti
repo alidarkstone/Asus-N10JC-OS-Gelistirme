@@ -75,8 +75,16 @@ class App(Gtk.Window):
         h264 = "H264_HIGH" in vd or "H264_MAIN" in vd
         if mode == "nvidia":
             fw = self._exists("/lib/firmware/nouveau/.n10-ok")
-            row(grid, 5, "H.264 donanım çözme", "Açık" if (h264 and fw) else
-                "Kapalı (firmware internete bağlanınca kendiliğinden iner)", "ok" if (h264 and fw) else "bad")
+            ok = h264 and fw
+            row(grid, 5, "H.264 donanım çözme", "Açık" if ok else
+                ("Kapalı (firmware yüklü, VDPAU yanıt vermiyor)" if fw else "Kapalı (firmware yok)"),
+                "ok" if ok else "bad")
+            if not fw:
+                b = Gtk.Button(label="Firmware'i şimdi indir ve kur")
+                b.connect("clicked", lambda *_: subprocess.Popen(
+                    ["lxterminal", "-t", "Video firmware", "-e",
+                     "sh -c 'sudo -n n10-nouveau-firmware; echo; read -p \"Kapatmak için Enter\" x'"]))
+                grid.attach(b, 1, 6, 1, 1)
         else:
             row(grid, 5, "Video çözme", "İşlemci (GMA 950'de donanım video çözücü yok)")
         outer.pack_start(c, False, False, 0)

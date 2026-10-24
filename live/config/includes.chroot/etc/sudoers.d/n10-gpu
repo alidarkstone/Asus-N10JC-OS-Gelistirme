@@ -1,1 +1,1 @@
-%sudo ALL=(root) NOPASSWD: /usr/local/sbin/n10-gpu-pstate
+%sudo ALL=(root) NOPASSWD: /usr/local/sbin/n10-gpu-pstate, /usr/local/sbin/n10-nouveau-firmware

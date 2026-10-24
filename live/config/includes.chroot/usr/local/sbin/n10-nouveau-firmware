@@ -1,16 +1,24 @@
 #!/bin/bash
-# Install the GeForce 9300M GS (VP3) video-decode firmware for nouveau/VDPAU.
-# The blobs can't be redistributed, so we extract them from NVIDIA's own driver
-# on this machine, following https://nouveau.freedesktop.org/VideoAcceleration.html
+# Install the GeForce 9300M GS (G98, "VP3") video-decode firmware for nouveau/VDPAU.
+# The blobs can't be redistributed separately, so they are extracted from NVIDIA's
+# own driver package, following https://nouveau.freedesktop.org/VideoAcceleration.html
+# Runs at ISO build time (hook 0500); can be re-run by hand: sudo n10-nouveau-firmware
 set -euo pipefail
-[ "$(id -u)" = 0 ] || exec sudo "$0" "$@"
+[ "$(id -u)" = 0 ] || exec sudo -n "$0" "$@"
+VER=340.108
 tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
 cd "$tmp"
-curl -fLO https://raw.githubusercontent.com/envytools/firmware/master/extract_firmware.py
-curl -fLO https://us.download.nvidia.com/XFree86/Linux-x86/325.15/NVIDIA-Linux-x86-325.15.run
-sh NVIDIA-Linux-x86-325.15.run --extract-only
+echo "[1/3] İndiriliyor: extract_firmware.py + NVIDIA $VER (~40 MB)"
+curl -fsSL --retry 3 -o extract_firmware.py https://raw.githubusercontent.com/envytools/firmware/master/extract_firmware.py
+curl -fsSL --retry 3 -O "https://us.download.nvidia.com/XFree86/Linux-x86/$VER/NVIDIA-Linux-x86-$VER.run"
+echo "[2/3] Ayıklanıyor"
+sh "NVIDIA-Linux-x86-$VER.run" --extract-only >/dev/null
 python3 extract_firmware.py
+[ -s nv98_bsp ] || { echo "HATA: G98 (VP3) firmware bulunamadı"; ls; exit 1; }
+echo "[3/3] Kuruluyor: /lib/firmware/nouveau"
 mkdir -p /lib/firmware/nouveau
-cp -d nv* vuc-* /lib/firmware/nouveau/
+cp -d nv* /lib/firmware/nouveau/
+cp -d vuc-* /lib/firmware/nouveau/ 2>/dev/null || true
 touch /lib/firmware/nouveau/.n10-ok
-echo "Firmware installed. In NVIDIA mode mpv/Chromium can now decode H.264 on the GPU (check: vdpauinfo)"
+ls /lib/firmware/nouveau | head -30
+echo "Tamam. NVIDIA modunda H.264 artık ekran kartında çözülür (kontrol: vdpauinfo)."
