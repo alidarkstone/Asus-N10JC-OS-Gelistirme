@@ -84,6 +84,10 @@ function Get-N10GitHubAsset {
 function Find-N10Katalog([string]$Sorgu) {
     $url = 'https://www.catalog.update.microsoft.com/Search.aspx?q=' + [uri]::EscapeDataString($Sorgu)
     $html = (Invoke-N10Web -Url $url).Content
+    if ($env:N10_KATALOG_DOKUM) {
+        New-Item -ItemType Directory -Force $env:N10_KATALOG_DOKUM | Out-Null
+        Set-Content -Encoding UTF8 -Path (Join-Path $env:N10_KATALOG_DOKUM (($Sorgu -replace '[^A-Za-z0-9]+', '_') + '.html')) -Value $html
+    }
     $satirlar = @{}
     $re = [regex]'(?s)id="([0-9a-fA-F-]{36})_C(\d)_R\d+"[^>]*>(.*?)</td>'
     foreach ($m in $re.Matches($html)) {
@@ -92,7 +96,7 @@ function Find-N10Katalog([string]$Sorgu) {
         $metin = [regex]::Replace($m.Groups[3].Value, '<[^>]+>', ' ')
         $satirlar[$id][[int]$m.Groups[2].Value] = [Net.WebUtility]::HtmlDecode(($metin -replace '\s+', ' ').Trim())
     }
-    $sonuc = foreach ($id in $satirlar.Keys) {
+    $sonuc = @(foreach ($id in $satirlar.Keys) {
         $s = $satirlar[$id]
         $tarih = [datetime]::MinValue
         if ($s.ContainsKey(4)) { [void][datetime]::TryParseExact($s[4], 'M/d/yyyy', [Globalization.CultureInfo]::InvariantCulture, 'None', [ref]$tarih) }
@@ -100,7 +104,8 @@ function Find-N10Katalog([string]$Sorgu) {
             Id = $id; Baslik = $s[1]; Urunler = $s[2]; Sinif = $s[3]; Tarih = $tarih
             Surum = $(if ($s.ContainsKey(5)) { $s[5] } else { '' })
         }
-    }
+    })
+    if ($sonuc.Count -eq 0) { return , @() }
     , @($sonuc | Sort-Object Tarih -Descending)
 }
 

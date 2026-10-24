@@ -144,8 +144,8 @@ try {
         Write-N10Log "  Özellik kapatıldı: $f ($LASTEXITCODE)"
     }
     # Kayıt defteri ayarları, duvar kağıdı, logo
-    $duvar = Join-Path (Split-Path $kit) 'live\config\includes.chroot\usr\share\backgrounds\n10os\default.jpg'
-    $logoPng = Join-Path (Split-Path $kit) 'live\config\includes.chroot\usr\share\n10os\rog-eye-256.png'
+    $duvar = Join-Path $kit 'assets\duvar.jpg'
+    $logoPng = Join-Path $kit 'assets\rog-logo.png'
     $logoBmp = $null
     if (Test-Path $logoPng) {
         $logoBmp = Join-Path $is 'n10-logo.bmp'

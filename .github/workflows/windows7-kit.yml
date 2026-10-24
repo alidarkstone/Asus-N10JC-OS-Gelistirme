@@ -19,6 +19,7 @@ jobs:
         shell: powershell
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          N10_KATALOG_DOKUM: ${{ runner.temp }}/n10w7/katalog
         run: windows7\tests\kit-testi.ps1 -Is "$env:RUNNER_TEMP\n10w7"
       - if: always()
         uses: actions/upload-artifact@v4
@@ -27,3 +28,4 @@ jobs:
           path: |
             ${{ runner.temp }}/n10w7/*.log
             ${{ runner.temp }}/n10w7/*.json
+            ${{ runner.temp }}/n10w7/katalog/
