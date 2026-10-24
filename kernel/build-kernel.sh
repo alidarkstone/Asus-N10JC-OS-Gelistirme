@@ -43,6 +43,7 @@ cp "$WORK/debian-686-pae.config" .config
 scripts/kconfig/merge_config.sh -m .config "$HERE/n10jc.config"
 make olddefconfig
 "$HERE/check-config.sh" .config
+grep -E "^CONFIG_MODULE_SIG" .config || true
 
 make -j"$(nproc)" KCFLAGS="-march=bonnell -mtune=bonnell -O2" \
   KDEB_PKGVERSION="$VER-1n10" KDEB_CHANGELOG_DIST=bookworm \
