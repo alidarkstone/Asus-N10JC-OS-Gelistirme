@@ -1,0 +1,15 @@
+#!/bin/sh
+# A fresh live system has no saved ALSA state, so the HDA codec can come up muted
+# or at 0%. Unmute every playback control the N10JC codec has and set sane levels.
+# (Real per-user volume is then handled by PipeWire.)
+for card in /proc/asound/card[0-9]*; do
+  c=${card#/proc/asound/card}
+  for ctl in Master Speaker Headphone PCM Front "Auto-Mute Mode"; do
+    case $ctl in
+      "Auto-Mute Mode") amixer -q -c "$c" sset "$ctl" Enabled 2>/dev/null ;;
+      PCM)              amixer -q -c "$c" sset "$ctl" 90% unmute 2>/dev/null ;;
+      *)                amixer -q -c "$c" sset "$ctl" 80% unmute 2>/dev/null ;;
+    esac
+  done
+done
+alsactl store 2>/dev/null || true
