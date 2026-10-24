@@ -50,3 +50,6 @@ wireless-regdb
 wpasupplicant
 pciutils
 usbutils
+# n10-rapor: writable Output partition on the USB stick
+fdisk
+dosfstools

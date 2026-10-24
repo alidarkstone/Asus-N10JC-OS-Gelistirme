@@ -80,7 +80,7 @@ jobs:
       - name: Install QEMU
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq qemu-system-x86 socat squashfs-tools imagemagick
+          sudo apt-get install -y -qq qemu-system-x86 socat squashfs-tools imagemagick mtools
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm.rules
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
       - name: Boot and screenshot
@@ -97,5 +97,5 @@ jobs:
           cp -r smoke /tmp/smoke
           git config user.name "n10os-ci"; git config user.email "ci@users.noreply.github.com"
           git checkout --orphan ci-shots && git rm -rqf . && rm -rf build
-          cp /tmp/smoke/* . && echo "${{ github.sha }}" > SOURCE_SHA
+          cp -r /tmp/smoke/* . && echo "${{ github.sha }}" > SOURCE_SHA
           git add -A && git commit -qm "Smoke test for ${{ github.sha }}" && git push -f origin ci-shots

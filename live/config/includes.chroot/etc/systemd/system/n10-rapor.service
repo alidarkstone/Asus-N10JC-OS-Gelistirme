@@ -1,0 +1,6 @@
+[Unit]
+Description=Write N10 OS diagnostics to the USB stick (Output folder)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/n10-rapor

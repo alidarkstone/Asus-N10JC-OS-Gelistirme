@@ -1,0 +1,8 @@
+[Unit]
+Description=N10 OS diagnostics shortly after boot (desktop idle by then)
+
+[Timer]
+OnBootSec=100s
+
+[Install]
+WantedBy=timers.target

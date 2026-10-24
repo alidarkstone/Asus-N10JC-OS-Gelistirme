@@ -1,0 +1,79 @@
+#!/bin/bash
+# Automatic diagnostics: every boot (n10-rapor.timer, ~100 s after boot) the full
+# report is written to the USB stick, in the "N10-OUTPUT" FAT32 partition under
+# Output/<date_time>/. Windows shows that partition as a normal drive.
+# The partition is created once, in the free space behind the DD-written ISO.
+# Can also be run by hand: sudo n10-rapor
+set -u
+LABEL=N10-OUTPUT
+log() { echo "n10-rapor: $*"; }
+
+out_dev() { blkid -L "$LABEL" 2>/dev/null; }
+
+make_partition() {
+  # Disk the live system booted from (e.g. /dev/sdb1 -> /dev/sdb)
+  local part disk
+  part=$(findmnt -no SOURCE /run/live/medium 2>/dev/null) || return 1
+  case $part in /dev/sd*|/dev/vd*|/dev/mmcblk*) ;; *) log "medium $part is not a disk"; return 1;; esac
+  disk=/dev/$(lsblk -no PKNAME "$part" | head -1)
+  [ -b "$disk" ] || return 1
+  # Need at least 64 MB free after the ISO
+  local free
+  free=$(sfdisk -F "$disk" 2>/dev/null | awk '/^Unpartitioned space/{for(i=2;i<=NF;i++) if($i ~ /^bytes/) print $(i-1)}')
+  [ "${free:-0}" -ge $((64*1024*1024)) ] || { log "no free space on $disk"; return 1; }
+  log "creating $LABEL on $disk"
+  echo ",,c" | sfdisk --force --append --no-reread --no-tell-kernel -q "$disk" || return 1
+  local n
+  n=$(sfdisk -l -q "$disk" | awk 'END{print $1}'); n=${n##*[!0-9]}
+  partx -a --nr "$n" "$disk" 2>/dev/null || partx -u "$disk" 2>/dev/null
+  udevadm settle
+  local newpart
+  newpart=$(lsblk -lnpo NAME "$disk" | sed -n "$((n+1))p")
+  [ -b "$newpart" ] || { log "new partition not visible"; return 1; }
+  mkfs.vfat -F 32 -n "$LABEL" "$newpart" >/dev/null || return 1
+  udevadm settle
+}
+
+dev=$(out_dev)
+[ -n "$dev" ] || { make_partition; dev=$(out_dev); }
+[ -n "$dev" ] || { log "no output partition, nothing written"; exit 0; }
+
+mnt=/run/n10-output
+mkdir -p "$mnt"
+mount -t vfat -o utf8,flush "$dev" "$mnt" || exit 1
+dir="$mnt/Output/$(date +%Y-%m-%d_%H-%M-%S)"
+mkdir -p "$dir"
+
+user=$(getent passwd 1000 | cut -d: -f1); home=$(getent passwd 1000 | cut -d: -f6)
+asuser() { runuser -u "$user" -- env XDG_RUNTIME_DIR=/run/user/1000 DISPLAY=:0 XAUTHORITY="$home/.Xauthority" "$@"; }
+
+/usr/local/bin/n10-hwcheck   > "$dir/donanim.txt" 2>&1
+asuser /usr/local/bin/n10-hiz-olc > "$dir/hiz.txt" 2>&1
+{
+  echo "== aplay -l"; aplay -l
+  echo "== amixer (card 0)"; amixer -c 0
+  echo "== codec"; cat /proc/asound/card0/codec#* 2>/dev/null | head -60
+  echo "== wpctl status"; asuser wpctl status
+  echo "== user services"; asuser systemctl --user --no-pager status pipewire wireplumber pipewire-pulse 2>&1 | head -40
+} > "$dir/ses.txt" 2>&1
+{
+  echo "== nmcli"; nmcli dev; nmcli radio
+  echo "== rfkill"; rfkill list
+  echo "== iw"; iw dev
+  echo "== bluetooth"; bluetoothctl show 2>&1 | head -20
+} > "$dir/ag.txt" 2>&1
+dmesg > "$dir/dmesg.txt" 2>&1
+journalctl -b --no-pager -p warning > "$dir/journal-uyarilar.txt" 2>&1
+journalctl -b --no-pager > "$dir/journal-tam.txt" 2>&1
+systemctl --failed --no-pager > "$dir/servis-hatalari.txt" 2>&1
+lspci -nnvk > "$dir/lspci.txt" 2>&1
+cp "$home/.cache/n10-session.log" "$home/.cache/startx.log" "$dir/" 2>/dev/null
+cp "$home/.local/share/xorg/Xorg.0.log" /var/log/Xorg.0.log "$dir/" 2>/dev/null
+cat > "$dir/OKU-BENI.txt" <<TXT
+N10 OS otomatik raporu - $(date)
+Çekirdek: $(uname -r)
+Bu klasörün tamamını Claude'a gönder.
+TXT
+sync
+umount "$mnt"
+log "report written to $dev:/Output/$(basename "$dir")"
