@@ -21,7 +21,7 @@ Windows yalnızca **sizin kendi orijinal ürün anahtarınızla** etkinleştiril
 Anahtar sürümle eşleşmeli. Örneğin Home Premium anahtarı yalnızca Home Premium'u etkinleştirir.
 
 ## Kullanım (Windows 10/11 bilgisayarda)
-1. Bu klasörü bilgisayara kopyalayın. Orijinal **Windows 7 32-bit (x86)** ISO'nuzu isterseniz `iso` alt klasörüne koyun. Koymazsanız program size sorar.
+1. Kaynak olarak üç seçenek var: orijinal **Windows 7 32-bit (x86)** ISO'nuzu `iso` alt klasörüne koyun, Windows 7 DVD'nizi ya da kurulum USB'nizi takın, ya da hiçbirini yapmayın, program ISO dosyasını size sorar. Microsoft Windows 7 ISO indirmesini kapattığı için kit ISO'yu kendisi indirmez.
 2. **`HAZIRLA.cmd`** dosyasına çift tıklayıp yönetici iznini verin.
 3. Açılan pencerelerde ISO'yu, sürümü ve ürün anahtarınızı seçin. Anahtarı boş bırakabilirsiniz.
 4. İndirme ve hazırlık 30-60 dakika sürer. Bittiğinde `C:\N10-Win7\cikti` klasörü açılır. Orada ISO ve `RAPOR_*.txt` bulunur.

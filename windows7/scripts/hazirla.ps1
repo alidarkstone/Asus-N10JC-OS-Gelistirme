@@ -40,27 +40,43 @@ if (-not $ayar.BILGISAYAR_ADI) { $ayar.BILGISAYAR_ADI = 'N10JC' }
 Write-N10Log "N10JC Windows 7 kiti başladı. Çalışma klasörü: $Kok"
 
 # ---------------- 2) ISO ----------------
+# Kaynak: kit klasöründeki ISO, takılı Windows 7 DVD'si/kurulum USB'si ya da seçilen ISO dosyası.
 $iso = Get-ChildItem -Path (Join-Path $kit 'iso'), $Kok -Filter *.iso -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -notlike "$cikti*" } | Select-Object -First 1
+$surucu = $null
 if ($iso) { $iso = $iso.FullName } else {
-    $dlg = New-Object Windows.Forms.OpenFileDialog
-    $dlg.Title = 'Orijinal Windows 7 32-bit (x86) ISO dosyanızı seçin'
-    $dlg.Filter = 'ISO dosyası (*.iso)|*.iso'
-    if ($dlg.ShowDialog() -ne 'OK') { Dur 'ISO seçilmedi.' }
-    $iso = $dlg.FileName
+    foreach ($d in Get-WmiObject Win32_LogicalDisk -Filter 'DriveType=5 OR DriveType=2') {
+        if ((Test-Path "$($d.DeviceID)\sources\install.wim") -and (Test-Path "$($d.DeviceID)\setup.exe")) {
+            $cevap = [Windows.Forms.MessageBox]::Show("$($d.DeviceID) sürücüsünde bir Windows kurulum diski/USB'si bulundu ($($d.VolumeName)).`n`nBundan hazırlansın mı?", 'N10JC Windows 7', 'YesNo', 'Question')
+            if ($cevap -eq 'Yes') { $surucu = $d.DeviceID; break }
+        }
+    }
+    if (-not $surucu) {
+        $dlg = New-Object Windows.Forms.OpenFileDialog
+        $dlg.Title = 'Orijinal Windows 7 32-bit (x86) ISO dosyanızı seçin'
+        $dlg.Filter = 'ISO dosyası (*.iso)|*.iso'
+        if ($dlg.ShowDialog() -ne 'OK') { Dur 'ISO seçilmedi. Windows 7 DVD''nizi takıp tekrar da deneyebilirsiniz.' }
+        $iso = $dlg.FileName
+    }
 }
-Write-N10Log "ISO: $iso"
 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $isoKlasor
 New-Item -ItemType Directory -Force $isoKlasor, $mount, $cikti | Out-Null
 if ((& dism.exe /English /Get-MountedWimInfo) -match [regex]::Escape($mount)) { DismCalistir @('/Unmount-Wim', "/MountDir:$mount", '/Discard') -Kabul 0, 1 | Out-Null }
 
-$disk = Mount-DiskImage -ImagePath $iso -PassThru
-try {
-    $harf = ($disk | Get-Volume).DriveLetter
-    Write-N10Log "ISO içeriği kopyalanıyor ($($harf):)..."
-    & robocopy.exe "$($harf):\" $isoKlasor /E /NFL /NDL /NJH /NJS /R:1 /W:1 | Out-Null
+function Kopyala([string]$Kaynak) {
+    Write-N10Log "Kurulum dosyaları kopyalanıyor ($Kaynak)..."
+    & robocopy.exe "$Kaynak\" $isoKlasor /E /NFL /NDL /NJH /NJS /R:1 /W:1 | Out-Null
     if ($LASTEXITCODE -ge 8) { throw "robocopy $LASTEXITCODE" }
-} finally { Dismount-DiskImage -ImagePath $iso | Out-Null }
+}
+if ($surucu) {
+    Write-N10Log "Kaynak: $surucu kurulum diski"
+    Kopyala $surucu
+} else {
+    Write-N10Log "ISO: $iso"
+    $disk = Mount-DiskImage -ImagePath $iso -PassThru
+    try { Kopyala "$(($disk | Get-Volume).DriveLetter):" }
+    finally { Dismount-DiskImage -ImagePath $iso | Out-Null }
+}
 Get-ChildItem -Recurse $isoKlasor | ForEach-Object { if (-not $_.PSIsContainer) { $_.IsReadOnly = $false } }
 
 $wim = Join-Path $isoKlasor 'sources\install.wim'
