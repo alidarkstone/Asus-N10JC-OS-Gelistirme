@@ -22,6 +22,16 @@ foreach ($z in $zorunlu) {
     $s = $ozet | Where-Object { $_.Konu -like $z }
     if (-not $s -or $s.Durum -ne 'TAMAM') { Write-Host "EKSİK: $z"; $hata++ }
 }
+if ($env:N10_KATALOG_DOKUM -and (Test-Path $env:N10_KATALOG_DOKUM)) {
+    Write-Host '--- Katalog arama sayfaları (tanı) ---'
+    foreach ($h in Get-ChildItem $env:N10_KATALOG_DOKUM -Filter *.html) {
+        $t = Get-Content -Raw $h.FullName
+        $sonucYok = $t -match 'noResult'
+        $i = $t.IndexOf('goToDetails')
+        Write-Host ("{0}: {1} bayt, goToDetails={2}, sonuç yok işareti={3}" -f $h.Name, $t.Length, ([regex]::Matches($t, 'goToDetails')).Count, $sonucYok)
+        if ($i -gt 0 -and $h.Name -like 'PCI_VEN_168C*') { Write-Host ($t.Substring([Math]::Max(0, $i - 900), [Math]::Min(2600, $t.Length - $i + 900)) -replace '\s+', ' ') }
+    }
+}
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
     $inf = Get-ChildItem $_.FullName -Recurse -Filter *.inf
