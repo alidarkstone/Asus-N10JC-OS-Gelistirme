@@ -1,0 +1,10 @@
+#!/bin/sh
+# Our kernel comes from a bindeb-pkg .deb, whose install did not leave an initrd here.
+# live-boot needs one, so build it directly (mkinitramfs is not diverted by live-build).
+set -e
+for k in /lib/modules/*; do
+  v=$(basename "$k")
+  [ -f "/boot/vmlinuz-$v" ] || continue
+  mkinitramfs -o "/boot/initrd.img-$v" "$v"
+done
+ls -l /boot
