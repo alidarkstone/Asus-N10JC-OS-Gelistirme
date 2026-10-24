@@ -92,7 +92,7 @@ jobs:
           path: smoke/
           retention-days: 14
       - name: Publish screenshots to ci-shots branch
-        if: always()
+        if: always() && github.ref == 'refs/heads/main'
         run: |
           cp -r smoke /tmp/smoke
           git config user.name "n10os-ci"; git config user.email "ci@users.noreply.github.com"
