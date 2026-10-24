@@ -170,8 +170,14 @@ if ($TurkceDilPaketi) {
                 $acik = Join-Path $ham 'dil-tr-acik'
                 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik
                 & (Get-N10SevenZip $arac) x -y "-o$acik" $dosya | Out-Null
+                $buyuk = Get-ChildItem $acik -Recurse -File | Where-Object { $_.Length -gt 20MB }
+                if (-not $buyuk) {
+                    # 7-Zip paketin yalnızca kabuğunu açtıysa Windows'un kendi expand aracıyla dene.
+                    & expand.exe -F:* $dosya $acik | Out-Null
+                }
+                Get-ChildItem $acik -Recurse -File | ForEach-Object { Write-N10Log ("  dil paketi içeriği: {0} ({1:N1} MB)" -f $_.FullName.Substring($acik.Length), ($_.Length / 1MB)) }
                 # Windows Update dil paketinin asıl içeriği lp.mlc'dir (adı değişik bir .cab); DISM onu lp.cab olarak alır.
-                $c = Get-ChildItem $acik -Recurse -Include *.mlc, *.cab | Sort-Object Length -Descending | Select-Object -First 1
+                $c = Get-ChildItem $acik -Recurse -File | Where-Object { $_.Extension -in '.mlc', '.cab' } | Sort-Object Length -Descending | Select-Object -First 1
                 if ($c -and $c.Length -lt 20MB) { throw "dil paketi içeriği beklenenden küçük ($($c.Name), $($c.Length) bayt)" }
                 if ($c) { Copy-Item -Force $c.FullName $lpCab; Write-N10Log "Türkçe dil paketi hazır ($($c.Name), SHA-1 ve Microsoft imzası doğrulandı)." 'TAMAM' }
                 else { throw 'paketten lp.cab çıkmadı' }
