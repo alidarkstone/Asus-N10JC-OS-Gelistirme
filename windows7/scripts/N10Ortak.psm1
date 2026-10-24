@@ -305,4 +305,58 @@ function Invoke-N10Denetim([scriptblock]$Denetim, [string]$Ad) {
     , @($r | ForEach-Object { $_ } | Where-Object { $_ } | ForEach-Object { [string]$_ })
 }
 
+# Eski sürücü paketlerindeki (ör. NVIDIA 341.x) "SZDD" sıkıştırmalı dosyalar (.dl_, .sy_) Windows 10/11'in
+# DISM'i tarafından okunamıyor (hata 30). Bunlar burada açılır; setupapi sıkıştırılmamış adı önce arar.
+function Expand-N10SikistirilmisDosyalar([string]$Klasor) {
+    if (-not ('N10Szdd' -as [type])) {
+        Add-Type -TypeDefinition @'
+using System; using System.IO;
+public static class N10Szdd {
+    public static bool Ac(string kaynak, string hedef) {
+        byte[] d = File.ReadAllBytes(kaynak);
+        byte[] imza = { 0x53, 0x5A, 0x44, 0x44, 0x88, 0xF0, 0x27, 0x33 };
+        if (d.Length < 14) return false;
+        for (int i = 0; i < 8; i++) if (d[i] != imza[i]) return false;
+        int boy = BitConverter.ToInt32(d, 10);
+        byte[] o = new byte[boy]; byte[] w = new byte[4096];
+        for (int i = 0; i < 4096; i++) w[i] = 0x20;
+        int op = 0, ip = 14, pos = 4096 - 16;
+        while (ip < d.Length && op < boy) {
+            int c = d[ip++];
+            for (int b = 0; b < 8 && ip < d.Length && op < boy; b++) {
+                if ((c & (1 << b)) != 0) { byte x = d[ip++]; o[op++] = x; w[pos] = x; pos = (pos + 1) & 4095; }
+                else {
+                    if (ip + 1 >= d.Length) break;
+                    int m = d[ip] | ((d[ip + 1] & 0xF0) << 4); int n = (d[ip + 1] & 0x0F) + 3; ip += 2;
+                    for (int k = 0; k < n && op < boy; k++) { byte x = w[(m + k) & 4095]; o[op++] = x; w[pos] = x; pos = (pos + 1) & 4095; }
+                }
+            }
+        }
+        if (op != boy) throw new InvalidDataException("SZDD dosyası eksik: " + kaynak);
+        File.WriteAllBytes(hedef, o);
+        return true;
+    }
+    public static char EksikHarf(string yol) { using (var f = File.OpenRead(yol)) { f.Position = 9; return (char)f.ReadByte(); } }
+}
+'@
+    }
+    $uzanti = @{ 'dl_' = 'l'; 'sy_' = 's'; 'ex_' = 'e'; 'bi_' = 'n'; 'cp_' = 'l'; 'dr_' = 'v'; 'hl_' = 'p'; 'ch_' = 'm'; 'ic_' = 'm' }
+    $sayi = 0
+    foreach ($f in Get-ChildItem $Klasor -Recurse -File -Filter '*_' -ErrorAction SilentlyContinue) {
+        $h = [N10Szdd]::EksikHarf($f.FullName)
+        if ([int]$h -eq 0) {
+            $u = $f.Extension.TrimStart('.').ToLower()
+            if (-not $uzanti.ContainsKey($u)) { continue }
+            $h = $uzanti[$u]
+        }
+        $hedef = $f.FullName.Substring(0, $f.FullName.Length - 1) + $h
+        if ([N10Szdd]::Ac($f.FullName, "$hedef.tmp")) {
+            Move-Item -Force "$hedef.tmp" $hedef
+            Remove-Item -Force $f.FullName
+            $sayi++
+        }
+    }
+    $sayi
+}
+
 Export-ModuleMember -Function *-N10*

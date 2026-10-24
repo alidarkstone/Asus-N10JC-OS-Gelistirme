@@ -12,6 +12,30 @@ foreach ($f in Get-ChildItem $kit -Recurse -Include *.ps1, *.psm1) {
     if ($err) { $err | ForEach-Object { Write-Host "SÖZDİZİMİ: $($f.Name): $_" }; $hata++ }
 }
 
+# 1b) Statik denetim: PSScriptAnalyzer (hatalar ve kısa ad kullanımı) ve kısa adlarla çakışan işlev adları.
+#     ('R' adlı bir işlev, PowerShell'deki r = Invoke-History kısa adının gölgesinde kalıp ince ayarı bozmuştu.)
+$takmaAd = @{}; Get-Alias | ForEach-Object { $takmaAd[$_.Name.ToLower()] = $_.Definition }
+foreach ($f in Get-ChildItem $kit -Recurse -Include *.ps1, *.psm1) {
+    $t1 = $null; $e1 = $null
+    $ast = [Management.Automation.Language.Parser]::ParseFile($f.FullName, [ref]$t1, [ref]$e1)
+    foreach ($fn in $ast.FindAll({ $args[0] -is [Management.Automation.Language.FunctionDefinitionAst] }, $true)) {
+        if ($takmaAd.ContainsKey($fn.Name.ToLower())) {
+            Write-Host "STATİK: $($f.Name): '$($fn.Name)' işlevi '$($takmaAd[$fn.Name.ToLower()])' kısa adıyla çakışıyor"; $hata++
+        }
+    }
+}
+try {
+    if (-not (Get-Module -ListAvailable PSScriptAnalyzer)) {
+        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope CurrentUser | Out-Null
+        Install-Module PSScriptAnalyzer -Force -Scope CurrentUser -SkipPublisherCheck
+    }
+    $bulgu = @(Invoke-ScriptAnalyzer -Path (Join-Path $kit 'scripts') -Recurse -Severity Error) +
+        @(Invoke-ScriptAnalyzer -Path (Join-Path $kit 'scripts') -Recurse -IncludeRule PSAvoidUsingCmdletAliases) +
+        @(Invoke-ScriptAnalyzer -Path (Join-Path $kit 'tests') -Recurse -Severity Error)
+    foreach ($b in $bulgu) { Write-Host "ANALİZ: $($b.ScriptName):$($b.Line) $($b.RuleName): $($b.Message)"; $hata++ }
+    if (-not $bulgu.Count) { Write-Host 'PSScriptAnalyzer: bulgu yok.' }
+} catch { Write-Host "ANALİZ çalıştırılamadı: $($_.Exception.Message)"; $hata++ }
+
 # 2) İndirme ve sürücü hazırlığı
 $onbellek = Join-Path $Is 'onbellek'
 & (Join-Path $kit 'scripts\indir.ps1') -Onbellek $onbellek -Gunluk (Join-Path $Is 'indir.log') -TurkceDilPaketi -SP1Gerekli
@@ -120,6 +144,86 @@ $r = Invoke-N10Denetim { Test-YokBoyleBirKomut 'x' } 'Medya denetimi'
 $ErrorActionPreference = 'Stop'
 if (-not $r.Count) { Write-Host 'MEDYA TESTİ: çalışamayan denetim geçti sayıldı'; $hata++ } else { Write-Host "Çalışamayan denetim: $($r -join ' | ')" }
 if (-not (Test-N10Medya $sahte)) { Write-Host 'MEDYA TESTİ: $OEM$ içeren medya yakalanmadı'; $hata++ } else { Write-Host 'Medya testi: değiştirilmiş medya yakalandı.' }
+
+# 6) Çevrimdışı ince ayarlar: sahte bir imaj klasöründe boş kovanlarla gerçekten çalıştırılır.
+$sm = Join-Path $Is 'sahte-mount'
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $sm
+New-Item -ItemType Directory -Force "$sm\Windows\System32\config", "$sm\Users\Default" | Out-Null
+& reg.exe add 'HKCU\Software\N10BosKovan' /f | Out-Null
+foreach ($h in "$sm\Windows\System32\config\SYSTEM", "$sm\Windows\System32\config\SOFTWARE", "$sm\Users\Default\NTUSER.DAT") {
+    & reg.exe save 'HKCU\Software\N10BosKovan' $h /y | Out-Null
+}
+& reg.exe delete 'HKCU\Software\N10BosKovan' /f | Out-Null
+$ayarLog = Join-Path $Is 'ince-ayar.log'
+Set-N10Log $ayarLog
+$ErrorActionPreference = 'Continue'   # HAZIRLA'daki gibi
+try { & (Join-Path $kit 'scripts\ince-ayar.ps1') -Mount $sm } catch { Write-Host "İNCE AYAR: çalışmadı: $($_.Exception.Message)"; $hata++ }
+$ErrorActionPreference = 'Stop'
+$uyari = @(Get-Content $ayarLog -ErrorAction SilentlyContinue | Where-Object { $_ -match 'UYARI|HATA' })
+if ($uyari) { $uyari | ForEach-Object { Write-Host "İNCE AYAR: $_" }; $hata++ }
+& reg.exe load 'HKLM\N10_TEST' "$sm\Windows\System32\config\SYSTEM" | Out-Null
+$q = & reg.exe query 'HKLM\N10_TEST\ControlSet001\Control\Session Manager\Memory Management' /v DisablePagingExecutive 2>&1
+& reg.exe unload 'HKLM\N10_TEST' | Out-Null
+& reg.exe load 'HKLM\N10_TEST' "$sm\Users\Default\NTUSER.DAT" | Out-Null
+$q2 = & reg.exe query 'HKLM\N10_TEST\Software\Microsoft\Windows\DWM' /v ColorizationColor 2>&1
+& reg.exe unload 'HKLM\N10_TEST' | Out-Null
+if (($q -join ' ') -notmatch '0x1' -or ($q2 -join ' ') -notmatch '0xc42b2b2b') {
+    Write-Host "İNCE AYAR: değerler kovana yazılmadı: $($q -join ' ') / $($q2 -join ' ')"; $hata++
+} else { Write-Host 'İnce ayar testi: kovanlara yazıldı.' }
+
+# 7) Eski sürücülerdeki SZDD sıkıştırmalı dosyalar (NVIDIA .dl_/.sy_) açılmalı; Windows'un kendi expand.exe'siyle karşılaştırılır.
+$nvKaynak = Join-Path $onbellek 'suruculer\nvidia-341'
+$nv = Join-Path $Is 'nvidia-acma'
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $nv
+Copy-Item -Recurse $nvKaynak $nv
+$sik = @(Get-ChildItem $nv -Recurse -File -Filter '*_')
+$ornek = $sik | Where-Object { $_.Name -eq 'nvd3dum.dl_' } | Select-Object -First 1
+$karsi = Join-Path $Is 'nvd3dum-expand.dll'
+if ($ornek) { & expand.exe $ornek.FullName $karsi | Out-Null }
+$acilan = Expand-N10SikistirilmisDosyalar $nv
+$kalan = @(Get-ChildItem $nv -Recurse -File -Filter '*_' | Where-Object { (([IO.File]::ReadAllBytes($_.FullName)[0..3]) -join ',') -eq '83,90,68,68' })
+Write-Host "SZDD: $($sik.Count) sıkıştırılmış dosya, $acilan açıldı, $($kalan.Count) kaldı"
+if (-not $acilan -or $kalan.Count) { Write-Host 'SZDD TESTİ: dosyalar açılmadı'; $hata++ }
+foreach ($d in Get-ChildItem $nv -Recurse -File -Include *.dll, *.sys, *.exe) {
+    $b = [IO.File]::ReadAllBytes($d.FullName)
+    if ($b[0] -ne 0x4D -or $b[1] -ne 0x5A) { Write-Host "SZDD TESTİ: $($d.Name) geçerli bir program dosyası değil"; $hata++ }
+    $imz = Get-AuthenticodeSignature $d.FullName
+    if ($imz.Status -eq 'HashMismatch') { Write-Host "SZDD TESTİ: $($d.Name) bozuk açıldı (imza tutmuyor)"; $hata++ }
+}
+$nvDll = Join-Path $nv 'nvd3dum.dll'
+if ((Test-Path $karsi) -and (Test-Path $nvDll)) {
+    $ayni = (Get-FileHash $karsi).Hash -eq (Get-FileHash $nvDll).Hash
+    Write-Host "SZDD: expand.exe ile aynı sonuç: $ayni ($((Get-AuthenticodeSignature $nvDll).Status))"
+    if (-not $ayni) { $hata++ }
+} else { Write-Host "SZDD: expand.exe karşılaştırması yapılamadı (expand çıktısı var: $(Test-Path $karsi))" }
+# INF'lerin istediği her dosya klasörde (açılmış adıyla) bulunmalı
+$eksikDosya = @()
+foreach ($inf in Get-ChildItem $nv -Filter *.inf) {
+    $bolum = $false
+    foreach ($satir in Get-Content $inf.FullName) {
+        if ($satir -match '^\s*\[(.+)\]') { $bolum = $Matches[1] -match '^SourceDisksFiles(\.x86)?$'; continue }
+        if ($bolum -and $satir -match '^\s*([^;=\s]+)\s*=') {
+            if (-not (Test-Path (Join-Path $nv $Matches[1]))) { $eksikDosya += "$($inf.Name): $($Matches[1])" }
+        }
+    }
+}
+$eksikDosya = @($eksikDosya | Select-Object -Unique)
+if ($eksikDosya) { Write-Host "SZDD TESTİ: INF'lerin istediği dosyalar yok: $(($eksikDosya | Select-Object -First 10) -join ' | ')"; $hata++ }
+else { Write-Host 'SZDD: INF''lerin istediği tüm dosyalar açılmış adlarıyla mevcut.' }
+
+# 8) Ara kayıt bilgisi (HAZIRLA'nın yazıp okuduğu yolla) bozulmadan geri okunmalı
+foreach ($liste in @(@(), @('nvidia-341'), @('nvidia-341', 'ses-alc662'))) {
+    $bilgi = [pscustomobject]@{ Dil = 'tr-TR'; SonraKurulacak = @($liste); Sonuc = @([pscustomobject]@{ Konu = 'Entegre: KB1'; Durum = 'TAMAM'; Ayrinti = 'x' }) }
+    $j = Join-Path $Is 'servis.json'
+    [IO.File]::WriteAllText($j, ($bilgi | ConvertTo-Json -Depth 4), (New-Object Text.UTF8Encoding $false))
+    $geri = Get-Content -Raw -Encoding UTF8 $j | ConvertFrom-Json
+    $gs = @($geri.SonraKurulacak | ForEach-Object { $_ } | Where-Object { $_ })
+    $gsn = @($geri.Sonuc | ForEach-Object { $_ })
+    if ($geri.Dil -ne 'tr-TR' -or ($gs -join ',') -ne ($liste -join ',') -or $gsn.Count -ne 1 -or $gsn[0].Durum -ne 'TAMAM') {
+        Write-Host "ARA KAYIT TESTİ: geri okunan bilgi farklı ($($gs -join ','))"; $hata++
+    }
+}
+Write-Host 'Ara kayıt bilgisi testi bitti.'
 
 Copy-Item (Join-Path $onbellek 'indirme-ozeti.json') $Is
 if ($hata) { Write-Host "$hata sorun var."; exit 1 }
