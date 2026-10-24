@@ -10,8 +10,8 @@ tmp=$(mktemp -d)
 if git clone --depth 1 https://github.com/vinceliuice/WhiteSur-gtk-theme "$tmp/gtk"; then
   # install.sh looks up the invoking user via logname, which has no answer in a chroot.
   # No -l (libadwaita/GTK4): it refuses to run as root and N10 OS has no GTK4 apps.
-  (cd "$tmp/gtk" && SUDO_USER=root USER=root HOME=/root bash ./install.sh -d /usr/share/themes -c light -o normal) \
-    || echo "WARN: WhiteSur GTK install failed"
+  (cd "$tmp/gtk" && SUDO_USER=root USER=root HOME=/root bash -x ./install.sh -d /usr/share/themes -c light -o normal >"$tmp/gtk.log" 2>&1) \
+    || { tail -40 "$tmp/gtk.log"; echo "WARN: WhiteSur GTK install failed"; }
   # Plank dock theme shipped in the same repo
   for p in "$tmp/gtk/src/other/plank/theme-Light" "$tmp/gtk/src/other/plank/theme-light"; do
     [ -d "$p" ] && mkdir -p /usr/share/plank/themes && cp -r "$p" /usr/share/plank/themes/WhiteSur-Light && break

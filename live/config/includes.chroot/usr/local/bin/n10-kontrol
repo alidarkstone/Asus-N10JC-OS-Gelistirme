@@ -153,12 +153,16 @@ def main():
     w.add(panel)
     w.set_size_request(300, -1)
     w.connect("key-press-event", lambda _w, e: e.keyval == Gdk.KEY_Escape and Gtk.main_quit())
-    w.connect("focus-out-event", lambda *_: Gtk.main_quit())
+    # Closes when clicking elsewhere; a focus change right after mapping (the
+    # hotkey still being released) must not close it at once
+    shown = [0]
+    w.connect("focus-out-event", lambda *_: GLib.get_monotonic_time() - shown[0] > 800000 and Gtk.main_quit())
     w.connect("destroy", Gtk.main_quit)
     w.show_all()
     sw = w.get_screen().get_width()
     w.move(sw - 300 - 8, 36)
     w.present()
+    shown[0] = GLib.get_monotonic_time()
     try:
         Gtk.main()
     finally:
