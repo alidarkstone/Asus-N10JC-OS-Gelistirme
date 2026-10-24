@@ -10,6 +10,8 @@ WORK="${WORK:-$HERE/../build/kernel}"
 OUT="${OUT:-$HERE/../build/debs}"
 mkdir -p "$WORK" "$OUT"
 cd "$WORK"
+# Debian's deb packaging rules call the i686 cross compiler, so use it for every step.
+export ARCH=i386 CROSS_COMPILE=i686-linux-gnu-
 
 # Latest stable release in the series, from kernel.org.
 VER="$(curl -fsSL https://www.kernel.org/releases.json \
@@ -37,13 +39,13 @@ if [ ! -f "$WORK/debian-686-pae.config" ]; then
 fi
 cp "$WORK/debian-686-pae.config" .config
 scripts/kconfig/merge_config.sh -m .config "$HERE/n10jc.config"
-make ARCH=i386 olddefconfig
+make olddefconfig
 "$HERE/check-config.sh" .config
 
-make ARCH=i386 -j"$(nproc)" KCFLAGS="-march=bonnell -mtune=bonnell -O2" \
+make -j"$(nproc)" KCFLAGS="-march=bonnell -mtune=bonnell -O2" \
   KDEB_PKGVERSION="$VER-1n10" KDEB_CHANGELOG_DIST=bookworm \
-  DPKG_FLAGS=-d bindeb-pkg  # -d: host gcc -m32 builds i386 fine; skip cross build-dep check
-make -s ARCH=i386 kernelrelease > "$OUT/KERNELRELEASE"
+  DPKG_FLAGS=-d bindeb-pkg  # -d: skip i386 lib build-deps (libssl-dev:i386 etc.), not needed for the kernel
+make -s kernelrelease > "$OUT/KERNELRELEASE"
 mv ../linux-image-*n10jc*.deb "$OUT/"
 rm -f "$OUT"/linux-image-*-dbg_*.deb
 ls -l "$OUT"

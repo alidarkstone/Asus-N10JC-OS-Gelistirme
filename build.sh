@@ -8,7 +8,7 @@ SERIES="${KERNEL_SERIES:-6.18}"
 apt-get update
 apt-get install -y --no-install-recommends live-build debootstrap \
   build-essential bc bison flex libssl-dev libelf-dev cpio kmod rsync \
-  python3 curl xz-utils dpkg-dev debhelper ca-certificates gcc-multilib \
+  python3 curl xz-utils dpkg-dev debhelper ca-certificates \
   gcc-i686-linux-gnu libdw-dev
 
 if [ "${SKIP_KERNEL:-0}" = 1 ] && ls "$ROOT"/build/debs/linux-image-*n10jc*.deb >/dev/null 2>&1; then
