@@ -8,7 +8,7 @@ on:
   push:
     branches: [main]
     tags: ["v*"]
-    paths-ignore: ["**.md"]
+    paths-ignore: ["**.md", "windows7/**", ".github/workflows/windows7-kit.yml"]
 
 concurrency:
   group: iso-${{ github.ref }}

@@ -1,0 +1,220 @@
+﻿# N10JC Windows 7 kiti: sizin orijinal Windows 7 32-bit ISO'nuzdan N10JC'ye özel kurulum ISO'su üretir.
+# HAZIRLA.cmd tarafından yönetici olarak çalıştırılır. Komut yazmanız gerekmez.
+param([string]$Kok = 'C:\N10-Win7')
+Import-Module (Join-Path $PSScriptRoot 'N10Ortak.psm1') -Force
+Add-Type -AssemblyName System.Windows.Forms, Microsoft.VisualBasic, System.Drawing
+
+$kit = Split-Path $PSScriptRoot
+$is = Join-Path $Kok 'is'
+$onbellek = Join-Path $Kok 'onbellek'
+$cikti = Join-Path $Kok 'cikti'
+$isoKlasor = Join-Path $is 'iso'
+$mount = Join-Path $is 'mount'
+$zaman = Get-Date -Format 'yyyy-MM-dd_HH-mm'
+$gunluk = Join-Path $cikti "derleme_$zaman.log"
+Set-N10Log $gunluk
+
+function Dur([string]$Mesaj) {
+    Write-N10Log $Mesaj 'HATA'
+    [void][Windows.Forms.MessageBox]::Show("$Mesaj`n`nAyrıntılar: $gunluk", 'N10JC Windows 7', 'OK', 'Error')
+    exit 1
+}
+function DismCalistir([string[]]$Arg, [int[]]$Kabul = @(0)) {
+    $out = & dism.exe /English @Arg 2>&1
+    $kod = $LASTEXITCODE
+    Add-Content -Path $gunluk -Value ($out | Out-String) -Encoding UTF8
+    if ($Kabul -notcontains $kod) { throw "DISM hata kodu $kod ($($Arg -join ' '))" }
+    return $kod
+}
+
+# ---------------- 1) Ayarlar ----------------
+$ayar = @{}
+$ini = Join-Path $kit 'ayarlar.ini'
+if (-not (Test-Path $ini)) { $ini = Join-Path $kit 'ayarlar.ornek.ini' }
+foreach ($s in Get-Content -Encoding UTF8 $ini) {
+    if ($s -match '^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$') { $ayar[$Matches[1]] = $Matches[2] }
+}
+foreach ($k in 'URUN_ANAHTARI', 'SURUM', 'KULLANICI', 'SIFRE', 'BILGISAYAR_ADI', 'NETFX48') { if (-not $ayar.ContainsKey($k)) { $ayar[$k] = '' } }
+if (-not $ayar.KULLANICI) { $ayar.KULLANICI = 'darkstone' }
+if (-not $ayar.BILGISAYAR_ADI) { $ayar.BILGISAYAR_ADI = 'N10JC' }
+Write-N10Log "N10JC Windows 7 kiti başladı. Çalışma klasörü: $Kok"
+
+# ---------------- 2) ISO ----------------
+$iso = Get-ChildItem -Path (Join-Path $kit 'iso'), $Kok -Filter *.iso -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notlike "$cikti*" } | Select-Object -First 1
+if ($iso) { $iso = $iso.FullName } else {
+    $dlg = New-Object Windows.Forms.OpenFileDialog
+    $dlg.Title = 'Orijinal Windows 7 32-bit (x86) ISO dosyanızı seçin'
+    $dlg.Filter = 'ISO dosyası (*.iso)|*.iso'
+    if ($dlg.ShowDialog() -ne 'OK') { Dur 'ISO seçilmedi.' }
+    $iso = $dlg.FileName
+}
+Write-N10Log "ISO: $iso"
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $isoKlasor
+New-Item -ItemType Directory -Force $isoKlasor, $mount, $cikti | Out-Null
+if ((& dism.exe /English /Get-MountedWimInfo) -match [regex]::Escape($mount)) { DismCalistir @('/Unmount-Wim', "/MountDir:$mount", '/Discard') -Kabul 0, 1 | Out-Null }
+
+$disk = Mount-DiskImage -ImagePath $iso -PassThru
+try {
+    $harf = ($disk | Get-Volume).DriveLetter
+    Write-N10Log "ISO içeriği kopyalanıyor ($($harf):)..."
+    & robocopy.exe "$($harf):\" $isoKlasor /E /NFL /NDL /NJH /NJS /R:1 /W:1 | Out-Null
+    if ($LASTEXITCODE -ge 8) { throw "robocopy $LASTEXITCODE" }
+} finally { Dismount-DiskImage -ImagePath $iso | Out-Null }
+Get-ChildItem -Recurse $isoKlasor | ForEach-Object { if (-not $_.PSIsContainer) { $_.IsReadOnly = $false } }
+
+$wim = Join-Path $isoKlasor 'sources\install.wim'
+if (-not (Test-Path $wim)) { Dur 'Bu ISO''da sources\install.wim yok. Orijinal bir Windows 7 ISO''su gerekiyor.' }
+
+# ---------------- 3) Sürüm seçimi ----------------
+$imajlar = @(Get-WindowsImage -ImagePath $wim | ForEach-Object { Get-WindowsImage -ImagePath $wim -Index $_.ImageIndex })
+$imajlar = @($imajlar | Where-Object { $_.Architecture -eq 0 })   # 0 = x86
+if (-not $imajlar) { Dur 'ISO''da 32-bit (x86) Windows yok. Atom N270 yalnızca 32-bit çalıştırır; x86 ISO gerekiyor.' }
+$secim = $null
+if ($ayar.SURUM) { $secim = $imajlar | Where-Object { $_.ImageName -match [regex]::Escape($ayar.SURUM) } | Select-Object -First 1 }
+if (-not $secim -and $imajlar.Count -eq 1) { $secim = $imajlar[0] }
+if (-not $secim) {
+    $secim = $imajlar | Select-Object ImageIndex, ImageName, @{ n = 'Dil'; e = { $_.Languages -join ',' } } |
+        Out-GridView -Title 'Kurulacak Windows 7 sürümünü seçin (ürün anahtarınız hangi sürüme aitse)' -OutputMode Single
+    if (-not $secim) { Dur 'Sürüm seçilmedi.' }
+    $secim = $imajlar | Where-Object { $_.ImageIndex -eq $secim.ImageIndex }
+}
+$dil = @($secim.Languages)[0]
+$yapi = [int]($secim.Version -split '\.')[2]
+Write-N10Log "Seçilen: $($secim.ImageName) (dizin $($secim.ImageIndex), dil $dil, yapı $($secim.Version))"
+if ($secim.Version -notmatch '^6\.1\.') { Dur 'Bu bir Windows 7 imajı değil.' }
+
+# ---------------- 4) Ürün anahtarı ----------------
+$anahtar = ($ayar.URUN_ANAHTARI -replace '\s', '').ToUpper()
+if (-not $anahtar) {
+    $anahtar = [Microsoft.VisualBasic.Interaction]::InputBox(
+        "Kendi orijinal Windows 7 ürün anahtarınızı yazın (ör. bilgisayarın altındaki COA etiketi).`n`n" +
+        "Boş bırakırsanız kurulum sırasında sorulur, sonra da girebilirsiniz.`n`nSeçilen sürüm: $($secim.ImageName)",
+        'N10JC Windows 7: ürün anahtarı', '').Trim().ToUpper()
+}
+if ($anahtar -and $anahtar -notmatch '^[A-Z0-9]{5}(-[A-Z0-9]{5}){4}$') { Dur "Ürün anahtarı biçimi hatalı: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX olmalı." }
+
+# ---------------- 5) İndirmeler ----------------
+$indirArg = @{ Onbellek = $onbellek; Gunluk = $gunluk }
+if ($yapi -lt 7601) { $indirArg['SP1Gerekli'] = $true }
+if ($ayar.NETFX48 -eq '1') { $indirArg['NetFx48'] = $true }
+& (Join-Path $PSScriptRoot 'indir.ps1') @indirArg
+Import-Module (Join-Path $PSScriptRoot 'N10Ortak.psm1') -Force
+Set-N10Log $gunluk
+
+# ---------------- 6) İmajı tek sürüme indir ve bağla ----------------
+$tekWim = Join-Path $is 'install.wim'
+Remove-Item -Force -ErrorAction SilentlyContinue $tekWim
+Write-N10Log 'Seçilen sürüm ayrı bir imaja aktarılıyor...'
+DismCalistir @('/Export-Image', "/SourceImageFile:$wim", "/SourceIndex:$($secim.ImageIndex)", "/DestinationImageFile:$tekWim", '/Compress:max') | Out-Null
+Write-N10Log 'İmaj bağlanıyor...'
+DismCalistir @('/Mount-Wim', "/WimFile:$tekWim", '/Index:1', "/MountDir:$mount") | Out-Null
+
+$guncellemeSonuc = @()
+try {
+    $img = "/Image:$mount"
+    # SP1 (gerekirse)
+    $sp1 = Join-Path $onbellek 'guncellemeler\sp1\windows6.1-KB976932-X86.cab'
+    if ($yapi -lt 7601) {
+        if (-not (Test-Path $sp1)) { throw 'ISO SP1 içermiyor ve SP1 paketi indirilemedi.' }
+        Write-N10Log 'Service Pack 1 ekleniyor (uzun sürer)...'
+        DismCalistir @($img, '/Add-Package', "/PackagePath:$sp1") -Kabul 0, 3010 | Out-Null
+    }
+    # Güncellemeler
+    $siraDosya = Join-Path $onbellek 'guncellemeler\sira.json'
+    foreach ($g in @(Get-Content -Raw $siraDosya | ConvertFrom-Json) | Sort-Object Sira) {
+        Write-N10Log "Güncelleme ekleniyor: $($g.KB) - $($g.Not)"
+        $kod = & dism.exe /English $img /Add-Package "/PackagePath:$(Join-Path $onbellek "guncellemeler\$($g.Dosya)")" 2>&1
+        $c = $LASTEXITCODE
+        Add-Content -Path $gunluk -Value ($kod | Out-String) -Encoding UTF8
+        $dr = switch ($c) { 0 { 'TAMAM' } 3010 { 'TAMAM' } -2146498530 { 'Gerekmedi' } default { "HATA ($c)" } }
+        Write-N10Log "  $($g.KB): $dr" $(if ($dr -like 'HATA*') { 'UYARI' } else { 'TAMAM' })
+        $guncellemeSonuc += [pscustomobject]@{ Konu = "Entegre: $($g.KB)"; Durum = $dr; Ayrinti = $g.Not }
+    }
+    # Sürücüler
+    $surDizin = Join-Path $onbellek 'suruculer'
+    if (Get-ChildItem $surDizin -Recurse -Filter *.inf) {
+        Write-N10Log 'Sürücüler ekleniyor...'
+        DismCalistir @($img, '/Add-Driver', "/Driver:$surDizin", '/Recurse', '/ForceUnsigned') | Out-Null
+    }
+    # Gereksiz özellikler (yer ve bellek)
+    foreach ($f in 'MediaCenter', 'TabletPCOC', 'FaxServicesClientPackage', 'Xps-Foundation-Xps-Viewer', 'Printing-XPSServices-Features',
+        'WindowsGadgetPlatform', 'Internet Games', 'OpticalMediaDisc', 'MSRDC-Infrastructure') {
+        $null = & dism.exe /English $img /Disable-Feature "/FeatureName:$f" 2>&1
+        Write-N10Log "  Özellik kapatıldı: $f ($LASTEXITCODE)"
+    }
+    # Kayıt defteri ayarları, duvar kağıdı, logo
+    $duvar = Join-Path (Split-Path $kit) 'live\config\includes.chroot\usr\share\backgrounds\n10os\default.jpg'
+    $logoPng = Join-Path (Split-Path $kit) 'live\config\includes.chroot\usr\share\n10os\rog-eye-256.png'
+    $logoBmp = $null
+    if (Test-Path $logoPng) {
+        $logoBmp = Join-Path $is 'n10-logo.bmp'
+        $kaynak = [Drawing.Image]::FromFile($logoPng)
+        $bmp = New-Object Drawing.Bitmap 120, 120
+        $gr = [Drawing.Graphics]::FromImage($bmp)
+        $gr.Clear([Drawing.Color]::White); $gr.InterpolationMode = 'HighQualityBicubic'
+        $gr.DrawImage($kaynak, 4, 4, 112, 112)
+        $bmp.Save($logoBmp, [Drawing.Imaging.ImageFormat]::Bmp)
+        $gr.Dispose(); $bmp.Dispose(); $kaynak.Dispose()
+    }
+    $p = @{ Mount = $mount }
+    if (Test-Path $duvar) { $p['DuvarKagidi'] = $duvar }
+    if ($logoBmp) { $p['Logo'] = $logoBmp }
+    & (Join-Path $PSScriptRoot 'ince-ayar.ps1') @p
+    Set-N10Log $gunluk
+
+    Write-N10Log 'İmaj kaydediliyor...'
+    DismCalistir @('/Unmount-Wim', "/MountDir:$mount", '/Commit') | Out-Null
+} catch {
+    Write-N10Log "Hata: $($_.Exception.Message). Değişiklikler geri alınıyor." 'HATA'
+    & dism.exe /English /Unmount-Wim "/MountDir:$mount" /Discard | Out-Null
+    Dur "İmaj hazırlanamadı: $($_.Exception.Message)"
+}
+
+# Son aktarım imajı küçültür (güncellemelerden kalan boşluklar atılır)
+Write-N10Log 'İmaj sıkıştırılıyor...'
+Remove-Item -Force $wim
+DismCalistir @('/Export-Image', "/SourceImageFile:$tekWim", '/SourceIndex:1', "/DestinationImageFile:$wim", '/Compress:max') | Out-Null
+Remove-Item -Force $tekWim
+
+# ---------------- 7) Otomatik kurulum ve kurulum sonrası dosyalar ----------------
+Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $isoKlasor 'sources\ei.cfg')
+$kesBlok = ''
+if ($anahtar) { $kesBlok = "        <ProductKey>`r`n          <Key>$anahtar</Key>`r`n          <WillShowUI>OnError</WillShowUI>`r`n        </ProductKey>" }
+function Xml([string]$s) { [Security.SecurityElement]::Escape($s) }
+$xml = (Get-Content -Raw -Encoding UTF8 (Join-Path $PSScriptRoot 'autounattend.sablon.xml')).
+    Replace('{{UILANG}}', $dil).Replace('{{USER}}', (Xml $ayar.KULLANICI)).Replace('{{PASSWORD}}', (Xml $ayar.SIFRE)).
+    Replace('{{COMPUTER}}', (Xml $ayar.BILGISAYAR_ADI)).Replace('{{KEY_BLOCK}}', $kesBlok)
+[IO.File]::WriteAllText((Join-Path $isoKlasor 'autounattend.xml'), $xml, (New-Object Text.UTF8Encoding $false))
+
+$oem = Join-Path $isoKlasor 'sources\$OEM$'
+New-Item -ItemType Directory -Force "$oem\`$`$\Setup\Scripts", "$oem\`$1\N10\uygulamalar" | Out-Null
+Copy-Item -Force (Join-Path $kit 'oem\Setup-Scripts\*') "$oem\`$`$\Setup\Scripts"
+Copy-Item -Force (Join-Path $kit 'oem\N10\*') "$oem\`$1\N10"
+Copy-Item -Force (Join-Path $onbellek 'uygulamalar\*') "$oem\`$1\N10\uygulamalar"
+
+# ---------------- 8) ISO ----------------
+$cikIso = Join-Path $cikti "N10JC-Win7-$zaman.iso"
+Write-N10Log "ISO oluşturuluyor: $cikIso"
+New-N10Iso -Kaynak $isoKlasor -Hedef $cikIso -Etiket 'N10JC_WIN7' -BootDosyasi (Join-Path $isoKlasor 'boot\etfsboot.com')
+
+# ---------------- 9) Rapor ----------------
+$ozet = @()
+$ozetDosya = Join-Path $onbellek 'indirme-ozeti.json'
+if (Test-Path $ozetDosya) { $ozet += @(Get-Content -Raw $ozetDosya | ConvertFrom-Json) }
+$ozet += $guncellemeSonuc
+$rapor = Join-Path $cikti "RAPOR_$zaman.txt"
+@(
+    'N10JC Windows 7 kurulum ISO''su hazır.'
+    "ISO      : $cikIso ($([math]::Round((Get-Item $cikIso).Length / 1GB, 2)) GB)"
+    "Sürüm    : $($secim.ImageName) ($dil)"
+    "Anahtar  : $(if ($anahtar) { 'otomatik kurulum dosyasına eklendi (' + $anahtar.Substring(24) + ' ile biten)' } else { 'yok, kurulumda sorulacak' })"
+    "Kullanıcı: $($ayar.KULLANICI)"
+    ''
+    ($ozet | Format-Table Konu, Durum, Ayrinti -AutoSize | Out-String -Width 200)
+    'USB''ye yazmak için Rufus kullanın: Bölüm düzeni MBR, hedef sistem BIOS. Ayrıntılar README.md''de.'
+) | Set-Content -Encoding UTF8 $rapor
+Write-N10Log "Bitti. Rapor: $rapor" 'TAMAM'
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $isoKlasor
+Start-Process explorer.exe $cikti
+[void][Windows.Forms.MessageBox]::Show("ISO hazır:`n$cikIso`n`nÖzet: $rapor", 'N10JC Windows 7', 'OK', 'Information')
