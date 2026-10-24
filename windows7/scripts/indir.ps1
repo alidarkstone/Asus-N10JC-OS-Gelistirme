@@ -150,9 +150,11 @@ $sira | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $guncel 'sira.jso
 
 if ($TurkceDilPaketi) {
     # Türkçe arayüz dil paketi (KB2483139, SP1 için). Microsoft yalnızca Ultimate/Enterprise'ta dil paketine izin verir.
-    $lpCab = Join-Path $guncel 'dil-tr\lp.cab'
-    if ((Test-Path $lpCab) -and (Get-Item $lpCab).Length -lt 20MB) { Remove-Item -Force $lpCab }
-    if (-not (Test-Path $lpCab)) {
+    # Paket, açılmış hâliyle (kök klasöründe .mum bildirimi olan klasör) tutulur; DISM klasörden de paket ekleyebilir.
+    $lpKlasor = Join-Path $guncel 'dil-tr\paket'
+    $lpHazir = { (Test-Path $lpKlasor) -and @(Get-ChildItem $lpKlasor -Filter *.mum -ErrorAction SilentlyContinue).Count -gt 0 }
+    Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $guncel 'dil-tr\lp.cab')
+    if (-not (& $lpHazir)) {
         try {
             # Dil paketleri katalogda yok; Microsoft'un Windows Update sunucusundaki asıl dosya kullanılır.
             # Dosya adındaki 40 haneli değer dosyanın SHA-1 özetidir; indirilen dosya buna göre doğrulanır.
@@ -166,25 +168,34 @@ if ($TurkceDilPaketi) {
                 if ($sha -ne '228dfa5fbaa4606b17f93d6fcd51c8c85c0f1fd3') { Remove-Item -Force $dosya; throw "SHA-1 uyuşmadı ($sha)" }
                 $imzaSorun = Test-N10MsImza $dosya
                 if ($imzaSorun) { throw $imzaSorun }
-                New-Item -ItemType Directory -Force (Split-Path $lpCab) | Out-Null
                 $acik = Join-Path $ham 'dil-tr-acik'
                 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik
                 & (Get-N10SevenZip $arac) x -y "-o$acik" $dosya | Out-Null
-                $buyuk = Get-ChildItem $acik -Recurse -File | Where-Object { $_.Length -gt 20MB }
-                if (-not $buyuk) {
-                    # 7-Zip paketin yalnızca kabuğunu açtıysa Windows'un kendi expand aracıyla dene.
-                    & expand.exe -F:* $dosya $acik | Out-Null
+                # Kökte .mum yoksa içerik henüz bir lp.mlc/lp.cab içindedir; onu da aç.
+                if (-not (Get-ChildItem $acik -Filter *.mum -ErrorAction SilentlyContinue)) {
+                    $ic = Get-ChildItem $acik -Recurse -File | Where-Object { $_.Extension -in '.mlc', '.cab' } | Sort-Object Length -Descending | Select-Object -First 1
+                    if (-not $ic -or $ic.Length -lt 20MB) { throw 'paketin içinden dil paketi çıkmadı' }
+                    $acik2 = Join-Path $ham 'dil-tr-acik2'
+                    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $acik2
+                    New-Item -ItemType Directory -Force $acik2 | Out-Null
+                    & expand.exe -F:* $ic.FullName $acik2 | Out-Null
+                    $acik = $acik2
                 }
-                Get-ChildItem $acik -Recurse -File | ForEach-Object { Write-N10Log ("  dil paketi içeriği: {0} ({1:N1} MB)" -f $_.FullName.Substring($acik.Length), ($_.Length / 1MB)) }
-                # Windows Update dil paketinin asıl içeriği lp.mlc'dir (adı değişik bir .cab); DISM onu lp.cab olarak alır.
-                $c = Get-ChildItem $acik -Recurse -File | Where-Object { $_.Extension -in '.mlc', '.cab' } | Sort-Object Length -Descending | Select-Object -First 1
-                if ($c -and $c.Length -lt 20MB) { throw "dil paketi içeriği beklenenden küçük ($($c.Name), $($c.Length) bayt)" }
-                if ($c) { Copy-Item -Force $c.FullName $lpCab; Write-N10Log "Türkçe dil paketi hazır ($($c.Name), SHA-1 ve Microsoft imzası doğrulandı)." 'TAMAM' }
-                else { throw 'paketten lp.cab çıkmadı' }
+                $kok = @(Get-ChildItem $acik -File)
+                foreach ($k in $kok) { Write-N10Log ("  dil paketi kök dosyası: {0} ({1:N1} MB)" -f $k.Name, ($k.Length / 1MB)) }
+                $tum = @(Get-ChildItem $acik -Recurse -File)
+                $boyut = ($tum | Measure-Object Length -Sum).Sum
+                Write-N10Log ("  dil paketi: {0} dosya, {1:N0} MB" -f $tum.Count, ($boyut / 1MB))
+                if (-not ($kok | Where-Object { $_.Extension -eq '.mum' })) { throw 'dil paketinde .mum bildirimi yok' }
+                if ($boyut -lt 50MB) { throw "dil paketi beklenenden küçük ($([math]::Round($boyut / 1MB)) MB)" }
+                Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $lpKlasor
+                New-Item -ItemType Directory -Force (Split-Path $lpKlasor) | Out-Null
+                Move-Item $acik $lpKlasor
+                Write-N10Log 'Türkçe dil paketi hazır (SHA-1 ve Microsoft imzası doğrulandı).' 'TAMAM'
             }
         } catch { Write-N10Log "Türkçe dil paketi alınamadı: $($_.Exception.Message)" 'HATA' }
     }
-    Add-N10Ozet 'Türkçe arayüz dil paketi (KB2483139)' $(if (Test-Path $lpCab) { 'TAMAM' } else { 'YOK' })
+    Add-N10Ozet 'Türkçe arayüz dil paketi (KB2483139)' $(if (& $lpHazir) { 'TAMAM' } else { 'YOK' })
 }
 
 if ($SP1Gerekli) {

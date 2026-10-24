@@ -173,8 +173,8 @@ try {
         DismCalistir @($img, '/Add-Package', "/PackagePath:$sp1") -Kabul 0, 3010 | Out-Null
     }
     # Türkçe dil paketi (güncellemelerden önce eklenir ki güncellemelerin Türkçe dosyaları da gelsin)
-    $lp = Join-Path $onbellek 'guncellemeler\dil-tr\lp.cab'
-    if ($turkceArayuz -and (Test-Path $lp)) {
+    $lp = Join-Path $onbellek 'guncellemeler\dil-tr\paket'
+    if ($turkceArayuz -and (Get-ChildItem $lp -Filter *.mum -ErrorAction SilentlyContinue)) {
         Write-N10Log 'Türkçe dil paketi ekleniyor...'
         $c = DismCalistir @($img, '/Add-Package', "/PackagePath:$lp") -Kabul 0, 3010
         DismCalistir @($img, '/Set-AllIntl:tr-TR') | Out-Null

@@ -33,10 +33,14 @@ if ($env:N10_KATALOG_DOKUM -and (Test-Path $env:N10_KATALOG_DOKUM)) {
     }
 }
 Import-Module (Join-Path $kit 'scripts\N10Ortak.psm1') -Force
-Get-ChildItem (Join-Path $onbellek 'guncellemeler\dil-tr') -ErrorAction SilentlyContinue | ForEach-Object {
-    Write-Host ("Dil paketi: {0} {1:N1} MB" -f $_.Name, ($_.Length / 1MB))
-    if ($_.Length -lt 20MB) { Write-Host 'DİL PAKETİ ÇOK KÜÇÜK'; $hata++ }
-    & expand.exe -D $_.FullName | Select-String -Pattern 'update.mum|tr-tr' | Select-Object -First 3 | ForEach-Object { Write-Host "  $_" }
+$lpKlasor = Join-Path $onbellek 'guncellemeler\dil-tr\paket'
+if (Test-Path $lpKlasor) {
+    $mum = @(Get-ChildItem $lpKlasor -Filter *.mum)
+    $mb = (Get-ChildItem $lpKlasor -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
+    Write-Host ("Dil paketi: {0:N0} MB, bildirimler: {1}" -f $mb, (($mum | ForEach-Object Name) -join ', '))
+    if (-not $mum -or $mb -lt 50) { Write-Host 'DİL PAKETİ EKSİK'; $hata++ }
+    # DISM'in paketi okuyabildiğini dene (çalışan sisteme göre; yalnızca tanı)
+    & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$lpKlasor" 2>&1 | Select-Object -First 25 | ForEach-Object { Write-Host "  $_" }
 }
 Write-Host '--- Hazırlanan sürücüler ---'
 Get-ChildItem (Join-Path $onbellek 'suruculer') -Directory | ForEach-Object {
