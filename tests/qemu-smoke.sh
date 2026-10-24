@@ -46,6 +46,9 @@ for at in 45 90 150 300; do  # n10-rapor runs at ~100 s
 done
 # App menu via Alt+Space (same rofi menu as the ROG button)
 echo "sendkey alt-spc" | socat - unix-connect:"$work/mon" >/dev/null; sleep 4; shot menu
+echo "sendkey esc" | socat - unix-connect:"$work/mon" >/dev/null; sleep 1
+# Control Centre (Super+C)
+echo "sendkey meta_l-c" | socat - unix-connect:"$work/mon" >/dev/null; sleep 6; shot kontrol
 echo quit | socat - unix-connect:"$work/mon" >/dev/null 2>&1
 wait $qemu 2>/dev/null
 echo "accel: $accel" >> "$out/image-files.txt"
