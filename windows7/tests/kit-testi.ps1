@@ -46,6 +46,27 @@ if (Test-Path $lpKlasor) {
         $imza = Get-AuthenticodeSignature ($sarma.FullName -replace '\.mum$', '.cat')
         Write-Host "Sarmalayıcı katalog imzası: $($imza.Status), $($imza.SignerCertificate.Subject)"
         if (-not (Test-Path (Join-Path $lpKlasor 'update.mum'))) { Write-Host 'update.mum YOK'; $hata++ }
+        # Deneme A: exe içindeki özgün cab'ı (MSCF imzası) olduğu gibi kesip çıkar
+        $exe = Get-ChildItem (Join-Path $onbellek 'ham') -Filter 'windows6.1-kb2483139-x86-tr-tr_*.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $exe) { $exe = Get-ChildItem $onbellek -Recurse -Filter 'windows6.1-kb2483139-x86-tr-tr_*.exe' | Select-Object -First 1 }
+        $b = [IO.File]::ReadAllBytes($exe.FullName)
+        $metin = [Text.Encoding]::GetEncoding(28591).GetString($b)
+        $konumlar = @(); $i = $metin.IndexOf("MSCF`0`0`0`0", [StringComparison]::Ordinal)
+        while ($i -ge 0 -and $konumlar.Count -lt 10) { $konumlar += $i; $i = $metin.IndexOf("MSCF`0`0`0`0", $i + 4, [StringComparison]::Ordinal) }
+        $metin = $null
+        Write-Host "exe $($b.Length) bayt, MSCF konumları: $($konumlar -join ', ')"
+        foreach ($k in $konumlar) {
+            $uz = [BitConverter]::ToUInt32($b, $k + 8)
+            Write-Host "  MSCF @$k uzunluk $uz"
+            if ($uz -gt 50MB -and $k + $uz -le $b.Length) {
+                $kesik = Join-Path $Is 'lp-kesik.cab'
+                $fs = [IO.File]::Create($kesik); $fs.Write($b, $k, $uz); $fs.Close()
+                & expand.exe -D $kesik | Select-Object -First 6 | ForEach-Object { Write-Host "    $_" }
+                & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$kesik" 2>&1 | Where-Object { $_ -match 'rror|Identity|Applicable|valid' } | Select-Object -First 4 | ForEach-Object { Write-Host "    kesik: $_" }
+            }
+        }
+        $b = $null
+        # Deneme B: açılmış klasör
         & dism.exe /English /Online /Get-PackageInfo "/PackagePath:$lpKlasor" 2>&1 | Select-Object -First 25 | ForEach-Object { Write-Host "  $_" }
     }
 }
