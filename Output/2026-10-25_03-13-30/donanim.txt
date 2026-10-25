@@ -1,0 +1,46 @@
+== N10 OS 6.18.58-n10jc ==
+== PCI ==
+00:02.0 VGA compatible controller [0300]: Device [1234:1111] (rev 02)
+	Subsystem: Red Hat, Inc. Device [1af4:1100]
+	Kernel driver in use: bochs-drm
+	Kernel modules: bochs
+00:03.0 Ethernet controller [0200]: Intel Corporation 82540EM Gigabit Ethernet Controller [8086:100e] (rev 03)
+	Subsystem: Red Hat, Inc. QEMU Virtual Machine [1af4:1100]
+	Kernel driver in use: e1000
+	Kernel modules: e1000
+00:04.0 Audio device [0403]: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) High Definition Audio Controller [8086:2668] (rev 01)
+	Subsystem: Red Hat, Inc. QEMU Virtual Machine [1af4:1100]
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel
+== USB ==
+Bus 002 Device 002: ID 46f4:0001 QEMU QEMU USB HARDDRIVE
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+== Radios ==
+== Network ==
+DEVICE  TYPE      STATE                  
+ens3    ethernet  bağlandı               
+lo      loopback  connected (externally) 
+== Audio ==
+**** List of PLAYBACK Hardware Devices ****
+card 0: Intel [HDA Intel], device 0: Generic Analog [Generic Analog]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+Codec: QEMU Generic
+Address: 0
+AFG Function Id: 0x1 (unsol 0)
+== GPU mode: intel ==
+== Backlight ==
+== Memory ==
+               total        used        free      shared  buff/cache   available
+Mem:           992Mi       331Mi        88Mi        17Mi       725Mi       661Mi
+Swap:          992Mi          0B       992Mi
+NAME       TYPE        SIZE USED PRIO
+/dev/zram0 partition 992,5M   0B  100
+== Firmware / errors ==
+[    1.366261] button: module verification failed: signature and/or required key missing - tainting kernel
+[    5.429489] Error: Driver 'pcspkr' is already registered, aborting...
+[  133.262730] I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+[  133.263889] floppy: error 10 while reading block 0
+[  133.359408] I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+[  133.360666] floppy: error 10 while reading block 0

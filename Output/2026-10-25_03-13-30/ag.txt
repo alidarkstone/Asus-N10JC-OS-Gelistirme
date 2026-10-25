@@ -1,0 +1,9 @@
+== nmcli
+DEVICE  TYPE      STATE                   CONNECTION         
+ens3    ethernet  bağlandı                Kablolu bağlantı 1 
+lo      loopback  connected (externally)  lo                 
+WIFI-HW  WIFI   WWAN-HW  WWAN  
+missing  etkin  missing  etkin 
+== rfkill
+== iw
+== bluetooth

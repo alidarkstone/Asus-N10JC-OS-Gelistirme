@@ -1,0 +1,3 @@
+N10 OS otomatik raporu - Paz 25 Eki 2026 03:14:55 +03
+Çekirdek: 6.18.58-n10jc
+Bu klasörün tamamını Claude'a gönder.

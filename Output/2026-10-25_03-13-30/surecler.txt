@@ -1,0 +1,108 @@
+  PID   RSS     ELAPSED COMMAND
+ 1149 92284       02:02 nm-applet
+ 1095 77552       02:06 /usr/lib/xorg/Xorg :0 -nolisten tcp vt1 -auth /tmp/serverauth.fe5xQExTA4
+ 1155 50976       02:02 picom --backend xrender --no-fading-openclose --unredir-if-possible -b
+ 1148 40968       02:02 plank
+ 1196 27392       02:00 /usr/libexec/bamf/bamfdaemon
+ 1142 20976       02:02 openbox
+ 1010 18692       02:07 /usr/sbin/NetworkManager --no-daemon
+ 1147 16792       02:02 tint2
+ 1058 15876       02:06 /usr/bin/wireplumber
+ 1057 11616       02:06 /usr/bin/pipewire
+    1 10868       02:14 /sbin/init components
+ 1150 10300       02:02 dunst
+ 1027  9540       02:06 /lib/systemd/systemd --user
+ 1165  8372       02:02 /usr/lib/polkit-1/polkitd --no-debug
+ 1059  8324       02:06 /usr/bin/pipewire-pulse
+  352  8048       02:09 /lib/systemd/systemd-journald
+  978  7432       02:07 /lib/systemd/systemd-logind
+ 1011  6668       02:07 /sbin/wpa_supplicant -u -s -O DIR=/run/wpa_supplicant GROUP=netdev
+ 1273  5668       01:57 /usr/libexec/dconf-service
+  372  5576       02:09 /lib/systemd/systemd-udevd
+  972  4580       02:07 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 1064  4316       02:06 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 1322  4212       00:00 ps -eo pid,rss,etime,args --sort=-rss
+ 1034  4096       02:06 (sd-pam)
+ 1295  3896       00:00 (udev-worker)
+ 1297  3844       00:00 (udev-worker)
+ 1018  3760       02:06 /bin/login -f
+ 1278  3532       00:01 /bin/bash /usr/local/sbin/n10-rapor
+  971  2860       02:07 /usr/sbin/cron -f
+ 1094  2636       02:06 xinit /usr/local/bin/n10-session -- /usr/bin/X :0 -nolisten tcp vt1 -auth /tmp/serverauth.fe5xQExTA4
+ 1019  2284       02:06 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 - vt220
+  974  1796       02:07 /usr/bin/earlyoom -m 4 -s 10 -r 0 --prefer (chromium|chrome|netsurf) --avoid (Xorg|openbox|tint2|plank|pipewire)
+ 1130  1784       02:03 /bin/sh /usr/local/bin/n10-session
+ 1060  1776       02:06 /bin/sh /usr/bin/startx /usr/local/bin/n10-session -- -nolisten tcp vt1
+    2     0       02:14 [kthreadd]
+    3     0       02:14 [pool_workqueue_release]
+    4     0       02:14 [kworker/R-rcu_gp]
+    5     0       02:14 [kworker/R-sync_wq]
+    6     0       02:14 [kworker/R-kvfree_rcu_reclaim]
+    7     0       02:14 [kworker/R-slub_flushwq]
+    8     0       02:14 [kworker/R-netns]
+    9     0       02:14 [kworker/0:0-events]
+   10     0       02:14 [kworker/0:1-cgroup_release]
+   11     0       02:14 [kworker/0:0H-events_highpri]
+   12     0       02:14 [kworker/u8:0-writeback]
+   13     0       02:14 [kworker/R-mm_percpu_wq]
+   14     0       02:14 [ksoftirqd/0]
+   15     0       02:14 [rcu_preempt]
+   16     0       02:14 [rcu_exp_par_gp_kthread_worker/0]
+   17     0       02:14 [rcu_exp_gp_kthread_worker]
+   18     0       02:14 [migration/0]
+   19     0       02:14 [idle_inject/0]
+   20     0       02:14 [cpuhp/0]
+   21     0       02:14 [cpuhp/1]
+   22     0       02:14 [idle_inject/1]
+   23     0       02:14 [migration/1]
+   24     0       02:14 [ksoftirqd/1]
+   25     0       02:14 [kworker/1:0-rcu_gp]
+   26     0       02:14 [kworker/1:0H-kblockd]
+   27     0       02:14 [kdevtmpfs]
+   28     0       02:14 [kworker/R-inet_frag_wq]
+   29     0       02:14 [rcu_tasks_kthread]
+   30     0       02:14 [rcu_tasks_trace_kthread]
+   31     0       02:13 [kauditd]
+   32     0       02:13 [khungtaskd]
+   33     0       02:13 [oom_reaper]
+   34     0       02:13 [kworker/R-writeback]
+   35     0       02:13 [kcompactd0]
+   36     0       02:13 [ksmd]
+   37     0       02:13 [khugepaged]
+   38     0       02:13 [kworker/R-kblockd]
+   39     0       02:13 [kworker/R-blkcg_punt_bio]
+   40     0       02:13 [kworker/R-kintegrityd]
+   41     0       02:13 [irq/9-acpi]
+   42     0       02:13 [kworker/1:1-events]
+   43     0       02:13 [kworker/R-tpm_dev_wq]
+   44     0       02:13 [kworker/R-ata_sff]
+   45     0       02:13 [kworker/R-edac-poller]
+   46     0       02:13 [kworker/R-devfreq_wq]
+   47     0       02:13 [kworker/R-quota_events_unbound]
+   48     0       02:13 [kworker/1:1H-kblockd]
+   49     0       02:13 [kworker/u8:1-loop0]
+   50     0       02:13 [kswapd0]
+   51     0       02:13 [kworker/R-kthrotld]
+   52     0       02:13 [kworker/R-acpi_thermal_pm]
+   54     0       02:13 [scsi_eh_0]
+   55     0       02:13 [kworker/R-scsi_tmf_0]
+   56     0       02:13 [scsi_eh_1]
+   57     0       02:13 [kworker/R-scsi_tmf_1]
+   58     0       02:13 [kworker/u8:2-events_unbound]
+   59     0       02:13 [kworker/u8:3-loop0]
+   60     0       02:13 [kworker/u8:4-loop0]
+   61     0       02:13 [kworker/R-mld]
+   62     0       02:13 [kworker/R-ipv6_addrconf]
+   63     0       02:13 [kworker/R-kstrp]
+   65     0       02:13 [kworker/u9:0]
+  112     0       02:13 [kworker/0:1H-kblockd]
+  114     0       02:12 [kworker/1:2]
+  115     0       02:12 [kworker/1:3-events_power_efficient]
+  118     0       02:12 [kworker/1:2H-kblockd]
+  120     0       02:12 [scsi_eh_2]
+  121     0       02:12 [kworker/R-scsi_tmf_2]
+  122     0       02:12 [usb-storage]
+  123     0       02:12 [kworker/R-uas]
+  124     0       02:12 [kworker/0:2-rcu_gp]
+  358     0       02:09 [kworker/0:3-cgroup_free]
+  359     0       02:09 [kworker/0:4-rcu_gp]

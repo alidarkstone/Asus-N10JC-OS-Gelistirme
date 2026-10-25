@@ -1,0 +1,39 @@
+== Açılış süresi ==
+Startup finished in 4.044s (kernel) + 3.361s (userspace) = 7.405s 
+graphical.target reached after 3.339s in userspace.
+== En yavaş 10 servis ==
+1.893s live-config.service
+ 907ms dev-sda1.device
+ 890ms systemd-binfmt.service
+ 519ms dev-loop0.device
+ 483ms NetworkManager.service
+ 270ms networking.service
+ 212ms wpa_supplicant.service
+ 178ms zramswap.service
+ 170ms dbus.service
+ 164ms e2scrub_reap.service
+== Bellek (boşta) ==
+               total        used        free      shared  buff/cache   available
+Mem:             992         331          88          17         726         661
+Swap:            992           0         992
+
+NAME       ALGORITHM DISKSIZE DATA COMPR TOTAL STREAMS MOUNTPOINT
+/dev/zram0 lz4         992,5M   4K   64B    4K         [SWAP]
+== En çok bellek kullanan 8 süreç ==
+MB  SÜREÇ
+90   nm-applet
+75   Xorg
+49   picom
+40   plank
+26   bamfdaemon
+20   openbox
+18   NetworkManager
+16   tint2
+== CPU ==
+ 03:13:31 up 2 min,  1 user,  load average: 0,16, 0,17, 0,07
+== Disk okuma hızı ==
+ Timing buffered disk reads: == GPU ==
+mod: intel
+Extended renderer info (GLX_MESA_query_renderer):
+OpenGL renderer string: llvmpipe (LLVM 15.0.6, 256 bits)
+OpenGL version string: 4.5 (Compatibility Profile) Mesa 22.3.6

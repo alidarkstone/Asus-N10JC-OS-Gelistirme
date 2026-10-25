@@ -1,0 +1,63 @@
+00:00.0 Host bridge [0600]: Intel Corporation 440FX - 82441FX PMC [Natoma] [8086:1237] (rev 02)
+	Subsystem: Red Hat, Inc. Qemu virtual machine [1af4:1100]
+	Flags: fast devsel
+	Kernel modules: intel_agp
+
+00:01.0 ISA bridge [0601]: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II] [8086:7000]
+	Subsystem: Red Hat, Inc. Qemu virtual machine [1af4:1100]
+	Flags: medium devsel
+
+00:01.1 IDE interface [0101]: Intel Corporation 82371SB PIIX3 IDE [Natoma/Triton II] [8086:7010] (prog-if 80 [ISA Compatibility mode-only controller, supports bus mastering])
+	Subsystem: Red Hat, Inc. Qemu virtual machine [1af4:1100]
+	Flags: bus master, medium devsel, latency 0
+	I/O ports at 01f0 [size=8]
+	I/O ports at 03f4
+	I/O ports at 0170 [size=8]
+	I/O ports at 0374
+	I/O ports at c040 [size=16]
+	Kernel driver in use: ata_piix
+	Kernel modules: ata_generic
+
+00:01.3 Bridge [0680]: Intel Corporation 82371AB/EB/MB PIIX4 ACPI [8086:7113] (rev 03)
+	Subsystem: Red Hat, Inc. Qemu virtual machine [1af4:1100]
+	Flags: medium devsel, IRQ 9
+	Kernel driver in use: piix4_smbus
+	Kernel modules: i2c_piix4
+
+00:02.0 VGA compatible controller [0300]: Device [1234:1111] (rev 02) (prog-if 00 [VGA controller])
+	Subsystem: Red Hat, Inc. Device [1af4:1100]
+	Flags: fast devsel
+	Memory at fd000000 (32-bit, prefetchable) [size=16M]
+	Memory at febb8000 (32-bit, non-prefetchable) [size=4K]
+	Expansion ROM at 000c0000 [disabled] [size=128K]
+	Kernel driver in use: bochs-drm
+	Kernel modules: bochs
+
+00:03.0 Ethernet controller [0200]: Intel Corporation 82540EM Gigabit Ethernet Controller [8086:100e] (rev 03)
+	Subsystem: Red Hat, Inc. QEMU Virtual Machine [1af4:1100]
+	Physical Slot: 3
+	Flags: bus master, fast devsel, latency 0, IRQ 11
+	Memory at feb80000 (32-bit, non-prefetchable) [size=128K]
+	I/O ports at c000 [size=64]
+	Expansion ROM at feb00000 [disabled] [size=512K]
+	Kernel driver in use: e1000
+	Kernel modules: e1000
+
+00:04.0 Audio device [0403]: Intel Corporation 82801FB/FBM/FR/FW/FRW (ICH6 Family) High Definition Audio Controller [8086:2668] (rev 01)
+	Subsystem: Red Hat, Inc. QEMU Virtual Machine [1af4:1100]
+	Physical Slot: 4
+	Flags: bus master, fast devsel, latency 0, IRQ 27
+	Memory at febb0000 (32-bit, non-prefetchable) [size=16K]
+	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
+	Kernel driver in use: snd_hda_intel
+	Kernel modules: snd_hda_intel
+
+00:05.0 USB controller [0c03]: Red Hat, Inc. QEMU XHCI Host Controller [1b36:000d] (rev 01) (prog-if 30 [XHCI])
+	Subsystem: Red Hat, Inc. QEMU XHCI Host Controller [1af4:1100]
+	Physical Slot: 5
+	Flags: bus master, fast devsel, latency 0, IRQ 10
+	Memory at febb4000 (64-bit, non-prefetchable) [size=16K]
+	Capabilities: [90] MSI-X: Enable+ Count=16 Masked-
+	Kernel driver in use: xhci_hcd
+	Kernel modules: xhci_pci
+

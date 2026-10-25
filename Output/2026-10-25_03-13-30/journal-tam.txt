@@ -1,0 +1,920 @@
+Eki 25 03:11:21 localhost.localdomain kernel: Linux version 6.18.58-n10jc (root@d3c1cd9d64d7) (i686-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #1n10 SMP PREEMPT_DYNAMIC Sat Oct 24 13:00:32 UTC 2026
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-provided physical RAM map:
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-e820: [mem 0x0000000000100000-0x000000003ffdefff] usable
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-e820: [mem 0x000000003ffdf000-0x000000003fffffff] reserved
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+Eki 25 03:11:21 localhost.localdomain kernel: BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+Eki 25 03:11:21 localhost.localdomain kernel: NX (Execute Disable) protection: active
+Eki 25 03:11:21 localhost.localdomain kernel: APIC: Static calls initialized
+Eki 25 03:11:21 localhost.localdomain kernel: SMBIOS 3.0.0 present.
+Eki 25 03:11:21 localhost.localdomain kernel: DMI: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_caps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Eki 25 03:11:21 localhost.localdomain kernel: DMI: Memory slots populated: 1/1
+Eki 25 03:11:21 localhost.localdomain kernel: Hypervisor detected: KVM
+Eki 25 03:11:21 localhost.localdomain kernel: last_pfn = 0x3ffdf max_arch_pfn = 0x1000000
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-clock: Using msrs 4b564d01 and 4b564d00
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-clock: using sched offset of 641801728 cycles
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+Eki 25 03:11:21 localhost.localdomain kernel: tsc: Detected 2596.126 MHz processor
+Eki 25 03:11:21 localhost.localdomain kernel: e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+Eki 25 03:11:21 localhost.localdomain kernel: e820: remove [mem 0x000a0000-0x000fffff] usable
+Eki 25 03:11:21 localhost.localdomain kernel: last_pfn = 0x3ffdf max_arch_pfn = 0x1000000
+Eki 25 03:11:21 localhost.localdomain kernel: MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+Eki 25 03:11:21 localhost.localdomain kernel: x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+Eki 25 03:11:21 localhost.localdomain kernel: found SMP MP-table at [mem 0x000f5470-0x000f547f]
+Eki 25 03:11:21 localhost.localdomain kernel: initial memory mapped: [mem 0x00000000-0x1cbfffff]
+Eki 25 03:11:21 localhost.localdomain kernel: RAMDISK: [mem 0x3c700000-0x3ffcffff]
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Early table checksum verification disabled
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: RSDP 0x00000000000F5280 000014 (v00 BOCHS )
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: RSDT 0x000000003FFE1CB9 000034 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: FACP 0x000000003FFE1B65 000074 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: DSDT 0x000000003FFE0040 001B25 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: FACS 0x000000003FFE0000 000040
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: APIC 0x000000003FFE1BD9 000080 (v03 BOCHS  BXPC     00000001 BXPC 00000001)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: HPET 0x000000003FFE1C59 000038 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: WAET 0x000000003FFE1C91 000028 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Reserving FACP table memory at [mem 0x3ffe1b65-0x3ffe1bd8]
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Reserving DSDT table memory at [mem 0x3ffe0040-0x3ffe1b64]
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Reserving FACS table memory at [mem 0x3ffe0000-0x3ffe003f]
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Reserving APIC table memory at [mem 0x3ffe1bd9-0x3ffe1c58]
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Reserving HPET table memory at [mem 0x3ffe1c59-0x3ffe1c90]
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Reserving WAET table memory at [mem 0x3ffe1c91-0x3ffe1cb8]
+Eki 25 03:11:21 localhost.localdomain kernel: 1023MB LOWMEM available.
+Eki 25 03:11:21 localhost.localdomain kernel:   mapped low ram: 0 - 3ffdf000
+Eki 25 03:11:21 localhost.localdomain kernel:   low ram: 0 - 3ffdf000
+Eki 25 03:11:21 localhost.localdomain kernel: Zone ranges:
+Eki 25 03:11:21 localhost.localdomain kernel:   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+Eki 25 03:11:21 localhost.localdomain kernel:   Normal   [mem 0x0000000001000000-0x000000003ffdefff]
+Eki 25 03:11:21 localhost.localdomain kernel: Movable zone start for each node
+Eki 25 03:11:21 localhost.localdomain kernel: Early memory node ranges
+Eki 25 03:11:21 localhost.localdomain kernel:   node   0: [mem 0x0000000000001000-0x000000000009efff]
+Eki 25 03:11:21 localhost.localdomain kernel:   node   0: [mem 0x0000000000100000-0x000000003ffdefff]
+Eki 25 03:11:21 localhost.localdomain kernel: Initmem setup node 0 [mem 0x0000000000001000-0x000000003ffdefff]
+Eki 25 03:11:21 localhost.localdomain kernel: On node 0, zone DMA: 1 pages in unavailable ranges
+Eki 25 03:11:21 localhost.localdomain kernel: On node 0, zone DMA: 97 pages in unavailable ranges
+Eki 25 03:11:21 localhost.localdomain kernel: On node 0, zone Normal: 33 pages in unavailable ranges
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PM-Timer IO Port: 0x608
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+Eki 25 03:11:21 localhost.localdomain kernel: IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Using ACPI (MADT) for SMP configuration information
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: HPET id: 0x8086a201 base: 0xfed00000
+Eki 25 03:11:21 localhost.localdomain kernel: TSC deadline timer available
+Eki 25 03:11:21 localhost.localdomain kernel: CPU topo: Max. logical packages:   1
+Eki 25 03:11:21 localhost.localdomain kernel: CPU topo: Max. logical dies:       1
+Eki 25 03:11:21 localhost.localdomain kernel: CPU topo: Max. dies per package:   1
+Eki 25 03:11:21 localhost.localdomain kernel: CPU topo: Max. threads per core:   1
+Eki 25 03:11:21 localhost.localdomain kernel: CPU topo: Num. cores per package:     2
+Eki 25 03:11:21 localhost.localdomain kernel: CPU topo: Num. threads per package:   2
+Eki 25 03:11:21 localhost.localdomain kernel: CPU topo: Allowing 2 present CPUs plus 0 hotplug CPUs
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-guest: KVM setup pv remote TLB flush
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-guest: setup PV sched yield
+Eki 25 03:11:21 localhost.localdomain kernel: PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+Eki 25 03:11:21 localhost.localdomain kernel: PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+Eki 25 03:11:21 localhost.localdomain kernel: [mem 0x40000000-0xfeffbfff] available for PCI devices
+Eki 25 03:11:21 localhost.localdomain kernel: Booting paravirtualized kernel on KVM
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6370452778343963 ns
+Eki 25 03:11:21 localhost.localdomain kernel: setup_percpu: NR_CPUS:2 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:1
+Eki 25 03:11:21 localhost.localdomain kernel: percpu: Embedded 28 pages/cpu s82636 r0 d32052 u114688
+Eki 25 03:11:21 localhost.localdomain kernel: pcpu-alloc: s82636 r0 d32052 u114688 alloc=28*4096
+Eki 25 03:11:21 localhost.localdomain kernel: pcpu-alloc: [0] 0 [0] 1 
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-guest: PV spinlocks enabled
+Eki 25 03:11:21 localhost.localdomain kernel: PV qspinlock hash table entries: 512 (order: 0, 4096 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: Kernel command line: boot=live components locales=tr_TR.UTF-8 timezone=Europe/Istanbul console=ttyS0,115200 console=tty1
+Eki 25 03:11:21 localhost.localdomain kernel: Unknown kernel command line parameters "components boot=live locales=tr_TR.UTF-8 timezone=Europe/Istanbul", will be passed to user space.
+Eki 25 03:11:21 localhost.localdomain kernel: random: crng init done
+Eki 25 03:11:21 localhost.localdomain kernel: printk: log buffer data + meta data: 131072 + 409600 = 540672 bytes
+Eki 25 03:11:21 localhost.localdomain kernel: Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: Built 1 zonelists, mobility grouping on.  Total pages: 262013
+Eki 25 03:11:21 localhost.localdomain kernel: mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+Eki 25 03:11:21 localhost.localdomain kernel: Checking if this processor honours the WP bit even in supervisor mode...Ok.
+Eki 25 03:11:21 localhost.localdomain kernel: SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+Eki 25 03:11:21 localhost.localdomain kernel: Dynamic Preempt: voluntary
+Eki 25 03:11:21 localhost.localdomain kernel: rcu: Preemptible hierarchical RCU implementation.
+Eki 25 03:11:21 localhost.localdomain kernel:         Trampoline variant of Tasks RCU enabled.
+Eki 25 03:11:21 localhost.localdomain kernel:         Tracing variant of Tasks RCU enabled.
+Eki 25 03:11:21 localhost.localdomain kernel: rcu: RCU calculated value of scheduler-enlistment delay is 30 jiffies.
+Eki 25 03:11:21 localhost.localdomain kernel: RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+Eki 25 03:11:21 localhost.localdomain kernel: RCU Tasks Trace: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+Eki 25 03:11:21 localhost.localdomain kernel: NR_IRQS: 2304, nr_irqs: 440, preallocated irqs: 16
+Eki 25 03:11:21 localhost.localdomain kernel: rcu: srcu_init: Setting srcu_struct sizes based on contention.
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6370867519511994 ns
+Eki 25 03:11:21 localhost.localdomain kernel: Console: colour VGA+ 80x25
+Eki 25 03:11:21 localhost.localdomain kernel: printk: legacy console [tty1] enabled
+Eki 25 03:11:21 localhost.localdomain kernel: printk: legacy console [ttyS0] enabled
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Core revision 20250807
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+Eki 25 03:11:21 localhost.localdomain kernel: APIC: Switch to symmetric I/O mode setup
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-guest: APIC: send_IPI_mask() replaced with kvm_send_ipi_mask()
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-guest: APIC: send_IPI_mask_allbutself() replaced with kvm_send_ipi_mask_allbutself()
+Eki 25 03:11:21 localhost.localdomain kernel: kvm-guest: setup PV IPIs
+Eki 25 03:11:21 localhost.localdomain kernel: ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x256bf0a106d, max_idle_ns: 440795262885 ns
+Eki 25 03:11:21 localhost.localdomain kernel: Calibrating delay loop (skipped) preset value.. 5194.59 BogoMIPS (lpj=8653753)
+Eki 25 03:11:21 localhost.localdomain kernel: x86/cpu: User Mode Instruction Prevention (UMIP) activated
+Eki 25 03:11:21 localhost.localdomain kernel: Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+Eki 25 03:11:21 localhost.localdomain kernel: Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
+Eki 25 03:11:21 localhost.localdomain kernel: mitigations: Enabled attack vectors: user_kernel, user_user, guest_host, guest_guest, SMT mitigations: auto
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Store Bypass: Vulnerable
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Return Stack Overflow: IBPB-extending microcode not applied!
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Return Stack Overflow: WARNING: See https://kernel.org/doc/html/latest/admin-guide/hw-vuln/srso.html for mitigation options.
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Return Stack Overflow: WARNING: kernel not compiled with MITIGATION_SRSO.
+Eki 25 03:11:21 localhost.localdomain kernel: Spectre V2 : Mitigation: Retpolines
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Return Stack Overflow: Vulnerable
+Eki 25 03:11:21 localhost.localdomain kernel: Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+Eki 25 03:11:21 localhost.localdomain kernel: Spectre V2 : Spectre v2 / SpectreRSB: Filling RSB on context switch and VMEXIT
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: Supporting XSAVE feature 0x020: 'AVX-512 opmask'
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: Supporting XSAVE feature 0x040: 'AVX-512 Hi256'
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: Supporting XSAVE feature 0x080: 'AVX-512 ZMM_Hi256'
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: xstate_offset[5]:  832, xstate_sizes[5]:   64
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: xstate_offset[6]:  896, xstate_sizes[6]:  512
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: xstate_offset[7]: 1408, xstate_sizes[7]: 1024
+Eki 25 03:11:21 localhost.localdomain kernel: x86/fpu: Enabled xstate features 0xe7, context size is 2432 bytes, using 'compacted' format.
+Eki 25 03:11:21 localhost.localdomain kernel: Freeing SMP alternatives memory: 52K
+Eki 25 03:11:21 localhost.localdomain kernel: pid_max: default: 32768 minimum: 301
+Eki 25 03:11:21 localhost.localdomain kernel: LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,tomoyo,ima,evm
+Eki 25 03:11:21 localhost.localdomain kernel: landlock: Up and running.
+Eki 25 03:11:21 localhost.localdomain kernel: Yama: becoming mindful.
+Eki 25 03:11:21 localhost.localdomain kernel: AppArmor: AppArmor initialized
+Eki 25 03:11:21 localhost.localdomain kernel: TOMOYO Linux initialized
+Eki 25 03:11:21 localhost.localdomain kernel: Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: smpboot: CPU0: AMD EPYC 9V45 96-Core Processor (family: 0x1a, model: 0x2, stepping: 0x1)
+Eki 25 03:11:21 localhost.localdomain kernel: Performance Events: PMU not available due to virtualization, using software events only.
+Eki 25 03:11:21 localhost.localdomain kernel: signal: max sigframe size: 3360
+Eki 25 03:11:21 localhost.localdomain kernel: rcu: Hierarchical SRCU implementation.
+Eki 25 03:11:21 localhost.localdomain kernel: rcu:         Max phase no-delay instances is 1000.
+Eki 25 03:11:21 localhost.localdomain kernel: Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+Eki 25 03:11:21 localhost.localdomain kernel: NMI watchdog: Perf NMI watchdog permanently disabled
+Eki 25 03:11:21 localhost.localdomain kernel: smp: Bringing up secondary CPUs ...
+Eki 25 03:11:21 localhost.localdomain kernel: smpboot: x86: Booting SMP configuration:
+Eki 25 03:11:21 localhost.localdomain kernel: .... node  #0, CPUs:      #1
+Eki 25 03:11:21 localhost.localdomain kernel: smp: Brought up 1 node, 2 CPUs
+Eki 25 03:11:21 localhost.localdomain kernel: smpboot: Total of 2 processors activated (10388.19 BogoMIPS)
+Eki 25 03:11:21 localhost.localdomain kernel: Memory: 955036K/1048052K available (13420K kernel code, 827K rwdata, 4056K rodata, 924K init, 412K bss, 90784K reserved, 0K cma-reserved)
+Eki 25 03:11:21 localhost.localdomain kernel: devtmpfs: initialized
+Eki 25 03:11:21 localhost.localdomain kernel: posixtimers hash table entries: 1024 (order: 1, 8192 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: futex hash table entries: 512 (32768 bytes on 1 NUMA nodes, total 32 KiB, linear).
+Eki 25 03:11:21 localhost.localdomain kernel: pinctrl core: initialized pinctrl subsystem
+Eki 25 03:11:21 localhost.localdomain kernel: NET: Registered PF_NETLINK/PF_ROUTE protocol family
+Eki 25 03:11:21 localhost.localdomain kernel: audit: initializing netlink subsys (disabled)
+Eki 25 03:11:21 localhost.localdomain kernel: audit: type=2000 audit(1792887077.253:1): state=initialized audit_enabled=0 res=1
+Eki 25 03:11:21 localhost.localdomain kernel: thermal_sys: Registered thermal governor 'fair_share'
+Eki 25 03:11:21 localhost.localdomain kernel: thermal_sys: Registered thermal governor 'bang_bang'
+Eki 25 03:11:21 localhost.localdomain kernel: thermal_sys: Registered thermal governor 'step_wise'
+Eki 25 03:11:21 localhost.localdomain kernel: thermal_sys: Registered thermal governor 'user_space'
+Eki 25 03:11:21 localhost.localdomain kernel: thermal_sys: Registered thermal governor 'power_allocator'
+Eki 25 03:11:21 localhost.localdomain kernel: cpuidle: using governor ladder
+Eki 25 03:11:21 localhost.localdomain kernel: cpuidle: using governor menu
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: PCI BIOS revision 2.10 entry at 0xfd1d9, last bus=0
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: Using configuration type 1 for base access
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: Using configuration type 1 for extended access
+Eki 25 03:11:21 localhost.localdomain kernel: HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+Eki 25 03:11:21 localhost.localdomain kernel: HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Added _OSI(Module Device)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Added _OSI(Processor Device)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Added _OSI(Processor Aggregator Device)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: 1 ACPI AML tables successfully acquired and loaded
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Interpreter enabled
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PM: (supports S0 S3 S4 S5)
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Using IOAPIC for interrupt routing
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: Using E820 reservations for host bridge windows
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: Enabled 2 GPEs in block 00 to 0F
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+Eki 25 03:11:21 localhost.localdomain kernel: acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [3] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [4] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [5] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [6] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [7] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [8] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [9] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [10] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [11] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [12] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [13] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [14] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [15] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [16] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [17] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [18] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [19] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [20] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [21] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [22] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [23] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [24] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [25] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [26] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [27] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [28] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [29] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [30] registered
+Eki 25 03:11:21 localhost.localdomain kernel: acpiphp: Slot [31] registered
+Eki 25 03:11:21 localhost.localdomain kernel: PCI host bridge to bus 0000:00
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: root bus resource [mem 0x40000000-0xfebfffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: root bus resource [mem 0x100000000-0x17fffffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: root bus resource [bus 00-ff]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:00.0: [8086:1237] type 00 class 0x060000 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.0: [8086:7000] type 00 class 0x060100 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.1: [8086:7010] type 00 class 0x010180 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.1: BAR 4 [io  0xc040-0xc04f]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.1: BAR 0 [io  0x01f0-0x01f7]: legacy IDE quirk
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.1: BAR 1 [io  0x03f6]: legacy IDE quirk
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.1: BAR 2 [io  0x0170-0x0177]: legacy IDE quirk
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.1: BAR 3 [io  0x0376]: legacy IDE quirk
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.3: [8086:7113] type 00 class 0x068000 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: [1234:1111] type 00 class 0x030000 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: BAR 0 [mem 0xfd000000-0xfdffffff pref]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: BAR 2 [mem 0xfebb8000-0xfebb8fff]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: ROM [mem 0xfeba0000-0xfebaffff pref]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:03.0: [8086:100e] type 00 class 0x020000 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:03.0: BAR 0 [mem 0xfeb80000-0xfeb9ffff]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:03.0: BAR 1 [io  0xc000-0xc03f]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:03.0: ROM [mem 0xfeb00000-0xfeb7ffff pref]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:04.0: [8086:2668] type 00 class 0x040300 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:04.0: BAR 0 [mem 0xfebb0000-0xfebb3fff]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:05.0: [1b36:000d] type 00 class 0x0c0330 conventional PCI endpoint
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:05.0: BAR 0 [mem 0xfebb4000-0xfebb7fff 64bit]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: on NUMA node 0
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PCI: Interrupt link LNKA configured for IRQ 10
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PCI: Interrupt link LNKB configured for IRQ 10
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PCI: Interrupt link LNKC configured for IRQ 11
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PCI: Interrupt link LNKD configured for IRQ 11
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: PCI: Interrupt link LNKS configured for IRQ 9
+Eki 25 03:11:21 localhost.localdomain kernel: iommu: Default domain type: Translated
+Eki 25 03:11:21 localhost.localdomain kernel: iommu: DMA domain TLB invalidation policy: lazy mode
+Eki 25 03:11:21 localhost.localdomain kernel: SCSI subsystem initialized
+Eki 25 03:11:21 localhost.localdomain kernel: libata version 3.00 loaded.
+Eki 25 03:11:21 localhost.localdomain kernel: pps_core: LinuxPPS API ver. 1 registered
+Eki 25 03:11:21 localhost.localdomain kernel: pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+Eki 25 03:11:21 localhost.localdomain kernel: PTP clock support registered
+Eki 25 03:11:21 localhost.localdomain kernel: EDAC MC: Ver: 3.0.0
+Eki 25 03:11:21 localhost.localdomain kernel: NetLabel: Initializing
+Eki 25 03:11:21 localhost.localdomain kernel: NetLabel:  domain hash size = 128
+Eki 25 03:11:21 localhost.localdomain kernel: NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+Eki 25 03:11:21 localhost.localdomain kernel: NetLabel:  unlabeled traffic allowed by default
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: Using ACPI for IRQ routing
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: pci_cache_line_size set to 64 bytes
+Eki 25 03:11:21 localhost.localdomain kernel: e820: reserve RAM buffer [mem 0x0009fc00-0x0009ffff]
+Eki 25 03:11:21 localhost.localdomain kernel: e820: reserve RAM buffer [mem 0x3ffdf000-0x3fffffff]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: vgaarb: setting as boot VGA device
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: vgaarb: bridge control possible
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+Eki 25 03:11:21 localhost.localdomain kernel: vgaarb: loaded
+Eki 25 03:11:21 localhost.localdomain kernel: hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+Eki 25 03:11:21 localhost.localdomain kernel: hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: Switched to clocksource kvm-clock
+Eki 25 03:11:21 localhost.localdomain kernel: VFS: Disk quotas dquot_6.6.0
+Eki 25 03:11:21 localhost.localdomain kernel: VFS: Dquot-cache hash table entries: 1024 (order 0, 4096 bytes)
+Eki 25 03:11:21 localhost.localdomain kernel: AppArmor: AppArmor Filesystem Enabled
+Eki 25 03:11:21 localhost.localdomain kernel: pnp: PnP ACPI init
+Eki 25 03:11:21 localhost.localdomain kernel: pnp 00:02: [dma 2]
+Eki 25 03:11:21 localhost.localdomain kernel: pnp: PnP ACPI: found 5 devices
+Eki 25 03:11:21 localhost.localdomain kernel: PnPBIOS: Disabled
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+Eki 25 03:11:21 localhost.localdomain kernel: NET: Registered PF_INET protocol family
+Eki 25 03:11:21 localhost.localdomain kernel: IP idents hash table entries: 16384 (order: 5, 131072 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 4096 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: TCP established hash table entries: 8192 (order: 3, 32768 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: TCP bind hash table entries: 8192 (order: 5, 131072 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: TCP: Hash tables configured (established 8192 bind 8192)
+Eki 25 03:11:21 localhost.localdomain kernel: MPTCP token hash table entries: 1024 (order: 2, 16384 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: UDP hash table entries: 512 (order: 3, 28672 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: UDP-Lite hash table entries: 512 (order: 3, 28672 bytes, linear)
+Eki 25 03:11:21 localhost.localdomain kernel: NET: Registered PF_UNIX/PF_LOCAL protocol family
+Eki 25 03:11:21 localhost.localdomain kernel: NET: Registered PF_XDP protocol family
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: resource 7 [mem 0x40000000-0xfebfffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci_bus 0000:00: resource 8 [mem 0x100000000-0x17fffffff window]
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.0: PIIX3: Enabling Passive Release
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:01.0: Activating ISA DMA hang workarounds
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: \_SB_.LNKA: Enabled at IRQ 10
+Eki 25 03:11:21 localhost.localdomain kernel: pci 0000:00:05.0: quirk_usb_early_handoff+0x0/0x82c took 14554 usecs
+Eki 25 03:11:21 localhost.localdomain kernel: PCI: CLS 0 bytes, default 64
+Eki 25 03:11:21 localhost.localdomain kernel: Trying to unpack rootfs image as initramfs...
+Eki 25 03:11:21 localhost.localdomain kernel: clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x256bf0a106d, max_idle_ns: 440795262885 ns
+Eki 25 03:11:21 localhost.localdomain kernel: Initialise system trusted keyrings
+Eki 25 03:11:21 localhost.localdomain kernel: Key type blacklist registered
+Eki 25 03:11:21 localhost.localdomain kernel: workingset: timestamp_bits=14 max_order=18 bucket_order=4
+Eki 25 03:11:21 localhost.localdomain kernel: squashfs: version 4.0 (2009/01/31) Phillip Lougher
+Eki 25 03:11:21 localhost.localdomain kernel: integrity: Platform Keyring initialized
+Eki 25 03:11:21 localhost.localdomain kernel: integrity: Machine keyring initialized
+Eki 25 03:11:21 localhost.localdomain kernel: Key type asymmetric registered
+Eki 25 03:11:21 localhost.localdomain kernel: Asymmetric key parser 'x509' registered
+Eki 25 03:11:21 localhost.localdomain kernel: Block layer SCSI generic (bsg) driver version 0.4 loaded (major 247)
+Eki 25 03:11:21 localhost.localdomain kernel: io scheduler mq-deadline registered
+Eki 25 03:11:21 localhost.localdomain kernel: ledtrig-cpu: registered to indicate activity on CPUs
+Eki 25 03:11:21 localhost.localdomain kernel: isapnp: Scanning for PnP cards...
+Eki 25 03:11:21 localhost.localdomain kernel: Freeing initrd memory: 58176K
+Eki 25 03:11:21 localhost.localdomain kernel: isapnp: No Plug & Play device found
+Eki 25 03:11:21 localhost.localdomain kernel: Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+Eki 25 03:11:21 localhost.localdomain kernel: 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+Eki 25 03:11:21 localhost.localdomain kernel: Linux agpgart interface v0.103
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: bus type drm_connector registered
+Eki 25 03:11:21 localhost.localdomain kernel: loop: module loaded
+Eki 25 03:11:21 localhost.localdomain kernel: zram: Added device: zram0
+Eki 25 03:11:21 localhost.localdomain kernel: scsi host0: ata_piix
+Eki 25 03:11:21 localhost.localdomain kernel: scsi host1: ata_piix
+Eki 25 03:11:21 localhost.localdomain kernel: ata1: PATA max MWDMA2 cmd 0x1f0 ctl 0x3f6 bmdma 0xc040 irq 14 lpm-pol 0
+Eki 25 03:11:21 localhost.localdomain kernel: ata2: PATA max MWDMA2 cmd 0x170 ctl 0x376 bmdma 0xc048 irq 15 lpm-pol 0
+Eki 25 03:11:21 localhost.localdomain kernel: i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+Eki 25 03:11:21 localhost.localdomain kernel: serio: i8042 KBD port at 0x60,0x64 irq 1
+Eki 25 03:11:21 localhost.localdomain kernel: serio: i8042 AUX port at 0x60,0x64 irq 12
+Eki 25 03:11:21 localhost.localdomain kernel: mousedev: PS/2 mouse device common for all mice
+Eki 25 03:11:21 localhost.localdomain kernel: input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
+Eki 25 03:11:21 localhost.localdomain kernel: rtc_cmos PNP0B00:00: RTC can wake from S4
+Eki 25 03:11:21 localhost.localdomain kernel: rtc_cmos PNP0B00:00: registered as rtc0
+Eki 25 03:11:21 localhost.localdomain kernel: rtc_cmos PNP0B00:00: setting system clock to 2026-10-25T00:11:17 UTC (1792887077)
+Eki 25 03:11:21 localhost.localdomain kernel: rtc_cmos PNP0B00:00: alarms up to one day, y3k, 242 bytes nvram, hpet irqs
+Eki 25 03:11:21 localhost.localdomain kernel: amd_pstate: The CPPC feature is supported but currently disabled by the BIOS.
+                                              Please enable it if your BIOS has the CPPC option.
+Eki 25 03:11:21 localhost.localdomain kernel: amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+Eki 25 03:11:21 localhost.localdomain kernel: NET: Registered PF_INET6 protocol family
+Eki 25 03:11:21 localhost.localdomain kernel: Segment Routing with IPv6
+Eki 25 03:11:21 localhost.localdomain kernel: In-situ OAM (IOAM) with IPv6
+Eki 25 03:11:21 localhost.localdomain kernel: mip6: Mobile IPv6
+Eki 25 03:11:21 localhost.localdomain kernel: NET: Registered PF_PACKET protocol family
+Eki 25 03:11:21 localhost.localdomain kernel: mpls_gso: MPLS GSO support
+Eki 25 03:11:21 localhost.localdomain kernel: IPI shorthand broadcast: enabled
+Eki 25 03:11:21 localhost.localdomain kernel: sched_clock: Marking stable (960807125, 222695004)->(1231880265, -48378136)
+Eki 25 03:11:21 localhost.localdomain kernel: registered taskstats version 1
+Eki 25 03:11:21 localhost.localdomain kernel: Loading compiled-in X.509 certificates
+Eki 25 03:11:21 localhost.localdomain kernel: Loaded X.509 cert 'Build time autogenerated kernel key: 1c4c56f8c2ae359254179552662096947bec9668'
+Eki 25 03:11:21 localhost.localdomain kernel: Key type .fscrypt registered
+Eki 25 03:11:21 localhost.localdomain kernel: Key type fscrypt-provisioning registered
+Eki 25 03:11:21 localhost.localdomain kernel: Key type encrypted registered
+Eki 25 03:11:21 localhost.localdomain kernel: AppArmor: AppArmor sha256 policy hashing enabled
+Eki 25 03:11:21 localhost.localdomain kernel: ima: No TPM chip found, activating TPM-bypass!
+Eki 25 03:11:21 localhost.localdomain kernel: ima: Allocated hash algorithm: sha256
+Eki 25 03:11:21 localhost.localdomain kernel: ima: No architecture policies found
+Eki 25 03:11:21 localhost.localdomain kernel: evm: Initialising EVM extended attributes:
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.selinux
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.SMACK64 (disabled)
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.SMACK64EXEC (disabled)
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.SMACK64TRANSMUTE (disabled)
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.SMACK64MMAP (disabled)
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.apparmor
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.ima
+Eki 25 03:11:21 localhost.localdomain kernel: evm: security.capability
+Eki 25 03:11:21 localhost.localdomain kernel: evm: HMAC attrs: 0x1
+Eki 25 03:11:21 localhost.localdomain kernel: clk: Disabling unused clocks
+Eki 25 03:11:21 localhost.localdomain kernel: PM: genpd: Disabling unused power domains
+Eki 25 03:11:21 localhost.localdomain kernel: ata2: found unknown device (class 0)
+Eki 25 03:11:21 localhost.localdomain kernel: ata2.00: ATAPI: QEMU DVD-ROM, 2.5+, max UDMA/100
+Eki 25 03:11:21 localhost.localdomain kernel: scsi 1:0:0:0: CD-ROM            QEMU     QEMU DVD-ROM     2.5+ PQ: 0 ANSI: 5
+Eki 25 03:11:21 localhost.localdomain kernel: Freeing unused kernel image (initmem) memory: 924K
+Eki 25 03:11:21 localhost.localdomain kernel: Write protecting kernel text and read-only data: 17480k
+Eki 25 03:11:21 localhost.localdomain kernel: NX-protecting the kernel data: 7056k
+Eki 25 03:11:21 localhost.localdomain kernel: x86/mm: Checked W+X mappings: passed, no W+X pages found.
+Eki 25 03:11:21 localhost.localdomain kernel: Run /init as init process
+Eki 25 03:11:21 localhost.localdomain kernel:   with arguments:
+Eki 25 03:11:21 localhost.localdomain kernel:     /init
+Eki 25 03:11:21 localhost.localdomain kernel:     components
+Eki 25 03:11:21 localhost.localdomain kernel:   with environment:
+Eki 25 03:11:21 localhost.localdomain kernel:     HOME=/
+Eki 25 03:11:21 localhost.localdomain kernel:     TERM=linux
+Eki 25 03:11:21 localhost.localdomain kernel:     boot=live
+Eki 25 03:11:21 localhost.localdomain kernel:     locales=tr_TR.UTF-8
+Eki 25 03:11:21 localhost.localdomain kernel:     timezone=Europe/Istanbul
+Eki 25 03:11:21 localhost.localdomain kernel: button: module verification failed: signature and/or required key missing - tainting kernel
+Eki 25 03:11:21 localhost.localdomain kernel: e1000: Intel(R) PRO/1000 Network Driver
+Eki 25 03:11:21 localhost.localdomain kernel: e1000: Copyright (c) 1999-2006 Intel Corporation.
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+Eki 25 03:11:21 localhost.localdomain kernel: Floppy drive(s): fd0 is 2.88M AMI BIOS
+Eki 25 03:11:21 localhost.localdomain kernel: ACPI: bus type USB registered
+Eki 25 03:11:21 localhost.localdomain kernel: input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input3
+Eki 25 03:11:21 localhost.localdomain kernel: usbcore: registered new interface driver usbfs
+Eki 25 03:11:21 localhost.localdomain kernel: input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input2
+Eki 25 03:11:21 localhost.localdomain kernel: usbcore: registered new interface driver hub
+Eki 25 03:11:21 localhost.localdomain kernel: usbcore: registered new device driver usb
+Eki 25 03:11:21 localhost.localdomain kernel: piix4_smbus 0000:00:01.3: SMBus Host Controller at 0x700, revision 0
+Eki 25 03:11:21 localhost.localdomain kernel: i2c i2c-0: Memory type 0x07 not supported yet, not instantiating SPD
+Eki 25 03:11:21 localhost.localdomain kernel: FDC 0 is a S82078B
+Eki 25 03:11:21 localhost.localdomain kernel: xhci_hcd 0000:00:05.0: xHCI Host Controller
+Eki 25 03:11:21 localhost.localdomain kernel: xhci_hcd 0000:00:05.0: new USB bus registered, assigned bus number 1
+Eki 25 03:11:21 localhost.localdomain kernel: xhci_hcd 0000:00:05.0: hcc params 0x00087001 hci version 0x100 quirks 0x0000000000000010
+Eki 25 03:11:21 localhost.localdomain kernel: xhci_hcd 0000:00:05.0: xHCI Host Controller
+Eki 25 03:11:21 localhost.localdomain kernel: xhci_hcd 0000:00:05.0: new USB bus registered, assigned bus number 2
+Eki 25 03:11:21 localhost.localdomain kernel: sr 1:0:0:0: [sr0] scsi3-mmc drive: 4x/4x cd/rw xa/form2 tray
+Eki 25 03:11:21 localhost.localdomain kernel: xhci_hcd 0000:00:05.0: Host supports USB 3.0 SuperSpeed
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.18
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb1: Product: xHCI Host Controller
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb1: Manufacturer: Linux 6.18.58-n10jc xhci-hcd
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb1: SerialNumber: 0000:00:05.0
+Eki 25 03:11:21 localhost.localdomain kernel: hub 1-0:1.0: USB hub found
+Eki 25 03:11:21 localhost.localdomain kernel: hub 1-0:1.0: 4 ports detected
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.18
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb2: Product: xHCI Host Controller
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb2: Manufacturer: Linux 6.18.58-n10jc xhci-hcd
+Eki 25 03:11:21 localhost.localdomain kernel: usb usb2: SerialNumber: 0000:00:05.0
+Eki 25 03:11:21 localhost.localdomain kernel: hub 2-0:1.0: USB hub found
+Eki 25 03:11:21 localhost.localdomain kernel: hub 2-0:1.0: 4 ports detected
+Eki 25 03:11:21 localhost.localdomain kernel: cdrom: Uniform CD-ROM driver Revision: 3.20
+Eki 25 03:11:21 localhost.localdomain kernel: sr 1:0:0:0: Attached scsi CD-ROM sr0
+Eki 25 03:11:21 localhost.localdomain kernel: e1000 0000:00:03.0 eth0: (PCI:33MHz:32-bit) 52:54:00:12:34:56
+Eki 25 03:11:21 localhost.localdomain kernel: e1000 0000:00:03.0 eth0: Intel(R) PRO/1000 Network Connection
+Eki 25 03:11:21 localhost.localdomain kernel: e1000 0000:00:03.0 ens3: renamed from eth0
+Eki 25 03:11:21 localhost.localdomain kernel: usb 2-1: new SuperSpeed USB device number 2 using xhci_hcd
+Eki 25 03:11:21 localhost.localdomain kernel: usb 2-1: New USB device found, idVendor=46f4, idProduct=0001, bcdDevice= 0.00
+Eki 25 03:11:21 localhost.localdomain kernel: usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+Eki 25 03:11:21 localhost.localdomain kernel: usb 2-1: Product: QEMU USB HARDDRIVE
+Eki 25 03:11:21 localhost.localdomain kernel: usb 2-1: Manufacturer: QEMU
+Eki 25 03:11:21 localhost.localdomain kernel: usb 2-1: SerialNumber: 1-0000:00:05.0-1
+Eki 25 03:11:21 localhost.localdomain kernel: usb-storage 2-1:1.0: USB Mass Storage device detected
+Eki 25 03:11:21 localhost.localdomain kernel: scsi host2: usb-storage 2-1:1.0
+Eki 25 03:11:21 localhost.localdomain kernel: usbcore: registered new interface driver usb-storage
+Eki 25 03:11:21 localhost.localdomain kernel: usbcore: registered new interface driver uas
+Eki 25 03:11:21 localhost.localdomain kernel: scsi 2:0:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+Eki 25 03:11:21 localhost.localdomain kernel: sd 2:0:0:0: [sda] 2763200 512-byte logical blocks: (1.41 GB/1.32 GiB)
+Eki 25 03:11:21 localhost.localdomain kernel: sd 2:0:0:0: [sda] Write Protect is off
+Eki 25 03:11:21 localhost.localdomain kernel: sd 2:0:0:0: [sda] Mode Sense: 63 00 00 08
+Eki 25 03:11:21 localhost.localdomain kernel: sd 2:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Eki 25 03:11:21 localhost.localdomain kernel:  sda: sda1
+Eki 25 03:11:21 localhost.localdomain kernel: sd 2:0:0:0: [sda] Attached SCSI removable disk
+Eki 25 03:11:21 localhost.localdomain kernel: ISO 9660 Extensions: Microsoft Joliet Level 3
+Eki 25 03:11:21 localhost.localdomain kernel: ISO 9660 Extensions: RRIP_1991A
+Eki 25 03:11:21 localhost.localdomain kernel: loop0: detected capacity change from 0 to 2103648
+Eki 25 03:11:21 localhost.localdomain kernel: evm: overlay not supported
+Eki 25 03:11:21 localhost.localdomain kernel: Not activating Mandatory Access Control as /sbin/tomoyo-init does not exist.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Inserted module 'autofs4'
+Eki 25 03:11:21 localhost.localdomain systemd[1]: systemd 252.39-1~deb12u2 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Detected virtualization kvm.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Detected architecture x86.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Hostname set to <localhost.localdomain>.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Initializing machine ID from random generator.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Queued start job for default target graphical.target.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Created slice system-getty.slice - Slice /system/getty.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Created slice system-modprobe.slice - Slice /system/modprobe.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Created slice system-serial\x2dgetty.slice - Slice /system/serial-getty.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Created slice user.slice - User and Session Slice.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Started systemd-ask-password-console.path - Dispatch Password Requests to Console Directory Watch.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Expecting device dev-ttyS0.device - /dev/ttyS0...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target cryptsetup.target - Local Encrypted Volumes.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target remote-fs.target - Remote File Systems.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target slices.target - Slice Units.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target swap.target - Swaps.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Listening on systemd-journald-audit.socket - Journal Audit Socket.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Listening on systemd-journald.socket - Journal Socket.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: sys-kernel-tracing.mount - Kernel Trace File System was skipped because of an unmet condition check (ConditionPathExists=/sys/kernel/tracing).
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting keyboard-setup.service - Set the console keyboard layout...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+Eki 25 03:11:21 localhost.localdomain kernel: device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+Eki 25 03:11:21 localhost.localdomain kernel: device-mapper: uevent: version 1.0.3
+Eki 25 03:11:21 localhost.localdomain kernel: device-mapper: ioctl: 4.50.0-ioctl (2025-04-28) initialised: dm-devel@lists.linux.dev
+Eki 25 03:11:21 localhost.localdomain kernel: fuse: init (API version 7.45)
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-journald.service - Journal Service...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-remount-fs.service - Remount Root and Kernel File Systems...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounted dev-hugepages.mount - Huge Pages File System.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounted dev-mqueue.mount - POSIX Message Queue File System.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounted sys-kernel-debug.mount - Kernel Debug File System.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished keyboard-setup.service - Set the console keyboard layout.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished kmod-static-nodes.service - Create List of Static Device Nodes.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: modprobe@configfs.service: Deactivated successfully.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished modprobe@configfs.service - Load Kernel Module configfs.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: modprobe@dm_mod.service: Deactivated successfully.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished modprobe@dm_mod.service - Load Kernel Module dm_mod.
+Eki 25 03:11:21 localhost.localdomain systemd-journald[352]: Journal started
+Eki 25 03:11:21 localhost.localdomain systemd-journald[352]: Runtime Journal (/run/log/journal/6e8733d0fe7d45e185469f815d5cfc05) is 2.0M, max 16.0M, 14.0M free.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Started systemd-journald.service - Journal Service.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: modprobe@drm.service: Deactivated successfully.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished modprobe@drm.service - Load Kernel Module drm.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: modprobe@efi_pstore.service: Deactivated successfully.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished modprobe@efi_pstore.service - Load Kernel Module efi_pstore.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: modprobe@fuse.service: Deactivated successfully.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished modprobe@fuse.service - Load Kernel Module fuse.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: modprobe@loop.service: Deactivated successfully.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished modprobe@loop.service - Load Kernel Module loop.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-modules-load.service - Load Kernel Modules.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-remount-fs.service - Remount Root and Kernel File Systems.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounting sys-fs-fuse-connections.mount - FUSE Control File System...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounting sys-kernel-config.mount - Kernel Configuration File System...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: systemd-firstboot.service - First Boot Wizard was skipped because of an unmet condition check (ConditionFirstBoot=yes).
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-journal-flush.service - Flush Journal to Persistent Storage...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: systemd-pstore.service - Platform Persistent Storage Archival was skipped because of an unmet condition check (ConditionDirectoryNotEmpty=/sys/fs/pstore).
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-random-seed.service - Load/Save Random Seed...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: systemd-repart.service - Repartition Root Disk was skipped because no trigger condition checks were met.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-sysctl.service - Apply Kernel Variables...
+Eki 25 03:11:21 localhost.localdomain systemd-journald[352]: Runtime Journal (/run/log/journal/6e8733d0fe7d45e185469f815d5cfc05) is 2.0M, max 16.0M, 14.0M free.
+Eki 25 03:11:21 localhost.localdomain systemd-journald[352]: Received client request to flush runtime journal.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-sysusers.service - Create System Users...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-udev-trigger.service - Coldplug All udev Devices.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounted sys-fs-fuse-connections.mount - FUSE Control File System.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounted sys-kernel-config.mount - Kernel Configuration File System.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-journal-flush.service - Flush Journal to Persistent Storage.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-random-seed.service - Load/Save Random Seed.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: first-boot-complete.target - First Boot Complete was skipped because of an unmet condition check (ConditionFirstBoot=yes).
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting ifupdown-pre.service - Helper to synchronize boot up for ifupdown...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-sysctl.service - Apply Kernel Variables.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-sysusers.service - Create System Users.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-tmpfiles-setup-dev.service - Create Static Device Nodes in /dev...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished ifupdown-pre.service - Helper to synchronize boot up for ifupdown.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-tmpfiles-setup-dev.service - Create Static Device Nodes in /dev.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target local-fs-pre.target - Preparation for Local File Systems.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounting tmp.mount - /tmp...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-udevd.service - Rule-based Manager for Device Events and Files...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Mounted tmp.mount - /tmp.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Reached target local-fs.target - Local File Systems.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting networking.service - Raise network interfaces...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-binfmt.service - Set Up Additional Binary Formats...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: systemd-machine-id-commit.service - Commit a transient machine-id on disk was skipped because of an unmet condition check (ConditionPathIsMountPoint=/etc/machine-id).
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-tmpfiles-setup.service - Create System Files and Directories...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: proc-sys-fs-binfmt_misc.automount: Got automount request for /proc/sys/fs/binfmt_misc, triggered by 375 (systemd-binfmt)
+Eki 25 03:11:21 localhost.localdomain systemd-udevd[372]: Using default interface naming scheme 'v252'.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-tmpfiles-setup.service - Create System Files and Directories.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting live-config.service - live-config contains the components that configure a live system during the boot process (late userspace)....
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Starting systemd-update-utmp.service - Record System Boot/Shutdown in UTMP...
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Finished systemd-update-utmp.service - Record System Boot/Shutdown in UTMP.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Started systemd-udevd.service - Rule-based Manager for Device Events and Files.
+Eki 25 03:11:21 localhost.localdomain systemd[1]: Found device dev-ttyS0.device - /dev/ttyS0.
+Eki 25 03:11:21 localhost.localdomain live-config[398]: live-config: debconf hostnameDevice "eth0" does not exist.
+Eki 25 03:11:21 localhost.localdomain live-config[398]: Device "eth0" does not exist.
+Eki 25 03:11:21 localhost.localdomain live-config[398]: Device "eth0" does not exist.
+Eki 25 03:11:21 debian systemd[1]: Finished networking.service - Raise network interfaces.
+Eki 25 03:11:21 debian kernel: sr 1:0:0:0: Attached scsi generic sg0 type 5
+Eki 25 03:11:21 debian kernel: parport_pc 00:03: reported by Plug and Play ACPI
+Eki 25 03:11:21 debian kernel: sd 2:0:0:0: Attached scsi generic sg1 type 0
+Eki 25 03:11:21 debian kernel: parport0: PC-style at 0x378, irq 7 [PCSPP,TRISTATE]
+Eki 25 03:11:21 debian kernel: input: PC Speaker as /devices/platform/pcspkr/input/input4
+Eki 25 03:11:21 debian kernel: bochs-drm 0000:00:02.0: vgaarb: deactivate vga console
+Eki 25 03:11:21 debian kernel: Console: switching to colour dummy device 80x25
+Eki 25 03:11:21 debian kernel: [drm] Found bochs VGA, ID 0xb0c5.
+Eki 25 03:11:21 debian kernel: [drm] Framebuffer size 16384 kB @ 0xfd000000, mmio @ 0xfebb8000.
+Eki 25 03:11:21 debian kernel: [drm] Initialized bochs-drm 1.0.0 for 0000:00:02.0 on minor 0
+Eki 25 03:11:21 debian kernel: Console: switching to colour frame buffer device 160x50
+Eki 25 03:11:21 debian kernel: bochs-drm 0000:00:02.0: [drm] fb0: bochs-drmdrmfb frame buffer device
+Eki 25 03:11:21 debian kernel: Error: Driver 'pcspkr' is already registered, aborting...
+Eki 25 03:11:21 debian kernel: ACPI: \_SB_.LNKD: Enabled at IRQ 11
+Eki 25 03:11:21 debian kernel: snd_hda_codec_generic hdaudioC0D0: autoconfig for Generic: line_outs=1 (0x3/0x0/0x0/0x0/0x0) type:line
+Eki 25 03:11:21 debian kernel: snd_hda_codec_generic hdaudioC0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
+Eki 25 03:11:21 debian kernel: snd_hda_codec_generic hdaudioC0D0:    hp_outs=0 (0x0/0x0/0x0/0x0/0x0)
+Eki 25 03:11:21 debian kernel: snd_hda_codec_generic hdaudioC0D0:    mono: mono_out=0x0
+Eki 25 03:11:21 debian kernel: snd_hda_codec_generic hdaudioC0D0:    inputs:
+Eki 25 03:11:21 debian kernel: snd_hda_codec_generic hdaudioC0D0:      Line=0x5
+Eki 25 03:11:21 debian kernel: ppdev: user-space parallel port driver
+Eki 25 03:11:21 debian kernel: kvm_amd: TSC scaling supported
+Eki 25 03:11:21 debian kernel: kvm_amd: Nested Virtualization enabled
+Eki 25 03:11:21 debian kernel: kvm_amd: Nested Paging enabled
+Eki 25 03:11:21 debian kernel: kvm_amd: PMU virtualization is disabled
+Eki 25 03:11:22 debian (udev-worker)[408]: controlC0: Process '/usr/sbin/alsactl -E HOME=/run/alsa -E XDG_RUNTIME_DIR=/run/alsa/runtime restore 0' failed with exit code 99.
+Eki 25 03:11:22 debian systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+Eki 25 03:11:22 debian systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+Eki 25 03:11:22 debian systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+Eki 25 03:11:22 debian systemd[1]: systemd-firstboot.service - First Boot Wizard was skipped because of an unmet condition check (ConditionFirstBoot=yes).
+Eki 25 03:11:22 debian systemd[1]: first-boot-complete.target - First Boot Complete was skipped because of an unmet condition check (ConditionFirstBoot=yes).
+Eki 25 03:11:22 debian systemd[1]: systemd-machine-id-commit.service - Commit a transient machine-id on disk was skipped because of an unmet condition check (ConditionPathIsMountPoint=/etc/machine-id).
+Eki 25 03:11:22 debian systemd[1]: modprobe@dm_mod.service: Deactivated successfully.
+Eki 25 03:11:22 debian systemd[1]: Finished modprobe@dm_mod.service - Load Kernel Module dm_mod.
+Eki 25 03:11:22 debian systemd[1]: modprobe@efi_pstore.service: Deactivated successfully.
+Eki 25 03:11:22 debian systemd[1]: Finished modprobe@efi_pstore.service - Load Kernel Module efi_pstore.
+Eki 25 03:11:22 debian systemd[1]: systemd-pstore.service - Platform Persistent Storage Archival was skipped because of an unmet condition check (ConditionDirectoryNotEmpty=/sys/fs/pstore).
+Eki 25 03:11:22 debian systemd[1]: modprobe@loop.service: Deactivated successfully.
+Eki 25 03:11:22 debian systemd[1]: Finished modprobe@loop.service - Load Kernel Module loop.
+Eki 25 03:11:22 debian systemd[1]: systemd-repart.service - Repartition Root Disk was skipped because no trigger condition checks were met.
+Eki 25 03:11:22 debian systemd[1]: Mounting proc-sys-fs-binfmt_misc.mount - Arbitrary Executable File Formats File System...
+Eki 25 03:11:22 debian systemd[1]: sys-kernel-tracing.mount - Kernel Trace File System was skipped because of an unmet condition check (ConditionPathExists=/sys/kernel/tracing).
+Eki 25 03:11:22 debian systemd[1]: Mounted proc-sys-fs-binfmt_misc.mount - Arbitrary Executable File Formats File System.
+Eki 25 03:11:22 debian systemd[1]: Finished systemd-binfmt.service - Set Up Additional Binary Formats.
+Eki 25 03:11:22 debian systemd[1]: Reached target sysinit.target - System Initialization.
+Eki 25 03:11:22 debian systemd[1]: Started acpid.path - ACPI Events Check.
+Eki 25 03:11:22 debian systemd[1]: Started apt-daily.timer - Daily apt download activities.
+Eki 25 03:11:22 debian systemd[1]: Started apt-daily-upgrade.timer - Daily apt upgrade and clean activities.
+Eki 25 03:11:22 debian systemd[1]: Started dpkg-db-backup.timer - Daily dpkg database backup timer.
+Eki 25 03:11:22 debian systemd[1]: Started e2scrub_all.timer - Periodic ext4 Online Metadata Check for All Filesystems.
+Eki 25 03:11:22 debian systemd[1]: Started fstrim.timer - Discard unused blocks once a week.
+Eki 25 03:11:22 debian systemd[1]: Started logrotate.timer - Daily rotation of log files.
+Eki 25 03:11:22 debian systemd[1]: Started n10-rapor.timer - N10 OS diagnostics shortly after boot (desktop idle by then).
+Eki 25 03:11:22 debian systemd[1]: Started systemd-tmpfiles-clean.timer - Daily Cleanup of Temporary Directories.
+Eki 25 03:11:22 debian systemd[1]: Reached target paths.target - Path Units.
+Eki 25 03:11:22 debian systemd[1]: Reached target timers.target - Timer Units.
+Eki 25 03:11:22 debian systemd[1]: Listening on acpid.socket - ACPID Listen Socket.
+Eki 25 03:11:22 debian systemd[1]: Listening on dbus.socket - D-Bus System Message Bus Socket.
+Eki 25 03:11:22 debian systemd[1]: Reached target sockets.target - Socket Units.
+Eki 25 03:11:22 debian systemd[1]: systemd-pcrphase-sysinit.service - TPM2 PCR Barrier (Initialization) was skipped because of an unmet condition check (ConditionPathExists=/sys/firmware/efi/efivars/StubPcrKernelImage-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f).
+Eki 25 03:11:22 debian usermod[562]: change user 'root' password
+Eki 25 03:11:22 debian groupadd[573]: group added to /etc/group: name=user, GID=1000
+Eki 25 03:11:22 debian groupadd[573]: group added to /etc/gshadow: name=user
+Eki 25 03:11:22 debian groupadd[573]: new group: name=user, GID=1000
+Eki 25 03:11:22 debian useradd[579]: new user: name=user, UID=1000, GID=1000, home=/home/user, shell=/bin/bash, from=none
+Eki 25 03:11:22 debian chfn[588]: changed user 'user' information
+Eki 25 03:11:22 debian gpasswd[594]: members of group users set by root to user
+Eki 25 03:11:22 debian usermod[602]: change user 'user' password
+Eki 25 03:11:22 debian usermod[610]: add 'user' to group 'audio'
+Eki 25 03:11:22 debian usermod[610]: add 'user' to shadow group 'audio'
+Eki 25 03:11:22 debian usermod[618]: add 'user' to group 'cdrom'
+Eki 25 03:11:22 debian usermod[618]: add 'user' to shadow group 'cdrom'
+Eki 25 03:11:22 debian usermod[626]: add 'user' to group 'dip'
+Eki 25 03:11:22 debian usermod[626]: add 'user' to shadow group 'dip'
+Eki 25 03:11:22 debian usermod[634]: add 'user' to group 'floppy'
+Eki 25 03:11:22 debian usermod[634]: add 'user' to shadow group 'floppy'
+Eki 25 03:11:22 debian usermod[642]: add 'user' to group 'video'
+Eki 25 03:11:22 debian usermod[642]: add 'user' to shadow group 'video'
+Eki 25 03:11:22 debian usermod[650]: add 'user' to group 'plugdev'
+Eki 25 03:11:22 debian usermod[650]: add 'user' to shadow group 'plugdev'
+Eki 25 03:11:22 debian usermod[658]: add 'user' to group 'netdev'
+Eki 25 03:11:22 debian usermod[658]: add 'user' to shadow group 'netdev'
+Eki 25 03:11:22 debian usermod[668]: add 'user' to group 'bluetooth'
+Eki 25 03:11:22 debian usermod[668]: add 'user' to shadow group 'bluetooth'
+Eki 25 03:11:22 debian usermod[682]: add 'user' to group 'sudo'
+Eki 25 03:11:22 debian usermod[682]: add 'user' to shadow group 'sudo'
+Eki 25 03:11:22 debian sudo[689]:     root : PWD=/ ; USER=user ; COMMAND=/usr/bin/sh -c 'echo \'SU_TO_ROOT_SU=sudo\' >> /home/user/.su-to-rootrc'
+Eki 25 03:11:22 debian sudo[689]: pam_unix(sudo:session): session opened for user user(uid=1000) by (uid=0)
+Eki 25 03:11:22 debian sudo[689]: pam_unix(sudo:session): session closed for user user
+Eki 25 03:11:22 debian sudo[691]:     root : PWD=/ ; USER=user ; COMMAND=/usr/bin/sh -c 'umask 0077 && mkdir -p /home/user/.kde/share/config && cat > /home/user/.kde/share/config/kdesurc'
+Eki 25 03:11:22 debian sudo[691]: pam_unix(sudo:session): session opened for user user(uid=1000) by (uid=0)
+Eki 25 03:11:22 debian sudo[691]: pam_unix(sudo:session): session closed for user user
+Eki 25 03:11:23 debian live-config[398]:  user-setup sudo locales tzdata
+Eki 25 03:11:23 debian live-config[398]: Current default time zone: 'Europe/Istanbul'
+Eki 25 03:11:23 debian live-config[398]: Local time is now:      Sun Oct 25 03:11:23 +03 2026.
+Eki 25 03:11:23 debian live-config[398]: Universal Time is now:  Sun Oct 25 00:11:23 UTC 2026.
+Eki 25 03:11:23 debian live-config[398]:  xinit keyboard-configuration policykit util-linux login.
+Eki 25 03:11:23 debian systemd[1]: Finished live-config.service - live-config contains the components that configure a live system during the boot process (late userspace)..
+Eki 25 03:11:23 debian systemd[1]: Reached target basic.target - Basic System.
+Eki 25 03:11:23 debian systemd[1]: alsa-state.service - Manage Sound Card State (restore and store) was skipped because of an unmet condition check (ConditionPathExists=/etc/alsa/state-daemon.conf).
+Eki 25 03:11:23 debian systemd[1]: Starting alsa-restore.service - Save/Restore Sound Card State...
+Eki 25 03:11:23 debian alsactl[970]: /usr/sbin/alsactl: load_state:1689: Cannot open /var/lib/alsa/asound.state for reading: No such file or directory
+Eki 25 03:11:23 debian alsactl[970]: Found hardware: "HDA-Intel" "QEMU Generic" "HDA:1af40022,1af40022,00100101" "0x1af4" "0x1100"
+Eki 25 03:11:23 debian alsactl[970]: Hardware is initialized using a generic method
+Eki 25 03:11:23 debian systemd[1]: Started cron.service - Regular background program processing daemon.
+Eki 25 03:11:23 debian systemd[1]: Starting dbus.service - D-Bus System Message Bus...
+Eki 25 03:11:23 debian systemd[1]: Starting e2scrub_reap.service - Remove Stale Online ext4 Metadata Check Snapshots...
+Eki 25 03:11:23 debian systemd[1]: Started earlyoom.service - Early OOM Daemon.
+Eki 25 03:11:23 debian cron[971]: (CRON) INFO (pidfile fd = 3)
+Eki 25 03:11:23 debian systemd[1]: getty-static.service - getty on tty2-tty6 if dbus and logind are not available was skipped because of an unmet condition check (ConditionPathExists=!/usr/bin/dbus-daemon).
+Eki 25 03:11:23 debian systemd[1]: Starting lm-sensors.service - Initialize hardware monitoring sensors...
+Eki 25 03:11:23 debian cron[971]: (CRON) INFO (Running @reboot jobs)
+Eki 25 03:11:23 debian systemd[1]: Starting n10-gpu-profile.service - Apply N10JC GPU-switch power/graphics profile...
+Eki 25 03:11:23 debian systemd[1]: Starting n10-radio-on.service - Turn on N10JC Wi-Fi/Bluetooth radios...
+Eki 25 03:11:23 debian earlyoom[974]: earlyoom v1.7
+Eki 25 03:11:23 debian earlyoom[974]: Preferring to kill process names that match regex '(chromium|chrome|netsurf)'
+Eki 25 03:11:23 debian earlyoom[974]: Will avoid killing process names that match regex '(Xorg|openbox|tint2|plank|pipewire)'
+Eki 25 03:11:23 debian earlyoom[974]: mem total:  992 MiB, swap total:    0 MiB
+Eki 25 03:11:23 debian earlyoom[974]: sending SIGTERM when mem <=  4.00% and swap <= 10.00%,
+Eki 25 03:11:23 debian earlyoom[974]:         SIGKILL when mem <=  2.00% and swap <=  5.00%
+Eki 25 03:11:23 debian systemd[1]: Starting systemd-logind.service - User Login Management...
+Eki 25 03:11:23 debian systemd[1]: systemd-pcrphase.service - TPM2 PCR Barrier (User) was skipped because of an unmet condition check (ConditionPathExists=/sys/firmware/efi/efivars/StubPcrKernelImage-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f).
+Eki 25 03:11:23 debian systemd[1]: Starting zramswap.service - Linux zramswap setup...
+Eki 25 03:11:23 debian systemd[1]: Finished alsa-restore.service - Save/Restore Sound Card State.
+Eki 25 03:11:23 debian systemd[1]: Reached target sound.target - Sound Card.
+Eki 25 03:11:23 debian systemd[1]: Starting n10-audio-on.service - Unmute N10JC speakers/headphones...
+Eki 25 03:11:23 debian sensors[975]: No sensors found!
+Eki 25 03:11:23 debian sensors[975]: Make sure you loaded all the kernel drivers you need.
+Eki 25 03:11:23 debian sensors[975]: Try sensors-detect to find out which these are.
+Eki 25 03:11:23 debian sensors[983]: No sensors found!
+Eki 25 03:11:23 debian sensors[983]: Make sure you loaded all the kernel drivers you need.
+Eki 25 03:11:23 debian sensors[983]: Try sensors-detect to find out which these are.
+Eki 25 03:11:23 debian n10-gpu-profile[976]: /usr/local/sbin/n10-gpu-profile: 69: cannot create /sys/devices/system/cpu/cpufreq/policy0/scaling_governor: Directory nonexistent
+Eki 25 03:11:23 debian systemd[1]: Finished lm-sensors.service - Initialize hardware monitoring sensors.
+Eki 25 03:11:23 debian systemd[1]: Finished n10-audio-on.service - Unmute N10JC speakers/headphones.
+Eki 25 03:11:23 debian systemd-logind[978]: New seat seat0.
+Eki 25 03:11:23 debian rfkill[981]: unblock set for all
+Eki 25 03:11:23 debian n10[992]: GPU mode: intel
+Eki 25 03:11:23 debian systemd[1]: Finished n10-gpu-profile.service - Apply N10JC GPU-switch power/graphics profile.
+Eki 25 03:11:23 debian systemd-logind[978]: Watching system buttons on /dev/input/event0 (AT Translated Set 2 keyboard)
+Eki 25 03:11:23 debian systemd[1]: Finished n10-radio-on.service - Turn on N10JC Wi-Fi/Bluetooth radios.
+Eki 25 03:11:23 debian systemd[1]: Listening on systemd-rfkill.socket - Load/Save RF Kill Switch Status /dev/rfkill Watch.
+Eki 25 03:11:23 debian root[1003]: Starting Zram
+Eki 25 03:11:23 debian zramswap[1003]: <13>Oct 25 03:11:23 root: Starting Zram
+Eki 25 03:11:23 debian systemd[1]: e2scrub_reap.service: Deactivated successfully.
+Eki 25 03:11:23 debian systemd[1]: Finished e2scrub_reap.service - Remove Stale Online ext4 Metadata Check Snapshots.
+Eki 25 03:11:23 debian dbus-daemon[972]: [system] AppArmor D-Bus mediation is enabled
+Eki 25 03:11:23 debian systemd[1]: Started dbus.service - D-Bus System Message Bus.
+Eki 25 03:11:23 debian kernel: zram0: detected capacity change from 0 to 2032736
+Eki 25 03:11:23 debian systemd[1]: Starting NetworkManager.service - Network Manager...
+Eki 25 03:11:23 debian systemd[1]: Starting wpa_supplicant.service - WPA supplicant...
+Eki 25 03:11:23 debian systemd[1]: Started systemd-logind.service - User Login Management.
+Eki 25 03:11:23 debian zramswap[1009]: Setting up swapspace version 1, size = 992,5 MiB (1040756736 bytes)
+Eki 25 03:11:23 debian zramswap[1009]: no label, UUID=f8733d6b-0190-4888-95c7-ea191bc0cb39
+Eki 25 03:11:23 debian kernel: Adding 1016364k swap on /dev/zram0.  Priority:100 extents:1 across:1016364k SS
+Eki 25 03:11:23 debian systemd[1]: Finished zramswap.service - Linux zramswap setup.
+Eki 25 03:11:23 debian wpa_supplicant[1011]: Successfully initialized wpa_supplicant
+Eki 25 03:11:23 debian systemd[1]: Started wpa_supplicant.service - WPA supplicant.
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9062] NetworkManager (version 1.42.4) is starting... (boot:72df3085-e98a-4612-b4db-aeb5118f05f6)
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9063] Read config: /etc/NetworkManager/NetworkManager.conf (lib: no-mac-addr-change.conf)
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9073] bus-manager: acquired D-Bus service "org.freedesktop.NetworkManager"
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9084] manager[0x216c8f0]: monitoring kernel firmware directory '/lib/firmware'.
+Eki 25 03:11:23 debian systemd[1]: Started NetworkManager.service - Network Manager.
+Eki 25 03:11:23 debian systemd[1]: Reached target network.target - Network.
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9092] monitoring ifupdown state file '/run/network/ifstate'.
+Eki 25 03:11:23 debian dbus-daemon[972]: [system] Activating via systemd: service name='org.freedesktop.hostname1' unit='dbus-org.freedesktop.hostname1.service' requested by ':1.3' (uid=0 pid=1010 comm="/usr/sbin/NetworkManager --no-daemon" label="unconfined")
+Eki 25 03:11:23 debian systemd[1]: Starting systemd-user-sessions.service - Permit User Sessions...
+Eki 25 03:11:23 debian systemd[1]: Starting systemd-hostnamed.service - Hostname Service...
+Eki 25 03:11:23 debian systemd[1]: Finished systemd-user-sessions.service - Permit User Sessions.
+Eki 25 03:11:23 debian systemd[1]: Started getty@tty1.service - Getty on tty1.
+Eki 25 03:11:23 debian systemd[1]: Started serial-getty@ttyS0.service - Serial Getty on ttyS0.
+Eki 25 03:11:23 debian systemd[1]: Reached target getty.target - Login Prompts.
+Eki 25 03:11:23 debian systemd[1]: Reached target multi-user.target - Multi-User System.
+Eki 25 03:11:23 debian systemd[1]: Reached target graphical.target - Graphical Interface.
+Eki 25 03:11:23 debian systemd[1]: Starting systemd-update-utmp-runlevel.service - Record Runlevel Change in UTMP...
+Eki 25 03:11:23 debian systemd[1]: systemd-update-utmp-runlevel.service: Deactivated successfully.
+Eki 25 03:11:23 debian systemd[1]: Finished systemd-update-utmp-runlevel.service - Record Runlevel Change in UTMP.
+Eki 25 03:11:23 debian dbus-daemon[972]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Eki 25 03:11:23 debian systemd[1]: Started systemd-hostnamed.service - Hostname Service.
+Eki 25 03:11:23 debian systemd[1]: Startup finished in 4.044s (kernel) + 3.361s (userspace) = 7.405s.
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9728] hostname: hostname: using hostnamed
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9728] hostname: static hostname changed from (none) to "debian"
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9740] dns-mgr: init: dns=default,systemd-resolved rc-manager=symlink (auto)
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9743] manager[0x216c8f0]: rfkill: Wi-Fi hardware radio set enabled
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9744] manager[0x216c8f0]: rfkill: WWAN hardware radio set enabled
+Eki 25 03:11:23 debian NetworkManager[1010]: <info>  [1792887083.9784] Loaded device plugin: NMAtmManager (/usr/lib/i386-linux-gnu/NetworkManager/1.42.4/libnm-device-plugin-adsl.so)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0087] Loaded device plugin: NMBluezManager (/usr/lib/i386-linux-gnu/NetworkManager/1.42.4/libnm-device-plugin-bluetooth.so)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0248] Loaded device plugin: NMTeamFactory (/usr/lib/i386-linux-gnu/NetworkManager/1.42.4/libnm-device-plugin-team.so)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0354] Loaded device plugin: NMWifiFactory (/usr/lib/i386-linux-gnu/NetworkManager/1.42.4/libnm-device-plugin-wifi.so)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0393] Loaded device plugin: NMWwanFactory (/usr/lib/i386-linux-gnu/NetworkManager/1.42.4/libnm-device-plugin-wwan.so)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0398] manager: rfkill: Wi-Fi enabled by radio killswitch; enabled by state file
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0399] manager: rfkill: WWAN enabled by radio killswitch; enabled by state file
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0400] manager: Networking is enabled by state file
+Eki 25 03:11:24 debian dbus-daemon[972]: [system] Activating via systemd: service name='org.freedesktop.nm_dispatcher' unit='dbus-org.freedesktop.nm-dispatcher.service' requested by ':1.3' (uid=0 pid=1010 comm="/usr/sbin/NetworkManager --no-daemon" label="unconfined")
+Eki 25 03:11:24 debian login[1018]: pam_unix(login:session): session opened for user user(uid=1000) by LOGIN(uid=0)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0488] settings: Loaded settings plugin: ifupdown ("/usr/lib/i386-linux-gnu/NetworkManager/1.42.4/libnm-settings-plugin-ifupdown.so")
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0488] settings: Loaded settings plugin: keyfile (internal)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0489] ifupdown: management mode: unmanaged
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0489] ifupdown:       interface-parser: parsing file /etc/network/interfaces
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0489] ifupdown:       interface-parser: finished parsing file /etc/network/interfaces
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0501] dhcp: init: Using DHCP client 'internal'
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0502] manager: (lo): new Loopback device (/org/freedesktop/NetworkManager/Devices/1)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0510] device (lo): state change: unmanaged -> unavailable (reason 'connection-assumed', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0512] device (lo): state change: unavailable -> disconnected (reason 'connection-assumed', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0516] device (lo): Activation: starting connection 'lo' (16cdd4a6-6062-4c31-be7c-929d7a66debc)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0519] manager: (ens3): new Ethernet device (/org/freedesktop/NetworkManager/Devices/2)
+Eki 25 03:11:24 debian systemd[1]: Starting NetworkManager-dispatcher.service - Network Manager Script Dispatcher Service...
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0524] settings: (ens3): created default wired connection 'Kablolu bağlantı 1'
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0525] device (ens3): state change: unmanaged -> unavailable (reason 'managed', sys-iface-state: 'external')
+Eki 25 03:11:24 debian kernel: e1000: ens3 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
+Eki 25 03:11:24 debian systemd[1]: Created slice user-1000.slice - User Slice of UID 1000.
+Eki 25 03:11:24 debian systemd-logind[978]: New session 1 of user user.
+Eki 25 03:11:24 debian systemd[1]: Starting user-runtime-dir@1000.service - User Runtime Directory /run/user/1000...
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0724] device (lo): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0726] device (lo): state change: prepare -> config (reason 'none', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0727] device (lo): state change: config -> ip-config (reason 'none', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0727] device (ens3): carrier: link connected
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0729] device (lo): state change: ip-config -> ip-check (reason 'none', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0730] device (ens3): state change: unavailable -> disconnected (reason 'carrier-changed', sys-iface-state: 'managed')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0766] policy: auto-activating connection 'Kablolu bağlantı 1' (dcd2948b-0b9c-3a3a-957b-8e515ee732a2)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0768] device (ens3): Activation: starting connection 'Kablolu bağlantı 1' (dcd2948b-0b9c-3a3a-957b-8e515ee732a2)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0769] device (ens3): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'managed')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0771] manager: NetworkManager state is now CONNECTING
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0772] device (ens3): state change: prepare -> config (reason 'none', sys-iface-state: 'managed')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0791] device (ens3): state change: config -> ip-config (reason 'none', sys-iface-state: 'managed')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.0847] dhcp4 (ens3): activation: beginning transaction (timeout in 45 seconds)
+Eki 25 03:11:24 debian systemd[1]: Finished user-runtime-dir@1000.service - User Runtime Directory /run/user/1000.
+Eki 25 03:11:24 debian dbus-daemon[972]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
+Eki 25 03:11:24 debian systemd[1]: Starting user@1000.service - User Manager for UID 1000...
+Eki 25 03:11:24 debian systemd[1]: Started NetworkManager-dispatcher.service - Network Manager Script Dispatcher Service.
+Eki 25 03:11:24 debian (systemd)[1027]: pam_unix(systemd-user:session): session opened for user user(uid=1000) by (uid=0)
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.1115] device (lo): state change: ip-check -> secondaries (reason 'none', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.1117] device (lo): state change: secondaries -> activated (reason 'none', sys-iface-state: 'external')
+Eki 25 03:11:24 debian NetworkManager[1010]: <info>  [1792887084.1129] device (lo): Activation: successful, device activated.
+Eki 25 03:11:24 debian systemd[1027]: Queued start job for default target default.target.
+Eki 25 03:11:24 debian systemd[1027]: Created slice app.slice - User Application Slice.
+Eki 25 03:11:24 debian systemd[1027]: Created slice session.slice - User Core Session Slice.
+Eki 25 03:11:24 debian systemd[1027]: Reached target paths.target - Paths.
+Eki 25 03:11:24 debian systemd[1027]: Reached target timers.target - Timers.
+Eki 25 03:11:24 debian systemd[1027]: Starting dbus.socket - D-Bus User Message Bus Socket...
+Eki 25 03:11:24 debian systemd[1027]: Listening on dirmngr.socket - GnuPG network certificate management daemon.
+Eki 25 03:11:24 debian systemd[1027]: Listening on gpg-agent-browser.socket - GnuPG cryptographic agent and passphrase cache (access for web browsers).
+Eki 25 03:11:24 debian systemd[1027]: Listening on gpg-agent-extra.socket - GnuPG cryptographic agent and passphrase cache (restricted).
+Eki 25 03:11:24 debian systemd[1027]: Listening on gpg-agent-ssh.socket - GnuPG cryptographic agent (ssh-agent emulation).
+Eki 25 03:11:24 debian systemd[1027]: Listening on gpg-agent.socket - GnuPG cryptographic agent and passphrase cache.
+Eki 25 03:11:24 debian systemd[1027]: Listening on pipewire-pulse.socket - PipeWire PulseAudio.
+Eki 25 03:11:24 debian systemd[1027]: Listening on pipewire.socket - PipeWire Multimedia System Socket.
+Eki 25 03:11:24 debian systemd[1027]: Listening on dbus.socket - D-Bus User Message Bus Socket.
+Eki 25 03:11:24 debian systemd[1027]: Reached target sockets.target - Sockets.
+Eki 25 03:11:24 debian systemd[1027]: Reached target basic.target - Basic System.
+Eki 25 03:11:24 debian systemd[1027]: Started pipewire.service - PipeWire Multimedia Service.
+Eki 25 03:11:24 debian systemd[1]: Started user@1000.service - User Manager for UID 1000.
+Eki 25 03:11:24 debian systemd[1]: Started session-1.scope - Session 1 of User user.
+Eki 25 03:11:24 debian systemd[1027]: Started wireplumber.service - Multimedia Service Session Manager.
+Eki 25 03:11:24 debian systemd[1027]: Started pipewire-pulse.service - PipeWire PulseAudio.
+Eki 25 03:11:24 debian systemd[1027]: Reached target default.target - Main User Target.
+Eki 25 03:11:24 debian systemd[1027]: Startup finished in 107ms.
+Eki 25 03:11:24 debian systemd[1027]: Starting dbus.service - D-Bus User Message Bus...
+Eki 25 03:11:24 debian dbus-daemon[1064]: [session uid=1000 pid=1064] AppArmor D-Bus mediation is enabled
+Eki 25 03:11:24 debian systemd[1027]: Started dbus.service - D-Bus User Message Bus.
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: Can't find org.freedesktop.portal.Desktop. Is xdg-desktop-portal running?
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: found session bus but no portal
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: Can't find org.freedesktop.portal.Desktop. Is xdg-desktop-portal running?
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: found session bus but no portal
+Eki 25 03:11:24 debian wireplumber[1058]: Can't find org.freedesktop.portal.Desktop. Is xdg-desktop-portal running?
+Eki 25 03:11:24 debian wireplumber[1058]: found session bus but no portal
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: could not set nice-level to -11: Böyle bir dosya ya da dizin yok
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: could not set nice-level to -11: Böyle bir dosya ya da dizin yok
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian wireplumber[1058]: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian wireplumber[1058]: could not set nice-level to -11: Böyle bir dosya ya da dizin yok
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian wireplumber[1058]: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian wireplumber[1058]: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian wireplumber[1058]: SPA handle 'api.libcamera.enum.manager' could not be loaded; is it installed?
+Eki 25 03:11:24 debian wireplumber[1058]: PipeWire's libcamera SPA missing or broken. libcamera not supported.
+Eki 25 03:11:24 debian wireplumber[1058]: SPA handle 'api.bluez5.enum.dbus' could not be loaded; is it installed?
+Eki 25 03:11:24 debian wireplumber[1058]: PipeWire's BlueZ SPA missing or broken. Bluetooth not supported.
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.0913] dhcp4 (ens3): state changed new lease, address=10.0.2.15
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.0923] policy: set 'Kablolu bağlantı 1' (ens3) as default for IPv4 routing and DNS
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.1014] device (ens3): state change: ip-config -> ip-check (reason 'none', sys-iface-state: 'managed')
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.1066] device (ens3): state change: ip-check -> secondaries (reason 'none', sys-iface-state: 'managed')
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.1074] device (ens3): state change: secondaries -> activated (reason 'none', sys-iface-state: 'managed')
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.1079] manager: NetworkManager state is now CONNECTED_SITE
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.1083] device (ens3): Activation: successful, device activated.
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.1085] manager: NetworkManager state is now CONNECTED_GLOBAL
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.1097] manager: startup complete
+Eki 25 03:11:25 debian NetworkManager[1010]: <info>  [1792887085.8745] policy: set 'Kablolu bağlantı 1' (ens3) as default for IPv6 routing and DNS
+Eki 25 03:11:28 debian dbus-daemon[972]: [system] Activating via systemd: service name='org.freedesktop.PolicyKit1' unit='polkit.service' requested by ':1.3' (uid=0 pid=1010 comm="/usr/sbin/NetworkManager --no-daemon" label="unconfined")
+Eki 25 03:11:28 debian systemd[1]: Starting polkit.service - Authorization Manager...
+Eki 25 03:11:28 debian polkitd[1165]: Started polkitd version 122
+Eki 25 03:11:28 debian polkitd[1165]: Loading rules from directory /etc/polkit-1/rules.d
+Eki 25 03:11:28 debian polkitd[1165]: Loading rules from directory /usr/share/polkit-1/rules.d
+Eki 25 03:11:28 debian polkitd[1165]: Finished loading, compiling and executing 4 rules
+Eki 25 03:11:28 debian dbus-daemon[972]: [system] Successfully activated service 'org.freedesktop.PolicyKit1'
+Eki 25 03:11:28 debian polkitd[1165]: Acquired the name org.freedesktop.PolicyKit1 on the system bus
+Eki 25 03:11:28 debian systemd[1]: Started polkit.service - Authorization Manager.
+Eki 25 03:11:30 debian dbus-daemon[1064]: [session uid=1000 pid=1064] Activating via systemd: service name='org.ayatana.bamf' unit='bamfdaemon.service' requested by ':1.12' (uid=1000 pid=1148 comm="plank" label="unconfined")
+Eki 25 03:11:30 debian systemd[1027]: Starting bamfdaemon.service - BAMF Application Matcher Framework...
+Eki 25 03:11:30 debian bamfdaemon[1196]: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+Eki 25 03:11:30 debian dbus-daemon[1064]: [session uid=1000 pid=1064] Successfully activated service 'org.ayatana.bamf'
+Eki 25 03:11:30 debian systemd[1027]: Started bamfdaemon.service - BAMF Application Matcher Framework.
+Eki 25 03:11:30 debian NetworkManager[1010]: <info>  [1792887090.5410] agent-manager: agent[d962cd973c6114ae,:1.13/org.freedesktop.nm-applet/1000]: agent registered
+Eki 25 03:11:33 debian dbus-daemon[1064]: [session uid=1000 pid=1064] Activating via systemd: service name='ca.desrt.dconf' unit='dconf.service' requested by ':1.12' (uid=1000 pid=1148 comm="plank" label="unconfined")
+Eki 25 03:11:33 debian systemd[1027]: Starting dconf.service - User preferences database...
+Eki 25 03:11:33 debian dbus-daemon[1064]: [session uid=1000 pid=1064] Successfully activated service 'ca.desrt.dconf'
+Eki 25 03:11:33 debian systemd[1027]: Started dconf.service - User preferences database.
+Eki 25 03:11:35 debian systemd[1]: NetworkManager-dispatcher.service: Deactivated successfully.
+Eki 25 03:11:54 debian systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Eki 25 03:13:29 debian systemd[1]: Starting n10-rapor.service - Write N10 OS diagnostics to the USB stick (Output folder)...
+Eki 25 03:13:29 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+Eki 25 03:13:29 debian kernel: floppy: error 10 while reading block 0
+Eki 25 03:13:29 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+Eki 25 03:13:29 debian kernel: floppy: error 10 while reading block 0
+Eki 25 03:13:29 debian n10-rapor[1278]: n10-rapor: creating N10-OUTPUT on /dev/sda
+Eki 25 03:13:30 debian sudo[1343]:     root : PWD=/ ; USER=root ; COMMAND=/usr/bin/dmesg
+Eki 25 03:13:30 debian sudo[1343]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+Eki 25 03:13:30 debian sudo[1343]: pam_unix(sudo:session): session closed for user root
+Eki 25 03:13:31 debian runuser[1348]: pam_unix(runuser:session): session opened for user user(uid=1000) by (uid=0)
+Eki 25 03:13:31 debian sudo[1363]:     user : PWD=/ ; USER=root ; COMMAND=/usr/sbin/hdparm -t /dev/fd0
+Eki 25 03:13:31 debian sudo[1363]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=1000)
+Eki 25 03:13:34 debian kernel: floppy0: disk absent or changed during operation
+Eki 25 03:13:34 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 1 prio class 2
+Eki 25 03:13:34 debian kernel: floppy0: disk absent or changed during operation
+Eki 25 03:13:34 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+Eki 25 03:13:34 debian kernel: Buffer I/O error on dev fd0, logical block 0, async page read
+Eki 25 03:13:34 debian sudo[1363]: pam_unix(sudo:session): session closed for user root
+Eki 25 03:13:34 debian runuser[1348]: pam_unix(runuser:session): session closed for user user
+Eki 25 03:13:34 debian runuser[1379]: pam_unix(runuser:session): session opened for user user(uid=1000) by (uid=0)
+Eki 25 03:13:34 debian runuser[1379]: pam_unix(runuser:session): session closed for user user
+Eki 25 03:13:34 debian runuser[1386]: pam_unix(runuser:session): session opened for user user(uid=1000) by (uid=0)
+Eki 25 03:13:34 debian runuser[1386]: pam_unix(runuser:session): session closed for user user
+Eki 25 03:13:34 debian kernel: cfg80211: Loading compiled-in X.509 certificates for regulatory database
+Eki 25 03:13:34 debian kernel: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+Eki 25 03:13:34 debian kernel: Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+Eki 25 03:13:34 debian kernel: cfg80211: loaded regulatory.db is malformed or signature is missing/invalid

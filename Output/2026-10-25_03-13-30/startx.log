@@ -1,0 +1,22 @@
+xauth:  file /home/user/.Xauthority does not exist
+
+
+X.Org X Server 1.21.1.7
+X Protocol Version 11, Revision 0
+Current Operating System: Linux debian 6.18.58-n10jc #1n10 SMP PREEMPT_DYNAMIC Sat Oct 24 13:00:32 UTC 2026 i686
+Kernel command line: boot=live components locales=tr_TR.UTF-8 timezone=Europe/Istanbul console=ttyS0,115200 console=tty1
+xorg-server 2:21.1.7-3+deb12u13 (https://www.debian.org/support) 
+Current version of pixman: 0.42.2
+	Before reporting problems, check http://wiki.x.org
+	to make sure that you have the latest version.
+Markers: (--) probed, (**) from config file, (==) default setting,
+	(++) from command line, (!!) notice, (II) informational,
+	(WW) warning, (EE) error, (NI) not implemented, (??) unknown.
+(==) Log file: "/home/user/.local/share/xorg/Xorg.0.log", Time: Sun Oct 25 03:11:24 2026
+(==) Using config directory: "/etc/X11/xorg.conf.d"
+(==) Using system config directory "/usr/share/X11/xorg.conf.d"
+pci id for fd 11: 1234:1111, driver (null)
+MESA-LOADER: failed to open bochs-drm: /usr/lib/dri/bochs-drm_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/i386-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
+failed to load driver: bochs-drm
+pci id for fd 12: 1234:1111, driver (null)
+kmsro: driver missing

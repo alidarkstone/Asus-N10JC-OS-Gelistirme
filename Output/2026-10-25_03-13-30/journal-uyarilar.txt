@@ -1,0 +1,27 @@
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Return Stack Overflow: IBPB-extending microcode not applied!
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Return Stack Overflow: WARNING: See https://kernel.org/doc/html/latest/admin-guide/hw-vuln/srso.html for mitigation options.
+Eki 25 03:11:21 localhost.localdomain kernel: Speculative Return Stack Overflow: WARNING: kernel not compiled with MITIGATION_SRSO.
+Eki 25 03:11:21 localhost.localdomain kernel: amd_pstate: The CPPC feature is supported but currently disabled by the BIOS.
+                                              Please enable it if your BIOS has the CPPC option.
+Eki 25 03:11:21 localhost.localdomain kernel: amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+Eki 25 03:11:21 localhost.localdomain kernel: device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+Eki 25 03:11:21 debian kernel: Error: Driver 'pcspkr' is already registered, aborting...
+Eki 25 03:11:22 debian (udev-worker)[408]: controlC0: Process '/usr/sbin/alsactl -E HOME=/run/alsa -E XDG_RUNTIME_DIR=/run/alsa/runtime restore 0' failed with exit code 99.
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: Can't find org.freedesktop.portal.Desktop. Is xdg-desktop-portal running?
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: found session bus but no portal
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: Can't find org.freedesktop.portal.Desktop. Is xdg-desktop-portal running?
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: found session bus but no portal
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: could not set nice-level to -11: Böyle bir dosya ya da dizin yok
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: could not set nice-level to -11: Böyle bir dosya ya da dizin yok
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire-pulse[1059]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:24 debian pipewire[1057]: mod.rt: RTKit error: org.freedesktop.DBus.Error.ServiceUnknown
+Eki 25 03:11:30 debian bamfdaemon[1196]: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+Eki 25 03:13:29 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+Eki 25 03:13:29 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+Eki 25 03:13:34 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 1 prio class 2
+Eki 25 03:13:34 debian kernel: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 2
+Eki 25 03:13:34 debian kernel: Buffer I/O error on dev fd0, logical block 0, async page read

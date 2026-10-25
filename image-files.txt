@@ -1,0 +1,50 @@
+== /etc/profile.d/n10jc.sh
+# Chicony 04f2:b071 webcam on the N10JC is mounted upside down: flip in libv4l.
+export LIBV4LCONTROL_FLAGS=3
+export GTK_THEME=WhiteSur-Light
+# Start the desktop on tty1 after (auto)login. X's own log stays in
+# ~/.local/share/xorg/Xorg.0.log; the session log is ~/.cache/n10-session.log.
+if [ -z "${DISPLAY:-}" ] && [ "$(tty)" = /dev/tty1 ] && command -v startx >/dev/null; then
+  mkdir -p "$HOME/.cache"
+  exec startx /usr/local/bin/n10-session -- -nolisten tcp vt1 >"$HOME/.cache/startx.log" 2>&1
+fi
+== /usr/local/bin
+total 8032
+-rwxr-xr-x 1 root root    6890 Oct 24 23:57 n10-ekran-karti
+-rwxr-xr-x 1 root root    1315 Oct 24 23:57 n10-gpu-durum
+-rwxr-xr-x 1 root root     464 Oct 24 23:57 n10-hakkinda
+-rwxr-xr-x 1 root root     972 Oct 24 23:57 n10-hiz-olc
+-rwxr-xr-x 1 root root     681 Oct 24 23:57 n10-hwcheck
+-rwxr-xr-x 1 root root    7613 Oct 24 23:57 n10-kontrol
+-rwxr-xr-x 1 root root     223 Oct 24 23:57 n10-kur
+-rwxr-xr-x 1 root root     320 Oct 24 23:57 n10-menu
+-rwxr-xr-x 1 root root     679 Oct 24 23:57 n10-oyun-kur
+-rwxr-xr-x 1 root root    1511 Oct 24 23:57 n10-rog-menu
+-rwxr-xr-x 1 root root    1214 Oct 24 23:57 n10-session
+-rwxr-xr-x 1 root root    1328 Oct 24 23:57 n10-youtube
+-rwxr-xr-x 1 root root 5089984 Oct 24 23:57 qjs
+-rwxr-xr-x 1 root root 3074818 Oct 24 23:57 yt-dlp
+== x-session-manager -> /usr/bin/openbox-session
+== installer: /tmp/tmp.AwUQdQNq0l/root/usr/bin/calamares
+== nouveau video firmware: nv106_fuc084 nv106_fuc085 nv106_fuc086 nv108_fuc084 nv108_fuc085 nv108_fuc086 nv84_bsp nv84_bsp-h264 nv84_vp nv84_vp-h264-1 nv84_vp-h264-2 nv84_vp-mpeg12 nv84_vp-vc1-1 nv84_vp-vc1-2 nv84_vp-vc1-3 nv84_xuc00f nv84_xuc103 nv98_bsp nv98_fuc084 nv98_fuc085 nv98_fuc086 nv98_ppp nv98_vp nva3_bsp nva3_fuc084 nva3_fuc085 nva3_fuc086 nva3_ppp nva3_vp nva5_fuc084 nva5_fuc085 nva5_fuc086 nva8_fuc084 nva8_fuc085 nva8_fuc086 nvaa_fuc084 nvaa_fuc085 nvaa_fuc086 nvac_fuc084 nvac_fuc085 nvac_fuc086 nvaf_fuc084 nvaf_fuc085 nvaf_fuc086 nvc0_bsp nvc0_fuc084 nvc0_fuc085 nvc0_fuc086 nvc0_ppp nvc0_vp nvc1_fuc084 nvc1_fuc085 nvc1_fuc086 nvc3_fuc084 nvc3_fuc085 nvc3_fuc086 nvc4_fuc084 nvc4_fuc085 nvc4_fuc086 nvc8_fuc084 nvc8_fuc085 nvc8_fuc086 nvce_fuc084 nvce_fuc085 nvce_fuc086 nvcf_fuc084 nvcf_fuc085 nvcf_fuc086 nvd7_fuc084 nvd7_fuc085 nvd7_fuc086 nvd9_fuc084 nvd9_fuc085 nvd9_fuc086 nve0_bsp nve0_vp nve4_fuc084 nve4_fuc085 nve4_fuc086 nve6_fuc084 nve6_fuc085 nve6_fuc086 nve7_fuc084 nve7_fuc085 nve7_fuc086 nvf0_fuc084 nvf0_fuc085 nvf0_fuc086 nvf1_fuc084 nvf1_fuc085 nvf1_fuc086 vuc-h264-0 vuc-mpeg12-0 vuc-mpeg4-0 vuc-mpeg4-1 vuc-vc1-0 vuc-vc1-1 vuc-vc1-2 vuc-vp3-h264-0 vuc-vp3-mpeg12-0 vuc-vp3-vc1-0 vuc-vp3-vc1-1 vuc-vp3-vc1-2 vuc-vp4-h264-0 vuc-vp4-mpeg12-0 vuc-vp4-mpeg4-0 vuc-vp4-mpeg4-1 vuc-vp4-vc1-0 vuc-vp4-vc1-1 vuc-vp4-vc1-2 
+== CA bundle: /tmp/tmp.AwUQdQNq0l/root/etc/ssl/certs/ca-certificates.crt
+== yt-dlp: /tmp/tmp.AwUQdQNq0l/root/usr/local/bin/yt-dlp, quickjs: /tmp/tmp.AwUQdQNq0l/root/usr/local/bin/qjs
+== /etc/xdg/openbox
+total 44
+-rwxr-xr-x 1 root root   488 Jan 30  2022 autostart
+-rwxr-xr-x 1 root root   379 Jan 30  2022 environment
+-rw-r--r-- 1 root root  1056 Mar 15  2020 menu.xml
+-rw-r--r-- 1 root root   595 Oct 24 23:57 n10-autostart
+-rw-r--r-- 1 root root 25665 Oct 24 23:57 rc.xml
+accel: -enable-kvm -cpu host
+Disk /tmp/tmp.AwUQdQNq0l/usb.img: 1.32 GiB, 1414758400 bytes, 2763200 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x01ab526f
+
+Device                       Boot   Start     End Sectors   Size Id Type
+/tmp/tmp.AwUQdQNq0l/usb.img1 *         64 2238911 2238848   1.1G 17 Hidden HPFS/NTFS
+/tmp/tmp.AwUQdQNq0l/usb.img2      2240512 2763199  522688 255.2M  c W95 FAT32 (LBA)
+Output partition: OK

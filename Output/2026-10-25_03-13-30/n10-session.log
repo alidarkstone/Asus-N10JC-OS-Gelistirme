@@ -1,0 +1,48 @@
++ date
+Paz 25 Eki 2026 03:11:27 +03
++ export XDG_SESSION_TYPE=x11 XDG_CURRENT_DESKTOP=N10:Openbox XDG_SESSION_DESKTOP=openbox DESKTOP_SESSION=openbox
++ dbus-update-activation-environment --systemd DISPLAY XAUTHORITY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP
++ xrdb -merge /etc/X11/Xresources/x11-common
++ setxkbmap tr
++ xsetroot -cursor_name left_ptr
++ wm=1142
++ openbox
++ xprop -root _NET_SUPPORTING_WM_CHECK
++ grep -q window
++ break
++ sh /etc/xdg/openbox/n10-autostart
++ wait 1142
+tint2: Using glib slice allocator (default). Run tint2 with environment variable G_SLICE=always-malloc in case of strange behavior or crashes
+tint2: xRandr: Found crtc's: 1
+[1;34mtint2: xRandr: Linking output Virtual-1 with crtc 0, resolution 1280x800, DPI 100[0m
+
+(nm-applet:1149): dbind-WARNING **: 03:11:28.489: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+Openbox-Message: "/var/lib/openbox/debian-menu.xml" geçerli menü dosyası bulunamadı
+tint2: No XSETTINGS manager, tint2 uses config option 'launcher_icon_theme'.
+tint2: could not find a config file! Creating a default one.
+tint2: Loading config file: /home/user/.config/tint2/tint2rc
+tint2: real transparency on... depth: 32
+tint2: panel items: PFESBPPC
+tint2: Systray composited rendering on
+tint2: nb monitors 1, nb monitors used 1, nb desktops 4
+[1;34mtint2: panel 1 uses scale 1 [0m
+[1;32mtint2: Loading icon theme cache...[0m
+[1;33mIcon path not found in cache: theme = hicolor, icon = /usr/share/n10os/rog-eye.png, size = 0[0m
+[1;32mtint2: Loading icon theme hicolor:[0m
+tint2:  'hicolor',tint2: 
+Adding icon path to cache: theme = hicolor, icon = /usr/share/n10os/rog-eye.png, size = 0, path = /usr/share/n10os/rog-eye.png
+[1;33mIcon path not found in cache: theme = hicolor, icon = /usr/share/n10os/ara.png, size = 0[0m
+Adding icon path to cache: theme = hicolor, icon = /usr/share/n10os/ara.png, size = 0, path = /usr/share/n10os/ara.png
+[1;33mIcon path not found in cache: theme = hicolor, icon = /usr/share/n10os/kontrol.png, size = 0[0m
+Adding icon path to cache: theme = hicolor, icon = /usr/share/n10os/kontrol.png, size = 0, path = /usr/share/n10os/kontrol.png
+Creating executor 'n10-gpu-durum' with monitor -1 for panel on monitor 0
+tint2: Kernel uevent interface initialized...
+[1;33mIcon path not found in cache: theme = hicolor, icon = /usr/share/n10os/rog-eye.png, size = 32[0m
+Adding icon path to cache: theme = hicolor, icon = /usr/share/n10os/rog-eye.png, size = 32, path = /usr/share/n10os/rog-eye.png
+tint2: systray window 12582920
+[1;32mtint2: systray started[0m
+[1;33mIcon path not found in cache: theme = hicolor, icon = /usr/share/n10os/ara.png, size = 22[0m
+Adding icon path to cache: theme = hicolor, icon = /usr/share/n10os/ara.png, size = 22, path = /usr/share/n10os/ara.png
+[1;33mIcon path not found in cache: theme = hicolor, icon = /usr/share/n10os/kontrol.png, size = 22[0m
+Adding icon path to cache: theme = hicolor, icon = /usr/share/n10os/kontrol.png, size = 22, path = /usr/share/n10os/kontrol.png
+[1;32madd_icon: 14680076 (“Kablolu bağlantı 1” ethernet ağ bağlantısı etkin), pid 1149, visual 0x1b669b0, colormap 14680075, depth 32, width 1, height 1[0m
